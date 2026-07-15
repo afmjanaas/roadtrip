@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gulf Grand Expedition 2026 — 18-Day Family Road Trip & Umrah</title>
+<style>
+/* ============ DESIGN SYSTEM ============ */
+:root{
+  --qa:#8A1538; --ae:#1B5FAA; --sa:#0E7A45; --ret:#D97B29;
+  --paper:#faf7f0; --card:#ffffff; --ink:#22221e; --ink2:#5a564c; --ink3:#8d8878;
+  --line:#e5dfd0; --line2:#efe9da; --gold:#b98a2e; --goldL:#f3e8ce;
+  --accent:#8A1538; --hero1:#1c2b3a; --hero2:#3d2230;
+  --ok:#0E7A45; --warn:#b3541e; --shadow:0 2px 10px rgba(40,32,10,.08);
+  --shadow2:0 8px 30px rgba(40,32,10,.13); --r:14px;
+  --sans:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+}
+[data-theme="dark"]{
+  --paper:#15171c; --card:#1e2128; --ink:#eae6da; --ink2:#b9b4a5; --ink3:#84806f;
+  --line:#31343d; --line2:#282b33; --gold:#d4a94e; --goldL:#3a3220;
+  --hero1:#10151c; --hero2:#2a1420;
+  --shadow:0 2px 10px rgba(0,0,0,.35); --shadow2:0 8px 30px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:15px;line-height:1.55}
+::selection{background:var(--gold);color:#fff}
+
+/* ============ LAYOUT ============ */
+#app{display:flex;min-height:100vh}
+#sidebar{width:252px;background:linear-gradient(180deg,var(--hero1),var(--hero2));color:#e8e2d2;
+  position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:50;transition:transform .25s;scrollbar-width:thin}
+#main{flex:1;margin-left:252px;min-width:0}
+@media(max-width:960px){#sidebar{transform:translateX(-100%)}#sidebar.open{transform:none;box-shadow:var(--shadow2)}#main{margin-left:0}}
+.sb-logo{padding:22px 18px 14px;border-bottom:1px solid rgba(255,255,255,.12)}
+.sb-logo h1{font-family:var(--serif);font-size:19px;letter-spacing:.5px;color:#fff;line-height:1.25}
+.sb-logo .sub{font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-top:5px}
+.sb-nav{padding:10px 0 30px}
+.sb-h{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(232,226,210,.45);padding:16px 18px 6px}
+.sb-a{display:flex;align-items:center;gap:10px;padding:8px 18px;color:#d9d3c2;text-decoration:none;font-size:13.5px;border-left:3px solid transparent;cursor:pointer}
+.sb-a:hover{background:rgba(255,255,255,.07);color:#fff}
+.sb-a.active{border-left-color:var(--gold);background:rgba(255,255,255,.09);color:#fff}
+.sb-a .ico{width:20px;text-align:center;font-size:14px;flex:none}
+.sb-day{display:flex;gap:8px;align-items:center;padding:4px 18px 4px 30px;font-size:12px;color:#bdb7a6;text-decoration:none;cursor:pointer}
+.sb-day:hover{color:#fff}
+.sb-day .db{width:20px;height:20px;border-radius:6px;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+
+/* ============ TOPBAR ============ */
+#topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:10px 22px}
+#burger{display:none;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer;color:var(--ink);font-size:16px}
+@media(max-width:960px){#burger{display:block}}
+#search{flex:1;max-width:420px;position:relative}
+#searchIn{width:100%;padding:8px 14px 8px 34px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font-size:13.5px;outline:none}
+#searchIn:focus{border-color:var(--gold)}
+#search .mag{position:absolute;left:12px;top:8px;color:var(--ink3)}
+#searchRes{position:absolute;top:110%;left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow2);max-height:340px;overflow:auto;display:none;z-index:60}
+#searchRes a{display:block;padding:9px 14px;text-decoration:none;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line2);cursor:pointer}
+#searchRes a:hover{background:var(--line2)}
+#searchRes .t{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:1px}
+.tb-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tbtn{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer;color:var(--ink);font-size:13px}
+.tbtn:hover{border-color:var(--gold)}
+#netdot{width:9px;height:9px;border-radius:50%;background:#999;display:inline-block;margin-right:4px}
+#netdot.on{background:var(--ok);box-shadow:0 0 6px var(--ok)}
+#progWrap{height:3px;background:transparent;position:sticky;top:0;z-index:41}
+#progBar{height:3px;width:0;background:linear-gradient(90deg,var(--qa),var(--ae),var(--sa),var(--ret))}
+
+/* ============ SECTIONS & HERO ============ */
+section{padding:34px 26px;max-width:1180px;margin:0 auto}
+.sec-h{font-family:var(--serif);font-size:30px;letter-spacing:.3px;margin-bottom:4px}
+.sec-sub{color:var(--ink2);font-size:14px;margin-bottom:22px}
+.rule{height:3px;width:64px;background:var(--gold);border-radius:2px;margin:10px 0 22px}
+#hero{background:linear-gradient(135deg,var(--hero1) 0%,var(--hero2) 100%);color:#f2ecdc;padding:54px 26px 44px;position:relative;overflow:hidden}
+#hero .wrap{max-width:1180px;margin:0 auto;position:relative;z-index:2}
+#hero .kick{letter-spacing:4px;text-transform:uppercase;font-size:11px;color:var(--gold);margin-bottom:12px}
+#hero h2{font-family:var(--serif);font-size:clamp(30px,4.6vw,52px);line-height:1.08;color:#fff;max-width:820px}
+#hero .tag{margin-top:14px;font-size:15.5px;color:#cfc8b4;max-width:760px}
+#hero .routeline{margin-top:22px;font-family:var(--serif);font-size:16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+#hero .routeline b{padding:2px 10px;border-radius:999px;font-size:13.5px}
+#hero .badges{margin-top:20px;display:flex;flex-wrap:wrap;gap:8px}
+.badge{border:1px solid rgba(212,169,78,.5);color:#e8d9ac;padding:4px 12px;border-radius:999px;font-size:11.5px;letter-spacing:1.2px;text-transform:uppercase}
+#hero .orn{position:absolute;right:-60px;top:-60px;width:420px;height:420px;border:1px solid rgba(255,255,255,.07);border-radius:50%}
+#hero .orn2{position:absolute;right:40px;top:60px;width:220px;height:220px;border:1px dashed rgba(212,169,78,.25);border-radius:50%}
+
+/* stats strip */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:-26px;position:relative;z-index:5;padding:0 26px;max-width:1180px;margin-left:auto;margin-right:auto}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:var(--shadow);text-align:center}
+.stat .v{font-family:var(--serif);font-size:22px;color:var(--accent)}
+[data-theme="dark"] .stat .v{color:var(--gold)}
+.stat .l{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);margin-top:2px}
+
+/* ============ CARDS / GRID ============ */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.card h4{font-family:var(--serif);font-size:17px;margin-bottom:8px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line2);font-size:13.5px}
+.kv:last-child{border-bottom:0}
+.kv .k{color:var(--ink2)}
+.kv .v{font-weight:600;text-align:right}
+.chip{display:inline-block;background:var(--goldL);color:var(--gold);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;letter-spacing:.5px}
+.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:11.5px;color:var(--ink2);background:var(--card)}
+.note{background:var(--goldL);border-left:4px solid var(--gold);border-radius:8px;padding:12px 14px;font-size:13.5px;margin:14px 0}
+.warn{background:color-mix(in srgb,var(--warn) 10%,var(--card));border-left:4px solid var(--warn);border-radius:8px;padding:12px 14px;font-size:13.5px;margin:14px 0}
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+table.tbl th{text-align:left;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3);padding:8px 10px;border-bottom:2px solid var(--line)}
+table.tbl td{padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+table.tbl tr:hover td{background:var(--line2)}
+.right{text-align:right}.center{text-align:center}
+.money{font-variant-numeric:tabular-nums;font-weight:700}
+
+/* ============ DAY CARDS ============ */
+.day{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:22px;overflow:hidden;scroll-margin-top:80px}
+.day-head{display:flex;gap:14px;align-items:center;padding:16px 18px;cursor:pointer;user-select:none;border-left:6px solid var(--accent)}
+.day-head:hover{background:var(--line2)}
+.dnum{width:52px;height:52px;border-radius:14px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;box-shadow:var(--shadow)}
+.dnum .n{font-family:var(--serif);font-size:21px;font-weight:700;line-height:1}
+.dnum .d{font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;opacity:.85}
+.day-head .rt{flex:1;min-width:0}
+.day-head .rt .r1{font-family:var(--serif);font-size:18px;line-height:1.25}
+.day-head .rt .r2{font-size:12px;color:var(--ink2);margin-top:3px;display:flex;flex-wrap:wrap;gap:10px}
+.day-head .money-side{text-align:right;flex:none}
+.day-head .money-side .b{font-family:var(--serif);font-size:18px;color:var(--accent)}
+[data-theme="dark"] .day-head .money-side .b{color:var(--gold)}
+.day-head .money-side .s{font-size:10px;letter-spacing:1px;color:var(--ink3);text-transform:uppercase}
+.day-head .car{font-size:18px;color:var(--ink3);transition:transform .2s}
+.day.open .day-head .car{transform:rotate(180deg)}
+.day-body{display:none;padding:0 18px 18px}
+.day.open .day-body{display:block}
+.done-ck{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink3);cursor:pointer}
+.tl{border-left:2px solid var(--line);margin:12px 0 8px 8px;padding-left:18px;display:grid;gap:12px}
+.tl .slot{position:relative}
+.tl .slot:before{content:"";position:absolute;left:-24px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--card)}
+.tl .slot.nd:before{background:var(--ink3)}
+.tl .st{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold);font-weight:700}
+.tl .sx{font-size:13.5px;margin-top:2px}
+.tipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin:14px 0}
+.tip{background:var(--line2);border-radius:10px;padding:10px 12px;font-size:12.5px}
+.tip b{display:block;font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.dbudget{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.dbudget .bh{background:var(--line2);padding:8px 12px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink2);display:flex;justify-content:space-between}
+.brow{display:flex;justify-content:space-between;padding:6px 12px;font-size:13px;border-top:1px dashed var(--line2)}
+.brow.tot{background:var(--goldL);font-weight:800;border-top:2px solid var(--gold)}
+
+/* ============ ATTRACTIONS ============ */
+.atts{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px;margin-top:10px}
+.att{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);display:flex;flex-direction:column;transition:box-shadow .2s}
+.att:hover{box-shadow:var(--shadow2)}
+.att.unsel{opacity:.55}
+.att .ph{height:130px;position:relative;background:linear-gradient(135deg,#2e3d50,#4a3345);display:flex;align-items:center;justify-content:center}
+.att .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.att .ph .fall{color:#d8cfb4;text-align:center;font-family:var(--serif);padding:8px}
+.att .ph .fall .fi{font-size:30px;display:block;margin-bottom:4px}
+.att .ph .stars{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);color:#ffd76e;padding:2px 8px;border-radius:999px;font-size:11px;letter-spacing:1px}
+.att .ph .cost{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.6);color:#fff;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+.att .bd{padding:10px 12px;flex:1;display:flex;flex-direction:column;gap:6px}
+.att .nm{font-weight:700;font-size:14px;line-height:1.3}
+.att .why{font-size:12px;color:var(--ink2)}
+.att .meta{display:flex;flex-wrap:wrap;gap:4px;font-size:10.5px;color:var(--ink3)}
+.att .meta span{background:var(--line2);border-radius:6px;padding:2px 7px}
+.att .ft{display:flex;gap:8px;align-items:center;padding:9px 12px;border-top:1px solid var(--line2)}
+.att .ft label{display:flex;gap:6px;align-items:center;font-size:12px;cursor:pointer;flex:1;font-weight:600}
+.att .ft input{accent-color:var(--sa);width:15px;height:15px;cursor:pointer}
+.gm{display:inline-flex;align-items:center;gap:4px;font-size:11px;text-decoration:none;color:#fff;background:var(--ae);padding:4px 9px;border-radius:8px;white-space:nowrap}
+.gm:hover{filter:brightness(1.15)}
+
+/* ============ MAP ============ */
+#mapbox{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:10px;position:relative}
+#mapbox svg{width:100%;height:auto;display:block}
+.maplegend{display:flex;flex-wrap:wrap;gap:14px;padding:12px 8px 4px;font-size:12px}
+.lg{display:flex;align-items:center;gap:6px}
+.lg .sw{width:22px;height:5px;border-radius:3px}
+.lg .ic{font-size:13px}
+
+/* ============ CHECKLISTS ============ */
+.ck{display:flex;gap:10px;align-items:flex-start;padding:8px 4px;border-bottom:1px dashed var(--line2);cursor:pointer;font-size:13.5px}
+.ck input{margin-top:3px;accent-color:var(--sa);width:15px;height:15px;flex:none;cursor:pointer}
+.ck.done .tx{text-decoration:line-through;color:var(--ink3)}
+.ckbar{height:8px;background:var(--line2);border-radius:99px;overflow:hidden;margin:8px 0 14px}
+.ckbar i{display:block;height:100%;background:linear-gradient(90deg,var(--sa),var(--gold));width:0;transition:width .3s}
+
+/* ============ BUDGET DASH ============ */
+.donutwrap{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.dlegend{display:grid;gap:7px;font-size:13px;min-width:210px}
+.dlegend .li{display:flex;align-items:center;gap:8px}
+.dlegend .sw{width:13px;height:13px;border-radius:4px;flex:none}
+.bigtotal{font-family:var(--serif);font-size:40px;color:var(--accent)}
+[data-theme="dark"] .bigtotal{color:var(--gold)}
+.bar{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:10px 0}
+.bar div{height:100%}
+.steps{counter-reset:st;display:grid;gap:12px}
+.step{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.step:before{counter-increment:st;content:counter(st);width:30px;height:30px;flex:none;border-radius:50%;background:var(--sa);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--serif)}
+.step b{display:block;margin-bottom:2px}
+.step .ar{font-family:var(--serif);color:var(--gold);font-size:13px}
+kbd{background:var(--line2);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:11px;font-family:monospace}
+footer{border-top:1px solid var(--line);padding:28px 26px 60px;text-align:center;color:var(--ink3);font-size:12.5px}
+footer .ft-t{font-family:var(--serif);font-size:17px;color:var(--ink2);margin-bottom:4px}
+.skyline{font-size:20px;letter-spacing:6px;margin-bottom:10px;opacity:.6}
+
+/* live strip */
+#livebar{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 0}
+.live{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:12.5px;box-shadow:var(--shadow)}
+.live b{font-size:14px}
+.live .lt{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3)}
+
+/* ============ PRINT ============ */
+@page{size:A4;margin:9mm}
+@media print{
+  #sidebar,#topbar,#progWrap,#burger,.tbtn,.gm,.att .ft input,#searchRes,.done-ck,#toTop{display:none !important}
+  #main{margin-left:0}
+  body{background:#fff;font-size:11.5px}
+  .day-body{display:block !important}
+  .day,.card,.att,.step{box-shadow:none;break-inside:avoid}
+  #hero{padding:26px}
+  section{padding:14px 6px}
+  .att .ph{height:90px}
+  a{color:inherit;text-decoration:none}
+}
+body.printmode #sidebar,body.printmode #topbar{display:none}
+body.printmode #main{margin-left:0}
+#toTop{position:fixed;right:18px;bottom:18px;z-index:45;background:var(--accent);color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:18px;cursor:pointer;box-shadow:var(--shadow2);display:none}
+</style>
+</head>
+<body>
+<div id="progWrap"><div id="progBar"></div></div>
+<div id="app">
+
+<!-- ================= SIDEBAR ================= -->
+<nav id="sidebar">
+  <div class="sb-logo">
+    <h1>Gulf Grand<br>Expedition ’26</h1>
+    <div class="sub">Road Trip &amp; Umrah</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-h">Journey</div>
+    <a class="sb-a" data-go="overview"><span class="ico">⌂</span>Overview</a>
+    <a class="sb-a" data-go="map"><span class="ico">🗺</span>Route Map</a>
+    <a class="sb-a" data-go="itinerary"><span class="ico">📅</span>18-Day Itinerary</a>
+    <div id="sbDays"></div>
+    <div class="sb-h">Planning</div>
+    <a class="sb-a" data-go="budget"><span class="ico">💰</span>Budget Dashboard</a>
+    <a class="sb-a" data-go="checklists"><span class="ico">☑</span>Checklists</a>
+    <a class="sb-a" data-go="docs"><span class="ico">🛂</span>Visas &amp; Borders</a>
+    <div class="sb-h">Guides</div>
+    <a class="sb-a" data-go="umrah"><span class="ico">🕋</span>Umrah Guide</a>
+    <a class="sb-a" data-go="prayer"><span class="ico">🕌</span>Prayer Guide</a>
+    <a class="sb-a" data-go="driving"><span class="ico">🚙</span>Driving &amp; Safety</a>
+    <a class="sb-a" data-go="emergency"><span class="ico">🚨</span>Emergency</a>
+  </div>
+</nav>
+
+<!-- ================= MAIN ================= -->
+<div id="main">
+<div id="topbar">
+  <button id="burger">☰</button>
+  <div id="search"><span class="mag">🔎</span><input id="searchIn" placeholder="Search cities, attractions… ( / )" autocomplete="off"><div id="searchRes"></div></div>
+  <div class="tb-right">
+    <span class="pill" title="Online: live weather & prayer times refresh"><span id="netdot"></span><span id="netlbl">offline</span></span>
+    <span class="pill" id="tripStage">—</span>
+    <button class="tbtn" id="darkBtn" title="Dark mode (D)">◐</button>
+    <button class="tbtn" id="printBtn" title="Print / PDF (P)">⎙ Print</button>
+  </div>
+</div>
+
+<!-- ============ HERO / OVERVIEW ============ -->
+<section id="overview" style="padding:0;max-width:none">
+  <div id="hero">
+    <div class="orn"></div><div class="orn2"></div>
+    <div class="wrap">
+      <div class="kick">Doha · Abu Dhabi · Dubai · AlUla · Madinah · Abha · Makkah</div>
+      <h2>The Gulf Grand Expedition</h2>
+      <div class="tag">An 18-day family road trip &amp; Umrah journey — 6,870 km across three nations, from the skylines of the Emirates through the tombs of Hegra and the fog-wrapped Asir mountains, ending at the Holy Kaaba.</div>
+      <div class="routeline" id="heroRoute"></div>
+      <div class="badges">
+        <span class="badge">5 – 22 Aug 2026</span><span class="badge">Family of 5</span><span class="badge">Nissan X-Trail</span>
+        <span class="badge">Self-Drive</span><span class="badge">Budget Travel</span><span class="badge">Umrah</span><span class="badge">Mountains &amp; Heritage</span>
+      </div>
+    </div>
+  </div>
+  <div class="stats" id="statsBar"></div>
+  <div style="max-width:1180px;margin:0 auto;padding:26px">
+    <div id="livebar"></div>
+    <div class="grid g3" style="margin-top:22px">
+      <div class="card">
+        <h4>👨‍👩‍👧‍👦 Family Profile</h4>
+        <div class="kv"><span class="k">Janaas · 37</span><span class="v">Primary driver</span></div>
+        <div class="kv"><span class="k">Jafeen · 32</span><span class="v">Co-pilot &amp; navigator</span></div>
+        <div class="kv"><span class="k">Jaish · 8</span><span class="v">Junior explorer</span></div>
+        <div class="kv"><span class="k">Alisha · 6</span><span class="v">Junior explorer</span></div>
+        <div class="kv"><span class="k">Alina · 4</span><span class="v">Junior explorer</span></div>
+        <div class="kv"><span class="k">Nationality</span><span class="v">Sri Lankan 🇱🇰</span></div>
+        <div class="kv"><span class="k">Residence</span><span class="v">Qatar RP holders</span></div>
+      </div>
+      <div class="card">
+        <h4>🚙 Vehicle — Nissan X-Trail</h4>
+        <div class="kv"><span class="k">Fuel assumed</span><span class="v">≈ 10 L / 100 km (AC, loaded)</span></div>
+        <div class="kv"><span class="k">Tank</span><span class="v">≈ 60 L → ~550 km range</span></div>
+        <div class="kv"><span class="k">Fuel rule</span><span class="v">Refill at ½ tank in remote legs</span></div>
+        <div class="kv"><span class="k">Car-bed setup</span><span class="v">Rear bench flat for kids’ night sleep</span></div>
+        <div class="kv"><span class="k">Grades</span><span class="v">SA 91 fine · UAE Special 95</span></div>
+        <div class="kv"><span class="k">Pre-trip</span><span class="v">Full service + tyres + spare kit</span></div>
+      </div>
+      <div class="card">
+        <h4>🧭 Route Philosophy</h4>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.6">
+        UAE comes <b>first</b> while everyone is fresh. Eastern Saudi cities (Hofuf, Riyadh, Buraydah) are <b>transit stops</b> — they’re weekend-trip distance from Doha. Maximum time goes to the far, hard-to-reach jewels: <b>AlUla, Madinah, Taif, Al Baha, Abha &amp; Rijal Almaa</b>. Umrah is performed on <b>Days 16–17</b>, leaving a safe two-stage return to reach Doha on the night of 22 Aug. Every day mixes sightseeing (07:00–18:00) with evening driving (18:00–23:30) while the kids sleep.</div>
+      </div>
+    </div>
+    <div class="note">⭐ <b>Ratings:</b> ★★★★★ Must-visit · ★★★★ Highly recommended · ★★★ Optional. Every attraction has a checkbox — untick anything to skip it and the <b>entire budget recalculates instantly</b>. Your choices are saved on this device.</div>
+  </div>
+</section>
+
+<!-- ============ MAP ============ -->
+<section id="map">
+  <div class="sec-h">Expedition Route Map</div>
+  <div class="sec-sub">Stylised GIS overview — tap any city pin to open the real route in Google Maps</div>
+  <div class="rule"></div>
+  <div id="mapbox">
+    <div id="svgmap"></div>
+    <div class="maplegend">
+      <span class="lg"><span class="sw" style="background:var(--qa)"></span>Qatar</span>
+      <span class="lg"><span class="sw" style="background:var(--ae)"></span>UAE</span>
+      <span class="lg"><span class="sw" style="background:var(--sa)"></span>Saudi Arabia</span>
+      <span class="lg"><span class="sw" style="background:var(--ret)"></span>Return route</span>
+      <span class="lg"><span class="ic">🛏</span>Overnight</span>
+      <span class="lg"><span class="ic">⛽</span>Key fuel stop</span>
+      <span class="lg"><span class="ic">🛂</span>Border</span>
+      <span class="lg"><span class="ic">⛰</span>Mountains</span>
+      <span class="lg"><span class="ic">🕋</span>Umrah</span>
+    </div>
+  </div>
+  <div id="legTable" style="margin-top:20px"></div>
+</section>
+
+<!-- ============ ITINERARY ============ -->
+<section id="itinerary">
+  <div class="sec-h">The 18-Day Itinerary</div>
+  <div class="sec-sub">Sightseeing by day · driving by evening · kids asleep in the car-bed. Click a day to expand. <span class="pill">⌨ <kbd>←</kbd><kbd>→</kbd> jump days · <kbd>E</kbd> expand all</span></div>
+  <div class="rule"></div>
+  <div id="days"></div>
+</section>
+
+<!-- ============ BUDGET ============ -->
+<section id="budget">
+  <div class="sec-h">Budget Dashboard</div>
+  <div class="sec-sub">All figures in Qatari Riyal (QAR). Fixed pegs used: 1 SAR = 0.971 QAR · 1 AED = 0.991 QAR. Realistic mid-2026 estimates — attraction ticks update everything live.</div>
+  <div class="rule"></div>
+  <div id="budgetDash"></div>
+</section>
+
+<!-- ============ CHECKLISTS ============ -->
+<section id="checklists">
+  <div class="sec-h">Expedition Checklists</div>
+  <div class="sec-sub">Tick items off — progress is saved on this device (works offline)</div>
+  <div class="rule"></div>
+  <div class="grid g2" id="ckGrid"></div>
+</section>
+
+<!-- ============ DOCS / VISAS / BORDERS ============ -->
+<section id="docs">
+  <div class="sec-h">Documents, Visas &amp; Border Playbook</div>
+  <div class="sec-sub">For Sri Lankan passport holders with Qatar Residence Permits, driving a Qatar-registered private car</div>
+  <div class="rule"></div>
+  <div class="grid g2">
+    <div class="card">
+      <h4>🇸🇦 Saudi Arabia — Multiple-Entry Tourist eVisa</h4>
+      <div style="font-size:13.5px;color:var(--ink2);line-height:1.65">
+      GCC residents (any nationality, incl. Sri Lankan) with a Qatar RP valid <b>3+ months</b> can apply on <b>visitsaudi.com</b>. It is a <b>1-year, multiple-entry</b> eVisa, up to 90 days per stay — exactly what this trip needs since you exit to UAE and re-enter Saudi. Passport must be valid 6+ months. Under-18s are applied for by a parent. Approval usually 24–48 h.</div>
+      <div class="kv" style="margin-top:8px"><span class="k">Fee + mandatory insurance</span><span class="v">≈ SAR 380 / person</span></div>
+      <div class="kv"><span class="k">Family of 5</span><span class="v money">≈ QAR 1,845</span></div>
+    </div>
+    <div class="card">
+      <h4>🇦🇪 UAE — eVisa for GCC Residents</h4>
+      <div style="font-size:13.5px;color:var(--ink2);line-height:1.65">
+      Sri Lankans resident in Qatar need the <b>UAE e-Visa for GCC residents</b> (apply via the ICP smartservices portal / u.ae before travel — not issued at the land border). 30-day visit visa, extendable once. Qatar RP must have 3+ months validity and your profession/status should match your RP. Apply for all 5 travellers ~2–3 weeks ahead.</div>
+      <div class="kv" style="margin-top:8px"><span class="k">Fee (typical)</span><span class="v">≈ AED 250 / person</span></div>
+      <div class="kv"><span class="k">Family of 5</span><span class="v money">≈ QAR 1,239</span></div>
+    </div>
+    <div class="card">
+      <h4>🛂 Border 1 &amp; 4 — Abu Samra ⇄ Salwa (QA ⇄ SA)</h4>
+      <div class="steps" style="margin-top:6px">
+        <div class="step"><div><b>Pre-register on MSAR portal</b>Vehicle + travellers pre-registration gives you the fast lane. From Feb 2026, vehicle insurance for the return into Qatar is arranged online in advance — on-site sales ended.</div></div>
+        <div class="step"><div><b>Qatar exit</b>Passports + RPs scanned, car exit stamp. Istimara (registration) must be in driver’s name or carry a NOC letter.</div></div>
+        <div class="step"><div><b>Saudi entry</b>eVisa check, fingerprints (first entry), customs x-ray. Buy <b>Saudi TPL car insurance</b> (~SAR 120/week — do it online beforehand to skip the queue).</div></div>
+        <div class="step"><div><b>Timing</b>Allow 1.5–3 h. Cross at dawn on a weekday — avoid Thu/Fri evenings. Toilets, mosque &amp; kiosk available on both sides.</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h4>🛂 Border 2 &amp; 3 — Batha ⇄ Ghuwaifat (SA ⇄ AE)</h4>
+      <div class="steps" style="margin-top:6px">
+        <div class="step"><div><b>Saudi exit at Batha</b>Quick passport scan + vehicle exit. Fuel up before the border on the Saudi side — it’s ~40% cheaper than UAE.</div></div>
+        <div class="step"><div><b>UAE entry at Ghuwaifat</b>eVisas verified, biometrics photo, car x-ray. Buy <b>UAE TPL insurance</b> for the car (~AED 150, kiosk at border or online). Expect 45 min–2 h.</div></div>
+        <div class="step"><div><b>Returning westbound (Day 6)</b>UAE exit is fast; Saudi re-entry uses your multiple-entry eVisa — biometrics already on file, so it’s quicker the second time.</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h4>📄 Documents Wallet — carry originals + photocopies</h4>
+      <div style="font-size:13.5px;line-height:1.9">
+      ▸ 5 × passports (6+ months validity) &nbsp;▸ 5 × Qatar RP cards<br>
+      ▸ Saudi eVisa printouts × 5 &nbsp;▸ UAE eVisa printouts × 5<br>
+      ▸ Qatar driving licence (+ int’l permit recommended)<br>
+      ▸ Istimara (car registration) — in driver’s name / NOC from owner or bank if financed<br>
+      ▸ Qatar car insurance + Saudi TPL + UAE TPL certificates<br>
+      ▸ Marriage &amp; kids’ birth certificates (rarely asked, good backup)<br>
+      ▸ Hotel bookings list + return proof &nbsp;▸ Cash: SAR + AED + QAR + 2 cards<br>
+      ▸ Travel/medical insurance covering KSA &amp; UAE (Saudi eVisa includes basic medical)</div>
+    </div>
+    <div class="card">
+      <h4>💡 Border Day Tips with Kids</h4>
+      <div style="font-size:13.5px;color:var(--ink2);line-height:1.8">
+      ▸ Cross Abu Samra at ~04:30 on Day 1 — kids sleep through both borders.<br>
+      ▸ Keep all 10 documents in one zip folder, ordered by traveller.<br>
+      ▸ Snacks &amp; water within reach; borders have no shade queues in August.<br>
+      ▸ SIM cards: grab a Saudi data eSIM (STC/Mobily) online; UAE tourist eSIM (du/Etisalat). Offline Google Maps areas downloaded before departure.<br>
+      ▸ Never photograph border posts. Dress modestly at Saudi crossings.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ UMRAH GUIDE ============ -->
+<section id="umrah">
+  <div class="sec-h">🕋 Umrah Guide — Days 16 &amp; 17</div>
+  <div class="sec-sub">Arrive Makkah Day 16 (Thu 20 Aug) evening → Umrah that night when the Haram is coolest and calmest → Jumu'ah at the Kaaba on Day 17 (Fri 21 Aug) before the homeward drive</div>
+  <div class="rule"></div>
+  <div class="grid g2">
+    <div class="card">
+      <h4>📍 Miqat — where you enter Ihram</h4>
+      <div style="font-size:13.5px;color:var(--ink2);line-height:1.7">
+      A <b>miqat</b> is the boundary you may not cross toward Makkah without Ihram. Your route from Abha follows the coastal highway (Route 5) north — the correct miqat is <b>Yalamlam (As-Sa’diyyah)</b>, ~100 km south of Makkah in Al-Lith governorate, right on your road. It has a large mosque, showers, wudu areas, parking and ihram shops.<br><br>
+      <b>Plan:</b> shower (ghusl) at the Abha hotel and wear ihram under travel clothes, or stop ~17:30 at Yalamlam: change, pray 2 raka’at, make <b>niyyah</b> — <i>“Labbayk Allahumma ‘Umrah”</i> — then recite the Talbiyah toward Makkah.<br><br>
+      <i>Note: had you gone via Madinah→Makkah directly, the miqat would be Dhul-Hulayfah (Abyar Ali). From Taif side it is Qarn al-Manazil (As-Sayl al-Kabir).</i></div>
+    </div>
+    <div class="card">
+      <h4>🧺 Ihram Checklist</h4>
+      <div id="ckIhram"></div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h4>Step-by-Step Umrah</h4>
+      <div class="steps" style="margin-top:8px">
+        <div class="step"><div><b>Ihram &amp; Niyyah at Yalamlam</b><span class="ar">إحرام</span> — Ghusl, 2 rak‘ah, intention for Umrah. Men: two white unstitched cloths. Women: normal modest dress. From now: no perfume, no cutting hair/nails, no arguments. Kids may wear normal clothes if not doing Umrah themselves; children CAN perform Umrah with parents guiding the intention.</div></div>
+        <div class="step"><div><b>Talbiyah on the road</b><span class="ar">تلبية</span> — “Labbayk Allāhumma labbayk…” repeatedly until you see the Kaaba. Teach the kids the response — it makes the 90-minute drive special.</div></div>
+        <div class="step"><div><b>Enter Masjid al-Haram (right foot, du‘a)</b> — go ~22:30 after resting at the hotel. First sight of the Kaaba: pause, make personal du‘a — it is a moment your children will remember forever.</div></div>
+        <div class="step"><div><b>Tawaf — 7 circuits</b><span class="ar">طواف</span> — Start at the Black Stone corner (green light marker), Kaaba on your LEFT. Point to the stone saying “Bismillāh, Allāhu Akbar” each pass. Keep Alina on shoulders / stroller on the upper mataf if crowded. Between Yemeni corner &amp; Black Stone: “Rabbanā ātinā fid-dunyā ḥasanah…”.</div></div>
+        <div class="step"><div><b>2 rak‘ah behind Maqam Ibrahim</b> then drink <b>Zamzam</b> — fill the kids’ bottles; it’s chilled and unlimited.</div></div>
+        <div class="step"><div><b>Sa‘i — 7 lengths Safa ⇄ Marwa</b><span class="ar">سعي</span> — Air-conditioned gallery, ~2.5 km total. Strollers allowed on the designated lane. Men jog gently between the green lights. Rest at any point — there is Zamzam along the route.</div></div>
+        <div class="step"><div><b>Halq / Taqsir</b> — Men: shave or trim hair (barbers outside on Ibrahim al-Khalil St, ~SAR 10–20). Women: trim a fingertip length. <b>Umrah complete — Mubarak!</b> Ihram restrictions end.</div></div>
+      </div>
+      <div class="note">👧 <b>Umrah with kids:</b> do Tawaf after 22:30 or after Fajr (coolest, calmest); use the upper floors with the stroller if the mataf is packed; agree a meeting point (Gate 1 — King Abdul Aziz Gate) in case of separation; write your phone number on a wristband for each child; carry snacks, and let them drink Zamzam freely. Total Umrah time with children: ~3–4 hours with breaks.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRAYER GUIDE ============ -->
+<section id="prayer">
+  <div class="sec-h">🕌 Prayer on the Road</div>
+  <div class="sec-sub">Live prayer times load for your route city when online</div>
+  <div class="rule"></div>
+  <div class="grid g2">
+    <div class="card"><h4>Today’s Prayer Times <span class="chip" id="ptCity">—</span></h4><div id="ptimes" style="margin-top:6px"><div class="kv"><span class="k">Connect to the internet once to load live times</span><span class="v">—</span></div></div></div>
+    <div class="card">
+      <h4>Traveller’s Fiqh Notes</h4>
+      <div style="font-size:13.5px;color:var(--ink2);line-height:1.8">
+      ▸ As musafir (traveller) you may <b>shorten</b> Dhuhr/Asr/Isha to 2 rak‘ah and <b>combine</b> Dhuhr+Asr, Maghrib+Isha — perfect for driving evenings.<br>
+      ▸ Every Saudi fuel station has a musalla; majors (SASCO, Naft, ADNOC) have family rooms and clean wudu areas.<br>
+      ▸ Qibla: use the compass in this app’s map or any qibla app offline.<br>
+      ▸ In Madinah, the men can pray in <b>Rawdah</b> (book a slot free on the <b>Nusuk</b> app ~1–3 days ahead); women have separate Rawdah hours.<br>
+      ▸ Friday (Days 3, 10, 17): plan sightseeing around Jumu‘ah ~11:45–13:00.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DRIVING & SAFETY ============ -->
+<section id="driving">
+  <div class="sec-h">🚙 Driving, Mountains &amp; Desert</div>
+  <div class="rule"></div>
+  <div class="grid g3">
+    <div class="card"><h4>⛰ Mountain Driving (Taif · Al Baha · Abha)</h4>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.75">Route 15 rides the Sarawat escarpment at 2,000–2,900 m. Use <b>engine braking (L/2 gear)</b> downhill — never ride the brakes (Al Hada &amp; Rijal Almaa descents are 8–10%). August afternoons bring <b>fog + sudden rain</b> in Asir: fog lights on, 60 km/h, never overtake blind. Baboons on roadsides — windows up, never feed. Fuel up before mountain sections; stations thin out. The Abha→Muhayil descent (Day 17) drops 2,000 m in 30 km — check brakes at the viewpoint pull-off first.</div></div>
+    <div class="card"><h4>🏜 Desert Driving (Days 1, 6, 8, 17–18)</h4>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.75">August highway surface exceeds 60°C — keep tyres at the <b>upper</b> recommended PSI and check cold. Watch for <b>camels at dusk</b> — the deadliest hazard on Saudi highways; scan shoulders continuously after 17:00, use high beams when alone. Sandstorms: pull fully off, hazards ON, lights OFF (so no one follows you off-road). Carry 10 L water + sunshades. Cruise 110–120 km/h max; radars (Saher) are everywhere and fines are automatic.</div></div>
+    <div class="card"><h4>🛡 Road Safety Rules</h4>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.75">▸ Kids ALWAYS belted; Alina (4) in her booster even at night in the car-bed — stop-and-sleep beats loose sleeping.<br>▸ Driver swap/stop every 2 h; hard stop by 23:30 — no all-nighters.<br>▸ Saudi speed limits: 120–140 hwy (signed), 50–80 urban. UAE: 110–140 with 20 buffer NOT on all roads — obey signs.<br>▸ Accident in KSA: call 911/993, don’t move cars, wait for Najm/Muroor report — insurance needs it.<br>▸ Keep tank ≥ ½ on legs marked ⛽ long-gap.</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h4>🧒 Kids Travel System</h4>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.75">The trip engine: <b>sightsee 07:00–18:00, drive 18:00–23:30 while kids sleep</b>. Feed dinner at 17:30, pyjamas + teeth before rolling, car-bed flat with their own pillows. Download cartoons offline for the two long daylight drives (Days 6 &amp; 17). Surprise bag every 3rd day (QAR 20 toys). Golden rule: one attraction the kids CHOOSE every day. Hotel pools = the real reward — every 2-night stop has pool time scheduled.</div></div>
+    <div class="card"><h4>🌡 August Heat Protocol</h4>
+      <div style="font-size:13px;color:var(--ink2);line-height:1.75">Gulf coast 41–45°C — outdoor sights before 10:00 or after 17:00 only; midday = museums, malls, caves, hotel pool. The blessed exceptions: <b>Taif 33°C, Al Baha 30°C, Abha 28°C</b> — that’s why the mountain leg sits mid-trip. 3 L water/person/day in the car, electrolyte sachets for kids, hats + SPF50. Never leave anyone in a parked car, even “one minute”.</div></div>
+  </div>
+</section>
+
+<!-- ============ EMERGENCY ============ -->
+<section id="emergency">
+  <div class="sec-h">🚨 Emergency Contacts</div>
+  <div class="rule"></div>
+  <div class="grid g3">
+    <div class="card"><h4>🇸🇦 Saudi Arabia</h4>
+      <div class="kv"><span class="k">All emergencies (unified)</span><span class="v">911</span></div>
+      <div class="kv"><span class="k">Ambulance</span><span class="v">997</span></div>
+      <div class="kv"><span class="k">Traffic / accidents</span><span class="v">993</span></div>
+      <div class="kv"><span class="k">Road security (highways)</span><span class="v">996</span></div>
+      <div class="kv"><span class="k">Najm (insurance accidents)</span><span class="v">920 000 560</span></div>
+      <div class="kv"><span class="k">Sri Lanka Embassy, Riyadh</span><span class="v">+966 11 460 8689</span></div>
+    </div>
+    <div class="card"><h4>🇦🇪 UAE</h4>
+      <div class="kv"><span class="k">Police</span><span class="v">999</span></div>
+      <div class="kv"><span class="k">Ambulance</span><span class="v">998</span></div>
+      <div class="kv"><span class="k">Fire</span><span class="v">997</span></div>
+      <div class="kv"><span class="k">Saaed (Abu Dhabi accidents)</span><span class="v">800 72233</span></div>
+      <div class="kv"><span class="k">Sri Lanka Embassy, Abu Dhabi</span><span class="v">+971 2 631 6444</span></div>
+    </div>
+    <div class="card"><h4>🇶🇦 Qatar &amp; General</h4>
+      <div class="kv"><span class="k">Emergency</span><span class="v">999</span></div>
+      <div class="kv"><span class="k">Hamad Road Service</span><span class="v">40 407 407</span></div>
+      <div class="kv"><span class="k">Nissan roadside (check policy)</span><span class="v">via insurer</span></div>
+      <div class="kv"><span class="k">Family WhatsApp location</span><span class="v">share live 24/7</span></div>
+      <div class="kv"><span class="k">Meeting point if separated</span><span class="v">Last hotel lobby</span></div>
+    </div>
+  </div>
+  <div class="warn">⚠ Verify embassy numbers and visa rules ~2 weeks before departure — this guide reflects mid-2026 information. Rules at land borders can change with little notice.</div>
+</section>
+
+<footer>
+  <div class="skyline">🕌 🏰 🏜 ⛰ 🕋</div>
+  <div class="ft-t">Gulf Grand Expedition 2026</div>
+  Designed for the Janaas family · 6,870 km · 3 nations · 1 unforgettable journey<br>
+  Prices are researched mid-2026 estimates — always confirm tickets &amp; hotels before booking. Safe travels — رحلة سعيدة
+</footer>
+</div><!--main-->
+</div><!--app-->
+<button id="toTop" title="Top">↑</button>
+<script>
+"use strict";
+/* ================= CORE DATA ================= */
+const FX={SAR:0.9707,AED:0.9913,QAR:1};
+const Q=(cur,v)=>Math.round(v*FX[cur]);
+const CCOL={QA:"#8A1538",AE:"#1B5FAA",SA:"#0E7A45",RET:"#D97B29"};
+
+/* Attractions. fam = family cost (2 adults + Jaish 8, Alisha 6, Alina 4) in native currency.
+   s=stars, ph=photo value 1-5, on=included in budget by default, d=day */
+const ATTS=[
+// ---- Day 1 · Abu Dhabi ----
+{id:"szgm",d:1,city:"Abu Dhabi",n:"Sheikh Zayed Grand Mosque",s:5,cur:"AED",fam:0,cn:"Free — book slot online",t:"1.5–2 h",why:"One of the world's most breathtaking mosques — 82 marble domes, the giant chandelier and reflective pools at sunset.",best:"17:00–19:00 (sunset + lights)",park:"Free underground parking",pray:"You're in one 🕌",kids:4,ph:5,wiki:"Sheikh Zayed Mosque",q:"Sheikh Zayed Grand Mosque Abu Dhabi",on:1},
+{id:"corniche",d:1,city:"Abu Dhabi",n:"Corniche Waterfront & Beach",s:4,cur:"AED",fam:0,cn:"Free (paid beach gates AED 5–25 optional)",t:"1–2 h",why:"8 km of palm-lined waterfront with play parks and skyline views — perfect first-evening stroll.",best:"After 18:00",park:"Paid street parking AED 2–3/h",pray:"Corniche mosques along path",kids:5,ph:4,wiki:"Abu Dhabi",q:"Corniche Beach Abu Dhabi",on:1},
+// ---- Day 2 · Abu Dhabi ----
+{id:"louvre",d:2,city:"Abu Dhabi",n:"Louvre Abu Dhabi",s:5,cur:"AED",fam:126,cn:"AED 63 × 2 adults · under-18 free",t:"2.5–3 h",why:"World-class art under the famous 'rain of light' dome — fully air-conditioned, stroller friendly.",best:"10:00 opening (cool + quiet)",park:"Free on-site",pray:"Prayer rooms inside",kids:4,ph:5,wiki:"Louvre Abu Dhabi",q:"Louvre Abu Dhabi",on:1},
+{id:"qasr",d:2,city:"Abu Dhabi",n:"Qasr Al Watan (Presidential Palace)",s:5,cur:"AED",fam:190,cn:"AED 65×2 + 30×2 · under-4 free",t:"2 h",why:"Dazzling white palace of the UAE rulers — the Great Hall's gold dome is unmissable.",best:"Midday (indoor) or evening light show",park:"Free on-site",pray:"On-site facilities",kids:4,ph:5,wiki:"Qasr Al Watan",q:"Qasr Al Watan Abu Dhabi",on:1},
+{id:"heritage",d:2,city:"Abu Dhabi",n:"Heritage Village",s:3,cur:"AED",fam:0,cn:"Free",t:"1 h",why:"Recreated oasis village — camels, old souq, pearl-diving displays; quick culture stop.",best:"17:00+",park:"Free",pray:"Nearby Marina Mall",kids:4,ph:3,wiki:"Abu Dhabi",q:"Heritage Village Abu Dhabi",on:1},
+{id:"empalace",d:2,city:"Abu Dhabi",n:"Emirates Palace & Etihad Towers (photo stop)",s:3,cur:"AED",fam:0,cn:"Free to stroll/photograph",t:"45 min",why:"The AED 11-billion hotel and its icon skyline — classic postcard shot on the way to dinner.",best:"Golden hour",park:"Visitor parking",pray:"Corniche mosques",kids:3,ph:4,wiki:"Emirates Palace",q:"Emirates Palace Abu Dhabi",on:1},
+{id:"yasbay",d:2,city:"Abu Dhabi",n:"Yas Bay / Yas Marina evening walk",s:4,cur:"AED",fam:0,cn:"Free",t:"1.5 h",why:"Buzzing waterfront by the F1 circuit — fountains, lights, ice-cream and happy kids.",best:"19:30+",park:"Free Yas Bay parking",pray:"Yas Mall prayer rooms",kids:5,ph:3,wiki:"Yas Island",q:"Yas Bay Waterfront Abu Dhabi",on:1},
+{id:"ferrari",d:2,city:"Abu Dhabi",n:"Ferrari World (optional splurge)",s:4,cur:"AED",fam:1290,cn:"~AED 345 pp · under 1.1 m ~AED 255",t:"5–6 h",why:"World's fastest rollercoaster + indoor kids' rides — but it swallows a whole day and the budget.",best:"Full day (indoor)",park:"Free Yas parking",pray:"Prayer rooms inside",kids:5,ph:3,wiki:"Ferrari World",q:"Ferrari World Abu Dhabi",on:0},
+{id:"obs300",d:2,city:"Abu Dhabi",n:"Observation Deck at 300 (Etihad Towers)",s:3,cur:"AED",fam:290,cn:"~AED 95×2 + kids ~AED 50 (partly redeemable on café)",t:"1 h",why:"Highest view in Abu Dhabi with cake & tea — nice heat escape.",best:"16:00–18:00",park:"Tower parking",pray:"In hotel",kids:3,ph:4,wiki:"Emirates Palace",q:"Observation Deck at 300 Abu Dhabi",on:0},
+// ---- Day 3 · AD → Dubai ----
+{id:"alhosn",d:3,city:"Abu Dhabi",n:"Qasr Al Hosn Fort",s:3,cur:"AED",fam:60,cn:"AED 30 × 2 · kids free",t:"1.5 h",why:"Abu Dhabi's oldest building — 1790s watchtower turned museum; the city's origin story.",best:"09:00–11:00",park:"On-site paid",pray:"Nearby city mosques",kids:3,ph:3,wiki:"Qasr al-Hosn",q:"Qasr Al Hosn Abu Dhabi",on:1},
+{id:"dxbmall",d:3,city:"Dubai",n:"Dubai Mall + Dubai Fountain Show",s:5,cur:"AED",fam:0,cn:"Free (fountain shows every 30 min from 18:00)",t:"3 h",why:"The world's biggest mall, the aquarium's free viewing wall, and the fountain dancing beneath Burj Khalifa.",best:"18:00–21:30",park:"Free mall parking",pray:"Prayer rooms every floor",kids:5,ph:5,wiki:"Dubai Mall",q:"Dubai Mall",on:1},
+// ---- Day 4 · Dubai ----
+{id:"olddxb",d:4,city:"Dubai",n:"Old Dubai: Al Fahidi, Abra ride, Gold & Spice Souks",s:5,cur:"AED",fam:10,cn:"Abra AED 1 pp per crossing",t:"3 h (morning)",why:"Wind-tower lanes, a 1-dirham boat across the Creek and souks glittering with gold — Dubai before the towers.",best:"08:30–11:30 (before heat)",park:"Al Seef paid parking AED 20",pray:"Grand Bur Dubai Masjid",kids:5,ph:5,wiki:"Al Fahidi Historical Neighbourhood",q:"Al Fahidi Historical District Dubai",on:1},
+{id:"frame",d:4,city:"Dubai",n:"Dubai Frame",s:4,cur:"AED",fam:180,cn:"AED 60×2 + 30×2 · under-3 free (Alina 4 → child rate applies)",t:"1.5 h",why:"150 m golden picture-frame with a glass sky-bridge — old Dubai on one side, new on the other.",best:"11:00 (indoor escape)",park:"Zabeel Park paid",pray:"Zabeel Park mosque",kids:4,ph:5,wiki:"Dubai Frame",q:"Dubai Frame",on:1},
+{id:"burj",d:4,city:"Dubai",n:"Burj Khalifa — At the Top (124/125)",s:5,cur:"AED",fam:676,cn:"AED 189×2 + 149×2 · under-4 free · sunset slots cost more",t:"2 h",why:"The world's tallest building. Book the 17:30 slot: daylight, sunset AND night skyline in one visit.",best:"17:00–19:00 (book weeks ahead)",park:"Dubai Mall parking",pray:"Mall prayer rooms",kids:4,ph:5,wiki:"Burj Khalifa",q:"Burj Khalifa At The Top",on:1},
+{id:"motf",d:4,city:"Dubai",n:"Museum of the Future (optional)",s:4,cur:"AED",fam:676,cn:"AED 169 pp · under-4 free",t:"2.5 h",why:"Torus-shaped architectural icon with a space-station experience kids adore — pricey but memorable.",best:"Morning slot",park:"On-site paid",pray:"Trade Centre mosque",kids:5,ph:5,wiki:"Museum of the Future (Dubai)",q:"Museum of the Future Dubai",on:0},
+{id:"aquarium",d:4,city:"Dubai",n:"Dubai Aquarium & Underwater Zoo (optional)",s:4,cur:"AED",fam:612,cn:"~AED 153×2 + child ~AED 102×3",t:"2 h",why:"10-million-litre tank with sharks + otters and penguins upstairs — you can see the main wall FREE from the mall.",best:"Any (indoor)",park:"Mall parking",pray:"Mall prayer rooms",kids:5,ph:4,wiki:"Dubai Aquarium",q:"Dubai Aquarium and Underwater Zoo",on:0},
+// ---- Day 5 · Dubai → Ruwais ----
+{id:"jbr",d:5,city:"Dubai",n:"JBR Beach & Marina Walk",s:4,cur:"AED",fam:0,cn:"Free beach",t:"2.5 h (early)",why:"Soft-sand swim beneath the Marina skyline; splash pad and camel photo-ops on The Walk.",best:"07:30–10:00 (water is warm but crowd-free)",park:"Paid AED 4/h",pray:"Marina mosque",kids:5,ph:4,wiki:"Jumeirah Beach Residence",q:"JBR Beach Dubai",on:1},
+{id:"palmview",d:5,city:"Dubai",n:"The View at The Palm (optional)",s:3,cur:"AED",fam:350,cn:"~AED 105×2 + child ~AED 70×2",t:"1.5 h",why:"52nd-floor panorama of the Palm's fronds — the shot everyone knows from drones.",best:"Morning haze-free slot",park:"Nakheel Mall",pray:"Mall prayer rooms",kids:3,ph:5,wiki:"Palm Jumeirah",q:"The View at the Palm Dubai",on:0},
+{id:"jummosque",d:5,city:"Dubai",n:"Jumeirah Mosque tour (optional)",s:3,cur:"AED",fam:80,cn:"AED 40×2 · kids free · 10:00 & 14:00 tours",t:"1.25 h",why:"Dubai's most beautiful mosque, open to visitors with a friendly Q&A cultural tour.",best:"10:00 tour",park:"Free on-site",pray:"On-site",kids:3,ph:4,wiki:"Jumeirah Mosque",q:"Jumeirah Mosque Dubai",on:0},
+// ---- Day 6 · Hofuf ----
+{id:"qara",d:6,city:"Hofuf (Al Ahsa)",n:"Al Qarah Mountain & Land of Civilisations Caves",s:5,cur:"SAR",fam:175,cn:"SAR 50×2 + child 25×3",t:"2 h",why:"Naturally chilled 22 °C canyon-caves inside a UNESCO oasis — nature's own air conditioning in August.",best:"13:00–16:00 (hide from peak heat)",park:"Free on-site",pray:"On-site mosque",kids:5,ph:5,wiki:"Jabal al-Qarah",q:"Al Qarah Mountain Al Ahsa",on:1},
+{id:"ibrahim",d:6,city:"Hofuf (Al Ahsa)",n:"Ibrahim Palace",s:4,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"Ottoman-era fort-palace with a beautiful whitewashed mosque dome — UNESCO listed.",best:"16:30",park:"Street, free",pray:"Palace mosque (historic)",kids:3,ph:4,wiki:"Ibrahim Palace",q:"Ibrahim Palace Hofuf",on:1},
+{id:"qaisariah",d:6,city:"Hofuf (Al Ahsa)",n:"Qaisariah Souq",s:4,cur:"SAR",fam:0,cn:"Free (browse!)",t:"45 min",why:"One of the Gulf's oldest covered souqs (1822) — bishts, dates, oud; buy Al Ahsa's famous Khalas dates.",best:"17:30–18:30",park:"Souq parking",pray:"Adjacent mosque",kids:3,ph:4,wiki:"Al-Ahsa Oasis",q:"Qaisariah Souq Hofuf",on:1},
+// ---- Day 7 · Riyadh ----
+{id:"natmus",d:7,city:"Riyadh",n:"National Museum of Saudi Arabia",s:5,cur:"SAR",fam:30,cn:"SAR 15×2 · kids free (often fully free)",t:"2.5 h",why:"Superb walk through Arabia from dinosaurs to the Kingdom — the best indoor morning in Riyadh.",best:"09:30–12:00",park:"Free on-site",pray:"Museum musalla",kids:4,ph:4,wiki:"National Museum of Saudi Arabia",q:"National Museum Riyadh",on:1},
+{id:"masmak",d:7,city:"Riyadh",n:"Masmak Fortress",s:4,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"The mud-brick fort whose 1902 capture founded modern Saudi Arabia — spot the spearhead in the door.",best:"16:30",park:"Deera square parking",pray:"Imam Turki Mosque adjacent",kids:3,ph:4,wiki:"Masmak Fortress",q:"Masmak Fortress Riyadh",on:1},
+{id:"deera",d:7,city:"Riyadh",n:"Souq Al Zal & Deera Square",s:3,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"Riyadh's old trading souq — carpets, antiques, oud smoke and bargaining theatre.",best:"17:30 (after Asr)",park:"Same as Masmak",pray:"Imam Turki Mosque",kids:3,ph:3,wiki:"Riyadh",q:"Souq Al Zal Riyadh",on:1},
+{id:"skybridge",d:7,city:"Riyadh",n:"Kingdom Centre Sky Bridge (optional)",s:3,cur:"SAR",fam:480,cn:"~SAR 138×2 + child ~68×3 (price doubled in 2026)",t:"1 h",why:"Glass bridge 300 m over Riyadh — great, but steep for a transit evening.",best:"Sunset",park:"Mall valet/parking",pray:"Mall musalla",kids:3,ph:4,wiki:"Kingdom Centre",q:"Kingdom Centre Sky Bridge Riyadh",on:0},
+// ---- Day 8 · Buraydah + Hail ----
+{id:"dates",d:8,city:"Buraydah",n:"Buraydah Dates Carnival (Aug = peak harvest!)",s:5,cur:"SAR",fam:0,cn:"Free entry — bring ~SAR 50 to buy Sukkari dates",t:"1.5 h",why:"The world's largest date market erupts in August: auctioneers, mountains of golden Sukkari, free tastings.",best:"07:30–10:00",park:"Free market lots",pray:"Market mosque",kids:4,ph:4,wiki:"Buraidah",q:"Buraydah dates market",on:1},
+{id:"camel",d:8,city:"Buraydah",n:"Buraydah Camel Market",s:4,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"The planet's biggest camel souq — thousands of camels, real Najdi life. Kids will talk about it for weeks.",best:"06:30–08:00 (auctions)",park:"Free",pray:"Market musalla",kids:5,ph:5,wiki:"Buraidah",q:"Buraydah camel market",on:1},
+{id:"aarif",d:8,city:"Hail",n:"A'arif Fort",s:4,cur:"SAR",fam:20,cn:"~SAR 10×2 · kids free",t:"1 h",why:"350-year-old hilltop fort with the best sunset view over Hail and the Aja mountains.",best:"17:30 (cooler + views)",park:"Base parking, short climb",pray:"City mosques below",kids:4,ph:4,wiki:"Ha'il",q:"A'arif Fort Hail",on:1},
+{id:"barzan",d:8,city:"Hail",n:"Barzan Souq & Qishlah Palace (exterior)",s:3,cur:"SAR",fam:0,cn:"Free",t:"45 min",why:"Hail's lively evening souq beside the huge mud-brick Qishlah fortress — dinner stop before the night leg.",best:"18:30",park:"Souq parking",pray:"Souq mosque",kids:3,ph:3,wiki:"Ha'il",q:"Barzan Souq Hail",on:1},
+// ---- Day 9 · AlUla ----
+{id:"hegra",d:9,city:"AlUla",n:"Hegra (Mada'in Salih) — UNESCO",s:5,cur:"SAR",fam:285,cn:"SAR 95×2 + child ~47×2 · under-5 free · vintage-bus tour, book on experiencealula.com",t:"3 h (dawn tour)",why:"Saudi Arabia's Petra — 110 monumental Nabataean tombs carved into golden outcrops, without the crowds.",best:"First tour ~06:30 (August!)",park:"Winter Park hub, free",pray:"Visitor centre musalla",kids:4,ph:5,wiki:"Hegra (Mada'in Salih)",q:"Hegra AlUla",on:1},
+{id:"dadan",d:9,city:"AlUla",n:"Dadan & Jabal Ikmah (open-air library)",s:4,cur:"SAR",fam:170,cn:"~SAR 60×2 + child 25×2 combo tour",t:"2 h",why:"Lion tombs of the Dadanite kingdom + a canyon of 2,500-year-old inscriptions — UNESCO Memory of the World.",best:"08:30–10:30",park:"Tour hub",pray:"Visitor centre",kids:3,ph:4,wiki:"Dedan",q:"Dadan AlUla",on:1},
+{id:"oldtown",d:9,city:"AlUla",n:"AlUla Old Town & Oasis Walk",s:5,cur:"SAR",fam:0,cn:"Free (guided walk optional SAR 45)",t:"2 h",why:"900-year-old mud-brick maze lit like a lantern at night, beside 2 million palm trees. Souvenir lane + cafés.",best:"18:00–21:00",park:"Free Old Town lots",pray:"Old Town mosque",kids:4,ph:5,wiki:"Al-'Ula",q:"AlUla Old Town",on:1},
+{id:"elephant",d:9,city:"AlUla",n:"Elephant Rock (Jabal AlFil)",s:5,cur:"SAR",fam:0,cn:"Free — sunset café seating",t:"1.5 h",why:"52-m sandstone elephant glowing red at sunset; sunken fire-pit seats and karak tea. Pure magic for kids.",best:"Sunset ~18:45",park:"Free on-site",pray:"Open desert (carry mat)",kids:5,ph:5,wiki:"Elephant Rock, Saudi Arabia",q:"Elephant Rock AlUla",on:1},
+// ---- Day 10 · AlUla → Madinah ----
+{id:"harrat",d:10,city:"AlUla",n:"Harrat Viewpoint",s:4,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"Volcanic-plateau balcony 300 m above the whole oasis — the single best photo of AlUla valley.",best:"08:00 (soft light)",park:"Summit parking",pray:"—",kids:3,ph:5,wiki:"Al-'Ula",q:"Harrat Viewpoint AlUla",on:1},
+{id:"maraya",d:10,city:"AlUla",n:"Maraya Mirror Building (photo stop)",s:3,cur:"SAR",fam:0,cn:"Free exterior (access if no event)",t:"45 min",why:"The world's largest mirrored building, dissolving into the desert — surreal photos.",best:"Morning",park:"Access road parking",pray:"—",kids:3,ph:5,wiki:"Maraya (building)",q:"Maraya AlUla",on:1},
+{id:"nabawi",d:10,city:"Madinah",n:"Al-Masjid an-Nabawi — first visit",s:5,cur:"SAR",fam:0,cn:"Free",t:"Evening",why:"The Prophet's ﷺ Mosque under the green dome — arriving after dark, the marble courtyards are cool and serene.",best:"After Isha (21:30+)",park:"Hotel parking / Haram garages SAR 10–20",pray:"The reason you're here",kids:5,ph:5,wiki:"Prophet's Mosque",q:"Al Masjid an Nabawi Madinah",on:1},
+// ---- Day 11 · Madinah ----
+{id:"rawdah",d:11,city:"Madinah",n:"Rawdah Sharifah (book on Nusuk)",s:5,cur:"SAR",fam:0,cn:"Free — reserve slot on Nusuk app 1–3 days ahead",t:"1 h slot",why:"Pray in the 'Garden of Paradise' beside the Prophet's ﷺ resting place — book men's & ladies' slots separately.",best:"Your allocated slot",park:"Walk from hotel",pray:"—",kids:4,ph:4,wiki:"Rawdah ash-Sharifah",q:"Rawdah Prophet's Mosque",on:1},
+{id:"quba",d:11,city:"Madinah",n:"Quba Mosque",s:5,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"Islam's first mosque — praying 2 rak'ah here carries the reward of an Umrah (hadith).",best:"After Fajr / 08:00",park:"Free lots around mosque",pray:"—",kids:4,ph:4,wiki:"Quba Mosque",q:"Quba Mosque Madinah",on:1},
+{id:"uhud",d:11,city:"Madinah",n:"Mount Uhud & Martyrs' Cemetery",s:4,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"Site of the Battle of Uhud and Sayyiduna Hamza's resting place; the mountain the Prophet ﷺ said 'loves us'.",best:"16:30 (softening heat)",park:"Free on-site",pray:"Sayyid al-Shuhada Mosque",kids:3,ph:3,wiki:"Mount Uhud",q:"Mount Uhud Madinah",on:1},
+{id:"qiblatain",d:11,city:"Madinah",n:"Masjid al-Qiblatayn & Seven Mosques",s:3,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"The mosque of two qiblas, where revelation turned prayer from Jerusalem to Makkah — plus the Trench battle sites.",best:"17:30",park:"On-site",pray:"—",kids:3,ph:3,wiki:"Masjid al-Qiblatayn",q:"Masjid Qiblatain Madinah",on:1},
+{id:"mdates",d:11,city:"Madinah",n:"Madinah Dates Market",s:4,cur:"SAR",fam:0,cn:"Free entry — Ajwa dates ~SAR 40–120/kg",t:"45 min",why:"Buy blessed Ajwa dates at source; sellers hand kids samples until they're full.",best:"After Maghrib",park:"Market parking",pray:"Nabawi 5 min away",kids:4,ph:3,wiki:"Medina",q:"Madinah dates market",on:1},
+// ---- Day 12 · Madinah → Taif ----
+{id:"nabawi2",d:12,city:"Madinah",n:"Farewell visit — Nabawi at Fajr",s:5,cur:"SAR",fam:0,cn:"Free",t:"Morning",why:"A last quiet Fajr under the umbrellas as they bloom open — then breakfast and gentle packing.",best:"Fajr–09:00",park:"Hotel",pray:"—",kids:4,ph:5,wiki:"Prophet's Mosque",q:"Prophet's Mosque Madinah",on:1},
+// ---- Day 13 · Taif ----
+{id:"alhada",d:13,city:"Taif",n:"Al Hada Cable Car → Al Kar Tourist Village",s:5,cur:"SAR",fam:340,cn:"~SAR 85×4 return · under-5 free",t:"2.5 h",why:"4.2 km flight over the hairpins of Al Hada mountain down to waterslide pools — the Gulf's best cable car.",best:"13:00–16:00 slot",park:"Free at top station",pray:"Al Hada mosques",kids:5,ph:5,wiki:"Al Hada",q:"Al Hada Cable Car Taif",on:1},
+{id:"shubra",d:13,city:"Taif",n:"Shubra Palace (exterior/museum)",s:3,cur:"SAR",fam:20,cn:"~SAR 10×2 if open (renovations common)",t:"45 min",why:"Ottoman-Roman lattice-window palace, summer home of King Abdulaziz.",best:"09:30",park:"Street",pray:"City mosques",kids:2,ph:4,wiki:"Shubra Palace",q:"Shubra Palace Taif",on:1},
+{id:"shafa",d:13,city:"Taif",n:"Al Shafa Mountain viewpoints",s:4,cur:"SAR",fam:0,cn:"Free (camel ride optional SAR 20–30)",t:"1.5 h",why:"2,400 m terraces of pomegranate and rose farms at 25 °C — pack a picnic; kids meet the baboons (windows up!).",best:"10:30–12:30",park:"Roadside viewpoints",pray:"Al Shafa mosque",kids:4,ph:4,wiki:"Ta'if",q:"Al Shafa Taif",on:1},
+{id:"rudaf",d:13,city:"Taif",n:"Al Rudaf Park (optional)",s:3,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"Granite-boulder park with lawns and playgrounds — easy pre-drive leg-stretch.",best:"17:00",park:"Free",pray:"Park musalla",kids:4,ph:3,wiki:"Ta'if",q:"Al Rudaf Park Taif",on:0},
+// ---- Day 14 · Al Baha → Abha ----
+{id:"dheeayn",d:14,city:"Al Baha",n:"Dhee Ayn Marble Village",s:5,cur:"SAR",fam:0,cn:"Free (small site fee if attended)",t:"1.5 h",why:"400-year-old stone village glowing white on a marble hill above banana groves, fed by a never-drying spring.",best:"08:30–10:30 (light + cool)",park:"Free at base",pray:"Village mosque",kids:4,ph:5,wiki:"Dhi Ayn",q:"Dhee Ayn heritage village Al Baha",on:1},
+{id:"raghadan",d:14,city:"Al Baha",n:"Raghadan Forest Park",s:4,cur:"SAR",fam:0,cn:"Free",t:"1 h",why:"Juniper forest at 2,000 m with playgrounds, fog rolling through and cheeky baboons on the rails.",best:"07:30 or late pm",park:"Free",pray:"Park mosque",kids:4,ph:4,wiki:"Al Bahah",q:"Raghadan Forest Park Al Baha",on:1},
+{id:"highcity",d:14,city:"Abha",n:"Abha High City (Jabal Thera)",s:4,cur:"SAR",fam:0,cn:"Free entry (cafés optional)",t:"2 h",why:"Cliff-edge promenade over a sea of lights at 24 °C — Abha's famous purple-lit evening scene.",best:"19:00–21:30",park:"On-site",pray:"High City mosque",kids:4,ph:4,wiki:"Abha",q:"Abha High City",on:1},
+// ---- Day 15 · Abha & Rijal Almaa ----
+{id:"rijal",d:15,city:"Rijal Almaa",n:"Rijal Almaa Heritage Village",s:5,cur:"SAR",fam:70,cn:"SAR 20×2 + child 10×3",t:"2.5 h",why:"The 'gingerbread village' — 900-year-old stone towers with white quartz trim and painted Qatt interiors. UNESCO tentative list.",best:"08:30–11:30",park:"Free village lot",pray:"Village mosque",kids:4,ph:5,wiki:"Rijal Almaa",q:"Rijal Almaa Heritage Village",on:1},
+{id:"sawda",d:15,city:"Abha",n:"Jabal Sawda summit viewpoints (3,015 m)",s:5,cur:"SAR",fam:0,cn:"Free (Soudah Season events may ticket some areas)",t:"2 h",why:"Saudi Arabia's rooftop — juniper cloud-forest at 18–22 °C while Doha bakes at 45 °C. Hawks, fog, picnics.",best:"15:30–18:00",park:"Summit park lots",pray:"Al Soudah mosque",kids:4,ph:5,wiki:"Jabal Sawda",q:"Jabal Sawda Abha",on:1},
+{id:"abhacable",d:15,city:"Abha",n:"Abha / Soudah Cable Car (if operating)",s:4,cur:"SAR",fam:320,cn:"~SAR 80×4 · check Soudah Season status",t:"1.5 h",why:"Glides off the escarpment edge over terraced farms — Asir from the air.",best:"16:00",park:"Station lot",pray:"Station musalla",kids:5,ph:5,wiki:"Abha",q:"Abha cable car Soudah",on:0},
+{id:"muftaha",d:15,city:"Abha",n:"Art Street & Al Muftaha Village",s:4,cur:"SAR",fam:0,cn:"Free",t:"1.5 h",why:"Open-air murals, fountains and gahwa stalls — Abha's creative heart on a cool evening.",best:"19:30",park:"Street parking",pray:"Grand Mosque Abha",kids:4,ph:3,wiki:"Abha",q:"Art Street Abha",on:1},
+// ---- Day 16-17 · Makkah ----
+{id:"umrahx",d:16,city:"Makkah",n:"UMRAH — Tawaf, Sa'i, Halq 🕋",s:5,cur:"SAR",fam:0,cn:"Free · barber ~SAR 20",t:"3–4 h with kids",why:"The purpose of it all. Night Umrah at ~23:00: the marble is cool, the crowd gentle, the Kaaba luminous.",best:"22:30–02:30",park:"Hotel parking (leave car!)",pray:"Masjid al-Haram",kids:4,ph:5,wiki:"Masjid al-Haram",q:"Masjid al Haram Makkah",on:1},
+{id:"haramday",d:17,city:"Makkah",n:"Jumu'ah at Masjid al-Haram",s:5,cur:"SAR",fam:0,cn:"Free — enter gates by 10:30 for Friday prayer",t:"Half day",why:"Friday prayer facing the Kaaba — arrive early, the Haram fills fast. Zamzam refills for the road.",best:"10:30–14:00",park:"Hotel",pray:"—",kids:4,ph:5,wiki:"Kaaba",q:"Masjid al Haram Makkah",on:1},
+{id:"jabalnour",d:17,city:"Makkah",n:"Jabal al-Nour / Cave of Hira (view from base)",s:3,cur:"SAR",fam:0,cn:"Free (Hira Cultural District paid exhibits optional)",t:"45 min",why:"The mountain of the first revelation — see it from the base; the 2-h climb is not for August or age 4.",best:"16:00 drive-by",park:"District parking",pray:"Nearby mosques",kids:3,ph:4,wiki:"Jabal al-Nour",q:"Jabal al Nour Makkah",on:1},
+{id:"clocktower",d:17,city:"Makkah",n:"Clock Tower Museum (optional)",s:3,cur:"SAR",fam:450,cn:"~SAR 150×3 (kids under 6 free-ish; check)",t:"1.5 h",why:"Ride to the giant clock face 400 m up, with astronomy exhibits and a balcony over the Haram.",best:"11:00",park:"Abraj Al Bait",pray:"Haram below",kids:3,ph:4,wiki:"Abraj Al Bait",q:"Clock Tower Museum Makkah",on:0}
+];
+
+/* ================= DAYS ================= */
+const DAYS=[
+{d:1,date:"Wed 5 Aug",dow:"WED",route:"Doha → Abu Samra 🛂 → Salwa → Batha 🛂 → Ghuwaifat → Abu Dhabi",cc:"AE",km:600,drv:"6.5 h + 2 borders",stay:"Abu Dhabi 🛏 (1/2)",hotel:"3★ Corniche / Downtown (e.g., Premier Inn Capital Centre class)",hCur:"AED",hV:260,
+ m:"03:30 depart Doha (kids asleep in car-bed). 04:30 Abu Samra border (pre-registered) → Salwa. Sunrise over the Saudi desert.",
+ a:"~09:30 Batha → Ghuwaifat into UAE. Lunch at ADNOC oasis stop. ~14:00 hotel check-in, cool-down nap + pool.",
+ e:"17:00 Sheikh Zayed Grand Mosque (sunset slot booked). 19:30 Corniche stroll & dinner.",
+ n:"No night driving — early sleep after a huge day.",
+ fuel:["Woqod Abu Samra (last cheap Qatar fuel)","ADNOC after Ghuwaifat"],
+ food:"Karak & chapati at ADNOC stops; dinner Lebanese Flower (AD institution, family friendly, ~AED 90)",
+ fam:"Pack breakfast boxes the night before; borders have long shadeless queues — keep water in the cabin, not the boot.",
+ kids:"Border passport game: each child 'stamps' a notebook page at every crossing (4 borders this trip = 4 stickers).",
+ wx:"42 °C / 31 °C — humid on the coast",road:"Salwa Rd + E11: flat, fast, camel fencing most of the way. Radars frequent.",
+ alt:"If borders are slow (>3 h), move mosque to Day 2 evening & keep tonight to pool + Corniche.",
+ fuelQ:176,foodQ:300,parkQ:0,miscQ:50},
+{d:2,date:"Thu 6 Aug",dow:"THU",route:"Abu Dhabi — full city day",cc:"AE",km:40,drv:"~1 h city hops",stay:"Abu Dhabi 🛏 (2/2)",hotel:"Same hotel — no repacking",hCur:"AED",hV:260,
+ m:"09:00 Louvre Abu Dhabi under the rain-of-light dome (fully indoor).",
+ a:"12:30 lunch; 14:00 Qasr Al Watan palace (indoor); optional swap: Ferrari World full-day instead of everything.",
+ e:"17:30 Heritage Village + Emirates Palace photo stop. 19:30 Yas Bay waterfront dinner & lights.",
+ n:"Back by 22:00 — pool-side ice cream if energy remains.",
+ fuel:["Any ADNOC in the city"],
+ food:"Food court lunch at Galleria/Marina Mall (~AED 120); Yas Bay casual dinner (~AED 140)",
+ fam:"Louvre pushchairs available free; Qasr Al Watan has shaded gardens for the kids to run.",
+ kids:"Louvre children's museum wing is FREE and brilliant — budget 45 min there.",
+ wx:"42 °C / 31 °C — indoor day by design",road:"City driving only; Salik-free (AD has no toll gates).",
+ alt:"Ferrari World day (AED ~1,290 fam) replaces Louvre+Qasr if the kids outvote the parents.",
+ fuelQ:13,foodQ:300,parkQ:40,miscQ:50},
+{d:3,date:"Fri 7 Aug",dow:"FRI",route:"Abu Dhabi → Dubai (E11)",cc:"AE",km:145,drv:"1.5 h",stay:"Dubai 🛏 (1/2)",hotel:"3★ aparthotel, Deira/City Centre (Rove class)",hCur:"AED",hV:320,
+ m:"09:00 Qasr Al Hosn fort — Abu Dhabi's origin story. 11:00 hotel pool before Jumu'ah.",
+ a:"12:15 Jumu'ah prayer. 13:30 lunch & checkout. 15:00 drive to Dubai (Salik tolls auto-charged AED 4–6/gate).",
+ e:"17:30 Dubai check-in. 18:30 Dubai Mall: fountain shows (every 30 min), Burj Khalifa from below, waterfall walk.",
+ n:"Fountain finale 21:30, gelato, home by 22:30.",
+ fuel:["ADNOC on E11 before Dubai (cheaper than ENOC by a hair — fill anyway)"],
+ food:"Friday lunch: Al Mrzab (Emirati, AD) or hotel; dinner Dubai Mall food hall (~AED 150)",
+ fam:"Friday = slow morning anyway; malls open ~14:00 for shops but restaurants earlier.",
+ kids:"Dubai Mall's free aquarium viewing wall = 20 min of 'wow' without tickets.",
+ wx:"41 °C / 31 °C",road:"E11 is 8 lanes, 140 km/h sections, heavy radar. Salik gates: Al Safa etc. — ensure the plate is registered or pay via app.",
+ alt:"",
+ fuelQ:47,foodQ:300,parkQ:40,miscQ:50},
+{d:4,date:"Sat 8 Aug",dow:"SAT",route:"Dubai — icons day",cc:"AE",km:50,drv:"~1.2 h city hops",stay:"Dubai 🛏 (2/2)",hotel:"Same aparthotel",hCur:"AED",hV:320,
+ m:"08:30 Old Dubai: Al Fahidi lanes → 1-dirham abra across the Creek → Gold & Spice souks (done by 11:30).",
+ a:"12:00 Dubai Frame (indoor). 13:30 lunch Ravi (Satwa legend). 14:30–16:30 hotel rest/pool — non-negotiable in August.",
+ e:"17:30 Burj Khalifa 'At the Top' sunset slot (pre-booked). Fountain show after.",
+ n:"Optional Museum of the Future exterior photo (lit) on the drive home.",
+ fuel:["ENOC near Zabeel"],
+ food:"Ravi Restaurant Satwa (~AED 80 for 5!); dinner light — mall food hall",
+ fam:"Souk tactic: agree prices ÷ 3 opening ask; kids get one small treasure each (budget in misc).",
+ kids:"Abra boat = highlight-per-dirham champion of the whole trip.",
+ wx:"41 °C / 31 °C",road:"Parking at Zabeel Park (Frame) fills by 11:00 on Saturdays.",
+ alt:"Swap Frame for Museum of the Future (AED 676 fam) if booked ahead — MOTF sells out days early.",
+ fuelQ:16,foodQ:300,parkQ:40,miscQ:50},
+{d:5,date:"Sun 9 Aug",dow:"SUN",route:"Dubai → (E11 west) → Ruwais / Al Dhafra",cc:"AE",km:380,drv:"3.5–4 h (evening)",stay:"Ruwais area 🛏",hotel:"Simple hotel, Al Dhafra (Ruwais/Madinat Zayed)",hCur:"AED",hV:250,
+ m:"07:30 JBR Beach swim + Marina Walk breakfast — beat the heat, water is bath-warm by 10:00.",
+ a:"11:30 optional The View at the Palm; 13:00 lunch; 14:00–16:00 hotel rest & checkout (late checkout arranged).",
+ e:"16:30 roll west past Abu Dhabi. Dinner stop at ADNOC Ruwais plaza ~20:00.",
+ n:"20:30 check-in Ruwais — kids transferred asleep. Positioning night for tomorrow's border.",
+ fuel:["Fill FULL at last big ADNOC before Ruwais — tomorrow starts with the border"],
+ food:"Beach-side breakfast (~AED 90); dinner ADNOC food court / Ruwais mall (~AED 100)",
+ fam:"Do the big repack tonight: border documents folder on the front seat, SAR cash out.",
+ kids:"Beach bucket set (AED 15 from Carrefour) = 2 h of free entertainment.",
+ wx:"41 °C / 30 °C, humid",road:"E11 west of AD is quiet, straight, 120–140; watch fatigue — swap drivers at Mirfa.",
+ alt:"Skip The View → longer beach morning; or leave Dubai at 15:00 for an earlier night.",
+ fuelQ:124,foodQ:300,parkQ:20,miscQ:50},
+{d:6,date:"Mon 10 Aug",dow:"MON",route:"Ruwais → Ghuwaifat 🛂 → Batha → Hofuf → Riyadh",cc:"SA",km:740,drv:"7 h + border",stay:"Riyadh 🛏",hotel:"3★ Olaya district aparthotel",hCur:"SAR",hV:280,
+ m:"06:30 depart. 07:15 Ghuwaifat/Batha crossing (2nd Saudi entry = fast biometrics). Long straight run to Al Ahsa.",
+ a:"12:30 Hofuf. Lunch, Dhuhr. 13:30 Al Qarah caves — 22 °C inside while it's 45 °C outside. 16:30 Ibrahim Palace, 17:30 Qaisariah Souq + Khalas dates.",
+ e:"18:30 depart. Dinner drive-through. Kids in pyjamas by 19:30.",
+ n:"330 km Hofuf → Riyadh (Route 522/40). Arrive ~22:00, carry kids up.",
+ fuel:["Saudi side of Batha (cheap!)","SASCO midway to Riyadh"],
+ food:"Hofuf: Al Ahsa traditional bakeries + broasted; road dinner Herfy/AlBaik drive-through",
+ fam:"This is the longest combined day — split driving 50/50 and keep the caves visit unhurried; it's the day's real rest.",
+ kids:"Cave echo game + date-tasting challenge: rank 3 varieties, winner picks tomorrow's dessert.",
+ wx:"45 °C / 29 °C Hofuf — hottest day of the trip; caves are the refuge",road:"Batha→Hofuf is remote: fuel discipline. Hofuf→Riyadh busy truck route at night — keep right, 110 max.",
+ alt:"If border eats the morning, drop Ibrahim Palace and keep caves + souq.",
+ fuelQ:169,foodQ:250,parkQ:0,miscQ:50},
+{d:7,date:"Tue 11 Aug",dow:"TUE",route:"Riyadh (transit day) → Buraydah",cc:"SA",km:330,drv:"3.5 h (evening)",stay:"Buraydah 🛏",hotel:"City-centre hotel apartment",hCur:"SAR",hV:220,
+ m:"09:30 National Museum — 2.5 h of air-conditioned wonder (meteorite, full-size Nabataean tomb).",
+ a:"12:30 lunch + Dhuhr at a mall; 14:00 rest at hotel (checkout 15:00). 16:30 Masmak Fortress + Deera Square + Souq Al Zal.",
+ e:"18:30 depart north on Route 65. Dinner drive-through Herfy.",
+ n:"330 km to Buraydah, arrive ~22:00. Straight, well-lit dual carriageway.",
+ fuel:["SASCO on Route 65 (musalla + family room)"],
+ food:"Mall food court lunch; Herfy/Kudu dinner on Route 65 (~SAR 90)",
+ fam:"Riyadh is deliberately light — it's your weekend-trip city from Doha. Boulevard City is CLOSED in August (Riyadh Season runs Oct–Mar).",
+ kids:"National Museum has a hands-on kids' hall; let them lead one gallery each.",
+ wx:"43 °C / 29 °C, dry",road:"Route 65 is the kingdom's smoothest highway; camels fenced but stay alert after dusk.",
+ alt:"Sky Bridge sunset (SAR 480 fam) if the family isn't museum'd out.",
+ fuelQ:70,foodQ:250,parkQ:10,miscQ:50},
+{d:8,date:"Wed 12 Aug",dow:"WED",route:"Buraydah → Hail → AlUla",cc:"SA",km:710,drv:"7 h (split am/eve)",stay:"AlUla 🛏 (1/2)",hotel:"Guesthouse/aparthotel, AlUla town",hCur:"SAR",hV:450,
+ m:"06:30 Camel Market auctions (unmissable, free), 08:00 Dates Carnival — August is PEAK harvest; breakfast = fresh Sukkari + gahwa.",
+ a:"10:30 roll northwest (300 km). 13:30 Hail: lunch, Dhuhr, hotel-lobby juice break. 16:30 A'arif Fort sunset views. 18:00 Barzan Souq dinner.",
+ e:"18:45 depart on Route 70 west — one of Saudi's emptiest, most beautiful desert roads.",
+ n:"410 km, arrive AlUla ~22:45. Fuel BEFORE leaving Hail — long dark gap.",
+ fuel:["Fill full in Hail (Naft/SASCO)","Top-up option at Al Hait junction"],
+ food:"Market breakfast; Hail lunch (broasted/mandi ~SAR 80); souq shawarma dinner",
+ fam:"Biggest driving day, engineered painlessly: sights morning + late pm, two sleep legs. Book Hegra's 06:30 tour TONIGHT if not done.",
+ kids:"Camel count competition (loser does the seatbelt checks all trip). Spot the black volcanic harrat fields after dark? Moon-watching stop!",
+ wx:"Buraydah 42 °C · Hail 38 °C — north is kinder",road:"Route 70 Hail→AlUla: remote, occasional camels, zero light pollution. 100–110 km/h, high beams etiquette.",
+ alt:"If exhausted, overnight Hail (hotels ~SAR 220) and do AlUla in 1.5 days — but you lose the dawn Hegra slot.",
+ fuelQ:150,foodQ:250,parkQ:0,miscQ:50},
+{d:9,date:"Thu 13 Aug",dow:"THU",route:"AlUla — wonder day",cc:"SA",km:80,drv:"~1.5 h site hops",stay:"AlUla 🛏 (2/2)",hotel:"Same guesthouse",hCur:"SAR",hV:450,
+ m:"06:30 HEGRA dawn tour — 110 Nabataean tombs in golden light, 10 °C cooler than midday. 09:30 Dadan & Jabal Ikmah canyon.",
+ a:"12:00–16:30 the August siesta: pool, lunch, naps. AlUla midday is 43 °C — everyone rests, no exceptions.",
+ e:"17:00 Old Town lanes as lanterns switch on; souvenir lane + Omani halwa. 18:30 Elephant Rock sunset with karak at the fire-pits.",
+ n:"Stargazing from the guesthouse roof — AlUla is a Dark Sky region.",
+ fuel:["AlUla town stations (plenty)"],
+ food:"Old Town cafés (try mubashel pancakes); Elephant Rock food trucks (~SAR 100)",
+ fam:"Hegra vintage Land Rover upgrade exists but the standard coach is fine with kids; bring hats even at 07:00.",
+ kids:"Tomb-detective sheet: find the eagle, the lion, the sphinx faces carved on Qasr al-Farid's neighbours.",
+ wx:"42 °C / 27 °C, bone dry — hydrate hourly",road:"Site roads are perfect; park-and-ride hubs mandatory for Hegra.",
+ alt:"Swap Dadan for AlUla Oasis walk if the kids melt early.",
+ fuelQ:17,foodQ:250,parkQ:0,miscQ:50},
+{d:10,date:"Fri 14 Aug",dow:"FRI",route:"AlUla → Madinah",cc:"SA",km:375,drv:"3.5 h (evening)",stay:"Madinah 🛏 (1/2)",hotel:"3★ within 500 m of Masjid an-Nabawi",hCur:"SAR",hV:380,
+ m:"08:00 Harrat Viewpoint over the whole oasis, 09:30 Maraya mirror-building photos. 11:30 back for Jumu'ah in AlUla + lunch.",
+ a:"14:00–16:30 final pool session & pack. 17:00 depart south on Route 375 — sweeping volcanic scenery.",
+ e:"Golden-hour drive; dinner stop at Khaybar junction plaza.",
+ n:"Arrive Madinah ~20:45. Check in, then first walk to the Prophet's ﷺ Mosque courtyards after Isha — unforgettable arrival.",
+ fuel:["Fill in AlUla before departing","Khaybar SASCO midway"],
+ food:"AlUla farm-café lunch; Madinah late-night shawarma street behind the Haram",
+ fam:"Dress the family for the Haram before the drive (easier than hotel-rush). Ladies' entrances: gates 13–25 side.",
+ kids:"First-sight moment: walk in through the courtyard umbrellas together — phones down, eyes up.",
+ wx:"AlUla 42 °C → Madinah 43 °C / 29 °C",road:"Route 375 smooth & scenic; some 4G dead zones — download offline maps.",
+ alt:"",
+ fuelQ:79,foodQ:250,parkQ:0,miscQ:50},
+{d:11,date:"Sat 15 Aug",dow:"SAT",route:"Madinah — ziyarah day",cc:"SA",km:40,drv:"~1 h city hops",stay:"Madinah 🛏 (2/2)",hotel:"Same hotel",hCur:"SAR",hV:380,
+ m:"Fajr at An-Nabawi (arrive 30 min early). Breakfast, rest. 08:30 Quba Mosque — pray 2 rak'ah (Umrah-reward hadith).",
+ a:"Rawdah slots as booked on Nusuk (men/ladies separate). 14:00 rest — the Haram AC lobbies are the best playground.",
+ e:"16:30 Mount Uhud + martyrs' cemetery. 17:45 Qiblatayn Mosque. Maghrib at An-Nabawi.",
+ n:"Dates market after Isha — stock Ajwa for gifts and the road.",
+ fuel:["Any city station"],
+ food:"Al Baik near the Haram (~SAR 75 for 5) — the kids' pilgrimage within the pilgrimage",
+ fam:"Keep shoes in a drawstring bag (numbered racks fill fast). Zamzam stations: let kids fill their own bottles.",
+ kids:"Pigeon square before Maghrib; buy a seed cup (SAR 5).",
+ wx:"43 °C / 29 °C — courtyards shaded by the giant umbrellas",road:"Haram ring roads one-way; use hotel parking and walk.",
+ alt:"Hejaz Railway Museum (if open) as an indoor afternoon swap.",
+ fuelQ:8,foodQ:250,parkQ:10,miscQ:50},
+{d:12,date:"Sun 16 Aug",dow:"SUN",route:"Madinah → Taif (Route 15 Hejaz highlands)",cc:"SA",km:570,drv:"5.5 h (evening)",stay:"Taif 🛏",hotel:"3★ Al Hada road area (Taif Season = book early)",hCur:"SAR",hV:420,
+ m:"Farewell Fajr + umbrella-opening at An-Nabawi. Souvenir run, slow breakfast, hotel pool.",
+ a:"13:00 lunch & checkout. 14:00 optional final Nabawi visit. 16:00 depart south past Dhul-Hulayfah miqat (photo stop — NOT your ihram point; yours is Yalamlam on Day 16).",
+ e:"Sunset over the Hejaz mountains from the highway.",
+ n:"Arrive Taif ~21:45 — at 1,700 m the night air is 24 °C. Windows down, jackets out!",
+ fuel:["Fill leaving Madinah","SASCO at Mahd adh Dhahab (the ancient gold-mine town) midway"],
+ food:"Road dinner at Mahd junction; Taif late tea + honeycomb bread",
+ fam:"Longest evening drive — start it rested. Kids bathed & fed before rolling.",
+ kids:"'First one to feel cold air wins' — the Taif climb is a real-life science lesson.",
+ wx:"Madinah 43 °C → Taif 33 °C / 22 °C 😍",road:"Route 15 climbs steadily; final Taif approach has truck lanes — stay left of the crawlers.",
+ alt:"Depart 14:00 if the family prefers arriving by 19:30 for a souq stroll.",
+ fuelQ:121,foodQ:250,parkQ:10,miscQ:50},
+{d:13,date:"Mon 17 Aug",dow:"MON",route:"Taif (rose city) → Al Baha (scenic Route 15)",cc:"SA",km:250,drv:"2.75 h (evening, mountains)",stay:"Al Baha 🛏",hotel:"City hotel apartment",hCur:"SAR",hV:380,
+ m:"08:30 Shubra Palace photo stop, 09:30 Al Shafa mountain loop — pomegranate stalls, camel rides, baboon-spotting at 2,400 m.",
+ a:"12:30 lunch + Dhuhr. 13:30 Al Hada cable car → Al Kar village (waterslides!). Back up by 17:00.",
+ e:"18:00 depart the Sarawat ridge road south — one of Arabia's great drives, village lights strung along the escarpment.",
+ n:"Arrive Al Baha ~21:00. Cool (20 °C!) mountain night.",
+ fuel:["Fill in Taif before the ridge","Baljurashi station near Al Baha"],
+ food:"Al Shafa fruit-stall grazing; Taif juice bars; Al Baha broasted dinner",
+ fam:"Taif is Saudi's summer capital — expect local tourists everywhere in August (Taif Season crowds evenings).",
+ kids:"Al Kar's pools & slides = the reward for all those museums.",
+ wx:"33 °C / 21 °C — glorious",road:"Route 15 Taif→Baha: constant curves, fog possible after 19:00. 80 km/h, fog lights ready, no overtaking on bends.",
+ alt:"Skip Al Kar pools → earlier ridge drive with daylight viewpoints (Ain viewpoints).",
+ fuelQ:53,foodQ:250,parkQ:10,miscQ:50},
+{d:14,date:"Tue 18 Aug",dow:"TUE",route:"Al Baha → Abha (Asir highlands)",cc:"SA",km:340,drv:"3.75 h (split)",stay:"Abha 🛏 (1/2)",hotel:"3★ near Art Street / High City",hCur:"SAR",hV:420,
+ m:"07:30 Raghadan Forest fog-walk (baboons on the rails — windows up, food hidden). 08:45 descend to Dhee Ayn marble village among banana groves.",
+ a:"11:30 lunch in Baljurashi. 13:00 ridge-run south on Route 15 — juniper forests, stone watchtowers, terraced cliffs.",
+ e:"17:00 Abha check-in. 19:00 High City (Jabal Thera) — cliff-edge dinner over the city lights at 22 °C.",
+ n:"No night leg — you're based in Abha 2 nights.",
+ fuel:["Baljurashi","An-Namas midway (scenic town)"],
+ food:"Baljurashi honey shops (Sidr tasting!); High City dinner (~SAR 140)",
+ fam:"THE most scenic driving day — do it in daylight on purpose. Stop at An-Namas viewpoint park.",
+ kids:"Waterfall/fog bingo card: baboon, watchtower, terraced farm, cloud below the road, beehive boxes.",
+ wx:"29 °C / 18 °C, afternoon mist — pack light jackets",road:"2,000–2,400 m ridge: fog patches, sudden showers, photogenic pull-offs every 20 km. Engine-brake descents.",
+ alt:"",
+ fuelQ:72,foodQ:250,parkQ:0,miscQ:50},
+{d:15,date:"Wed 19 Aug",dow:"WED",route:"Abha ⇄ Rijal Almaa ⇄ Jabal Sawda",cc:"SA",km:130,drv:"2.5 h mountain loop",stay:"Abha 🛏 (2/2)",hotel:"Same hotel",hCur:"SAR",hV:420,
+ m:"08:00 descend the spectacular Al Souda escarpment road to Rijal Almaa 'gingerbread' village (2.5 h with the museum).",
+ a:"12:30 back up for lunch in Abha. 15:30 Jabal Sawda summit — Saudi's highest point, 18–22 °C juniper cloud-forest picnics.",
+ e:"19:30 Art Street & Al Muftaha murals, gahwa + gelato. Green Mountain purple lights across the valley.",
+ n:"Early night — tomorrow is Umrah day. Ghusl prep, ihram laid out, nails/hair trimmed BEFORE ihram.",
+ fuel:["Fill full in Abha tonight (tomorrow: 600 km + Umrah)"],
+ food:"Asiri breakfast (areekah, honey); Sawda picnic; Art Street dinner",
+ fam:"Rijal road is steep hairpins — morning = best light AND best brakes. Museum has painted Qatt rooms the kids love.",
+ kids:"Explain tomorrow tonight: watch a 5-min kids' Umrah video together at bedtime.",
+ wx:"28 °C / 17 °C, possible afternoon shower/fog",road:"Sawda–Rijal descent ~8%: L-gear down, watch brake fade. Fog can close in fast after 16:00 up top.",
+ alt:"If Soudah cable car operates (Soudah Season), ride down instead of driving and skip the museum.",
+ fuelQ:28,foodQ:250,parkQ:0,miscQ:50},
+{d:16,date:"Thu 20 Aug",dow:"THU",route:"Abha → Muhayil descent → coastal Route 5 → Miqat Yalamlam 🕋 → Makkah",cc:"SA",km:600,drv:"6 h (daylight, split by miqat)",stay:"Makkah 🛏",hotel:"3★ Ibrahim al-Khalil St, ≤1 km / shuttle to Haram",hCur:"SAR",hV:480,
+ m:"07:30 ghusl, light breakfast, depart. The Abha→Muhayil road drops 2,000 m in 30 km — brake-check pull-off first. Tihama plain by 09:30.",
+ a:"Coastal Route 5 north: Al Qunfudhah lunch + Dhuhr ~12:30. 16:30 MIQAT YALAMLAM (As-Sa'diyyah): ihram, 2 rak'ah, niyyah, Talbiyah — the car rings with it for the last 100 km.",
+ e:"18:30 arrive Makkah, check in, dinner, kids nap 20:00–22:00.",
+ n:"22:30 walk to the Haram. First sight of the Kaaba together. UMRAH by night — Tawaf, Maqam Ibrahim, Zamzam, Sa'i, halq. Finish ~02:30, sleep in.",
+ fuel:["Fill at Muhayil base","Al Lith top-up before Yalamlam"],
+ food:"Coastal fish lunch at Al Qunfudhah (or safe chain); post-Umrah victory Al Baik at 02:45 — tradition",
+ fam:"Hardest, holiest day — engineered with the miqat as the natural long break. Umrah at night beats 43 °C daytime marble.",
+ kids:"Alina rides shoulders/stroller for Tawaf (upper mataf if crowded); wristbands with phone number on all three.",
+ wx:"Coast 40 °C humid → Makkah 42 °C / 30 °C night ~33 °C",road:"Muhayil descent = the trip's steepest; coastal Route 5 flat & fast; Makkah traffic dense near the Haram — park at hotel, never drive to the mosque.",
+ alt:"Inland Route 15 via Al Baha exists but backtracks and lacks a road-side miqat — coastal is correct.",
+ fuelQ:127,foodQ:250,parkQ:20,miscQ:50},
+{d:17,date:"Fri 21 Aug",dow:"FRI",route:"Makkah (Jumu'ah) → Route 40 → Ad Dawadimi",cc:"RET",km:560,drv:"5 h (evening)",stay:"Ad Dawadimi 🛏",hotel:"Simple highway hotel",hCur:"SAR",hV:200,
+ m:"Slow morning after the 02:30 finish. 10:30 enter the Haram for JUMU'AH AT THE KAABA — arrive early, it fills to the streets.",
+ a:"Post-prayer lunch. 15:00 optional second Tawaf (nafl) or Clock Tower Museum; Zamzam bottles filled (5 L each allowed).",
+ e:"16:45 farewell du'a, depart via Jabal al-Nour drive-by. Route 40 east through the Hejaz hills.",
+ n:"Dinner at Al Muwayh SASCO ~20:00. Arrive Ad Dawadimi ~22:00. Kids asleep since 20:30.",
+ fuel:["Fill leaving Makkah","Al Muwayh SASCO (musalla+family room)","Afif top-up"],
+ food:"Haram-area lunch; SASCO dinner (Kudu/local)",
+ fam:"Friday departure after Asr = traffic leaving Makkah; the du'a of the traveller is answered — make it together as the Clock Tower shrinks behind you.",
+ kids:"Zamzam guardianship: each child 'guards' one bottle home to Doha for grandparents.",
+ wx:"42 °C / 29 °C, dry inland",road:"Route 40 is broad and boring (good!). Watch camels after Afif. Radar-heavy 120 zones.",
+ alt:"If everyone is fresh, push to Shaqra (+120 km) for a shorter Day 18.",
+ fuelQ:119,foodQ:250,parkQ:0,miscQ:50},
+{d:18,date:"Sat 22 Aug",dow:"SAT",route:"Ad Dawadimi → Riyadh bypass → Haradh → Salwa 🛂 → Abu Samra → DOHA 🏁",cc:"RET",km:930,drv:"8.5–9 h + border",stay:"HOME — Doha",hotel:"Your own beds 🏠",hCur:"QAR",hV:0,
+ m:"07:30 depart. 10:30 Riyadh ring-road stop: brunch + playground hour at a mall (Nakheel/Granada) — legs stretched properly.",
+ a:"12:30 south-east on Route 10/75 through Al Kharj & Haradh — the Empty Quarter's edge rolls past. Dhuhr+Asr combined at a SASCO.",
+ e:"~17:30 Salwa border: Saudi exit + Qatar entry (car insurance pre-arranged online). Duty-free treat for 5 heroes.",
+ n:"~20:30 HOME in Doha — 6,870 km, 3 countries, 1 Umrah, memories for a lifetime. Alhamdulillah wa mabrook! 🎉",
+ fuel:["Fill at Dawadimi","Haradh SASCO (last cheap Saudi fuel)","Woqod after Abu Samra"],
+ food:"Riyadh mall brunch; road snacks; celebratory karak at the Qatar border",
+ fam:"The only heavy-driving day of the trip — unavoidable to be home Saturday night. Two proper stops, driver swaps every 2 h, done by 21:00.",
+ kids:"Trip awards ceremony in the car: best moment, funniest moment, bravest moment — record a voice note to keep forever.",
+ wx:"44 °C / 30 °C inland",road:"Riyadh→Haradh truck traffic; Haradh→Salwa long empty sectors — fuel discipline one last time.",
+ alt:"Leave 06:30 to reach Doha ~19:30 if the kids have school-prep the next day.",
+ fuelQ:197,foodQ:200,parkQ:0,miscQ:50}
+];
+
+/* ================= PRE-TRIP COSTS (QAR) ================= */
+const PRETRIP=[
+ {n:"Saudi multiple-entry tourist eVisas × 5 (SAR 380 pp incl. insurance)",v:1845},
+ {n:"UAE GCC-resident eVisas × 5 (≈ AED 250 pp)",v:1239},
+ {n:"Saudi vehicle TPL insurance (~3 weeks)",v:291},
+ {n:"UAE vehicle TPL insurance (border/online)",v:149},
+ {n:"X-Trail full service, tyre check, spare kit",v:400},
+ {n:"eSIMs / data packs (KSA + UAE)",v:100}
+];
+
+/* ================= MAP GEOMETRY ================= */
+const PX=(lon,lat)=>[Math.round((lon-34)*38.46), Math.round((32-lat)*38)];
+const CITIES={
+ Doha:{ll:[51.53,25.29],icon:"🏁"},AbuSamra:{ll:[50.84,24.74],icon:"🛂",lbl:"Abu Samra/Salwa"},
+ Batha:{ll:[51.55,24.15],icon:"🛂",lbl:"Batha/Ghuwaifat"},Ruwais:{ll:[52.73,24.11],icon:"🛏",lbl:"Ruwais"},
+ AbuDhabi:{ll:[54.37,24.45],icon:"🛏",lbl:"Abu Dhabi"},Dubai:{ll:[55.30,25.26],icon:"🛏"},
+ Hofuf:{ll:[49.60,25.38],icon:"⛽",lbl:"Hofuf"},Riyadh:{ll:[46.72,24.63],icon:"🛏"},
+ Buraydah:{ll:[43.97,26.33],icon:"🛏"},Hail:{ll:[41.69,27.51],icon:"⛽",lbl:"Hail"},
+ AlUla:{ll:[37.93,26.61],icon:"🛏"},Madinah:{ll:[39.61,24.47],icon:"🛏"},
+ Taif:{ll:[40.42,21.27],icon:"⛰",lbl:"Taif"},AlBaha:{ll:[41.47,20.01],icon:"⛰",lbl:"Al Baha"},
+ Abha:{ll:[42.51,18.22],icon:"⛰"},Yalamlam:{ll:[40.10,20.55],icon:"🕋",lbl:"Miqat Yalamlam"},
+ Makkah:{ll:[39.83,21.39],icon:"🕋"},Dawadimi:{ll:[44.39,24.51],icon:"🛏",lbl:"Ad Dawadimi"}};
+const LEGS=[
+ {f:"Doha",t:"AbuSamra",c:"QA",d:1},{f:"AbuSamra",t:"Batha",c:"SA",d:1},{f:"Batha",t:"AbuDhabi",c:"AE",d:1,km:600,h:"6.5h",lbl:"Day 1 · 600 km"},
+ {f:"AbuDhabi",t:"Dubai",c:"AE",d:3,km:145,h:"1.5h",lbl:"Day 3 · 145 km"},
+ {f:"Dubai",t:"Ruwais",c:"AE",d:5,km:380,h:"3.5h",lbl:"Day 5 · 380 km",curve:-18},
+ {f:"Ruwais",t:"Batha",c:"AE",d:6},{f:"Batha",t:"Hofuf",c:"SA",d:6},{f:"Hofuf",t:"Riyadh",c:"SA",d:6,km:740,h:"7h",lbl:"Day 6 · 740 km"},
+ {f:"Riyadh",t:"Buraydah",c:"SA",d:7,km:330,h:"3.5h",lbl:"Day 7 · 330 km"},
+ {f:"Buraydah",t:"Hail",c:"SA",d:8},{f:"Hail",t:"AlUla",c:"SA",d:8,km:710,h:"7h",lbl:"Day 8 · 710 km"},
+ {f:"AlUla",t:"Madinah",c:"SA",d:10,km:375,h:"3.5h",lbl:"Day 10 · 335 km"},
+ {f:"Madinah",t:"Taif",c:"SA",d:12,km:570,h:"5.5h",lbl:"Day 12 · 550 km"},
+ {f:"Taif",t:"AlBaha",c:"SA",d:13,km:250,h:"2.75h",lbl:"Day 13 · 220 km"},
+ {f:"AlBaha",t:"Abha",c:"SA",d:14,km:340,h:"3.75h",lbl:"Day 14 · 320 km"},
+ {f:"Abha",t:"Yalamlam",c:"SA",d:16,curve:14},{f:"Yalamlam",t:"Makkah",c:"SA",d:16,km:600,h:"6h",lbl:"Day 16 · 600 km"},
+ {f:"Makkah",t:"Dawadimi",c:"RET",d:17,km:560,h:"5h",lbl:"Day 17 · 560 km"},
+ {f:"Dawadimi",t:"Riyadh",c:"RET",d:18},{f:"Riyadh",t:"Hofuf",c:"RET",d:18,curve:16},{f:"Hofuf",t:"AbuSamra",c:"RET",d:18,curve:10},{f:"AbuSamra",t:"Doha",c:"RET",d:18,km:930,h:"9h",lbl:"Day 18 · 930 km"}
+];
+
+/* ================= CHECKLISTS ================= */
+const CHECKLISTS={
+ docs:{t:"🛂 Documents",items:["5 passports (6+ months validity)","5 Qatar RP cards","Saudi eVisas printed ×5","UAE eVisas printed ×5","Qatar + international driving licence","Istimara (registration) + bank NOC if financed","Saudi TPL + UAE TPL insurance certificates","Qatar car insurance card","MSAR pre-registration confirmation","Hotel booking list (printed)","Cash: SAR 2,000 + AED 800 + QAR 300","2 bank cards (different networks)"]},
+ vehicle:{t:"🚙 Vehicle (Nissan X-Trail)",items:["Full service done (oil, filters, brakes)","Tyres + spare checked, pressures set (hot-weather PSI)","Coolant flushed & topped","Battery health tested","AC serviced (it will run 18 days straight)","Jack, wheel spanner, tow rope, jumper cables","Warning triangle + hi-vis vests (mandatory KSA)","Fire extinguisher + first-aid kit","12V tyre inflator + puncture foam","Phone mounts + 4-port charger + power bank","Car-bed setup tested with bedding","10 L emergency water + sunshades all windows"]},
+ packing:{t:"🧳 Packing",items:["Passport/document zip folder (front seat)","Light jackets — Taif/Abha nights are 17–21 °C!","Modest wear; abayas for Haram cities","5 × refillable bottles + cooler box","Sunscreen SPF50, hats, sunglasses ×5","Kids: games tablet (offline), colouring, surprise bag ×6","Booster seat for Alina + neck pillows ×3","Medicines: fever, rehydration salts, motion sickness, plasters","Laundry bags + travel detergent (aparthotel nights)","Swimwear ×5 (hotel pools = daily reward)","Picnic mat + prayer mats + compass","Zamzam-safe 5 L containers ×2","Offline maps downloaded (KSA + UAE)","Nusuk app installed + Rawdah slots booked","experiencealula.com Hegra tour booked (Day 9, 06:30)","Burj Khalifa 17:30 slot booked (Day 4)"]},
+ ihram:{t:"🕋 Ihram bag (Day 16)",items:["2 × men's ihram sets (2 white cloths each)","Ihram belt / money pouch","Unscented soap & unscented sunscreen","Flip-flops (sandals without stitching over ankle)","Ladies: comfortable abayas + no face-covering niqab in ihram","Small scissors for taqsir (in checked bag, kept in car)","Umbrella (white) for the marble courtyards","Wristbands with phone number for all 3 kids","Foldable stroller for Alina (upper mataf allowed)","Du'a list — written by the whole family before the trip"]}
+};
+</script>
+<script>
+"use strict";
+/* ================= HELPERS ================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const fmt=n=>"QAR "+Math.round(n).toLocaleString("en-US");
+const stars=n=>"★".repeat(n);
+const store={get:(k,d)=>{try{const v=localStorage.getItem("gge_"+k);return v?JSON.parse(v):d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem("gge_"+k,JSON.stringify(v))}catch(e){}}};
+/* ---- self-memory: load saved edits (days & attractions) ---- */
+try{const _sd=store.get("udays",null);if(_sd&&Array.isArray(_sd)&&_sd.length){DAYS.length=0;_sd.forEach(d=>DAYS.push(d))}
+const _sa=store.get("uatts",null);if(_sa&&Array.isArray(_sa)){ATTS.length=0;_sa.forEach(a=>ATTS.push(a))}}catch(e){}
+DAYS.forEach((d,i)=>{d.d=i+1;if(!d.uid)d.uid="u"+(i+1)});
+const CBYD={};DAYS.forEach(x=>CBYD[x.d]=x);
+const CITYICON={"Abu Dhabi":"🕌","Dubai":"🌆","Hofuf (Al Ahsa)":"🏜","Riyadh":"🏙","Buraydah":"🐪","Hail":"🏰","AlUla":"🗿","Madinah":"🕌","Taif":"🌹","Al Baha":"🌲","Abha":"⛰","Rijal Almaa":"🏘","Makkah":"🕋"};
+
+/* selections */
+let SEL=store.get("sel",null);
+if(!SEL){SEL={};ATTS.forEach(a=>SEL[a.id]=a.on?1:0)}
+ATTS.forEach(a=>{if(SEL[a.id]===undefined)SEL[a.id]=a.on?1:0});
+const attQ=a=>Q(a.cur,a.fam);
+const dayActs=d=>ATTS.filter(a=>a.d===d&&SEL[a.id]).reduce((s,a)=>s+attQ(a),0);
+const dayTotal=x=>Q(x.hCur,x.hV)+x.fuelQ+x.foodQ+x.parkQ+x.miscQ+dayActs(x.d);
+const preTotal=()=>PRETRIP.reduce((s,p)=>s+p.v,0);
+const grandTotal=()=>DAYS.reduce((s,x)=>s+dayTotal(x),0)+preTotal();
+
+/* ================= HERO / STATS / SIDEBAR ================= */
+function renderHero(){
+  const seq=[["Doha","QA"],["Abu Dhabi","AE"],["Dubai","AE"],["Hofuf","SA"],["Riyadh","SA"],["Buraydah","SA"],["Hail","SA"],["AlUla","SA"],["Madinah","SA"],["Taif","SA"],["Al Baha","SA"],["Abha","SA"],["Makkah","SA"],["Doha","RET"]];
+  $("#heroRoute").innerHTML=seq.map(([n,c],i)=>`<b style="background:${CCOL[c]}22;border:1px solid ${CCOL[c]};color:#fff">${n}</b>${i<seq.length-1?"<span style='opacity:.5'>→</span>":""}`).join("");
+  const totKm=DAYS.reduce((s,x)=>s+x.km,0);
+  $("#statsBar").innerHTML=[[""+DAYS.length,"Days"],[""+(DAYS.length-1),"Nights"],[totKm.toLocaleString()+" km","Total distance"],["≈ "+Math.round(totKm/10)+" L","Fuel needed"],["3","Countries"],["4","Border crossings"],["13","Cities"],["<span id='statBudget'>—</span>","Est. budget"]]
+    .map(([v,l])=>`<div class="stat"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+  $("#sbDays").innerHTML=DAYS.map(x=>`<a class="sb-day" data-go="day${x.d}"><span class="db" style="background:${CCOL[x.cc]}">${x.d}</span><span class="sb-day-city">${x.stay.replace(" 🛏","").replace(/\(\d\/\d\)/,"").trim()}</span><span class="sb-done" data-sbd="${x.d}"></span></a>`).join("");
+}
+renderHero();
+
+/* ================= DAY CARDS ================= */
+function attCard(a){
+  const cost=attQ(a);
+  return `<div class="att ${SEL[a.id]?"":"unsel"}" data-att="${a.id}" data-search="${(a.n+" "+a.city).toLowerCase()}">
+    <div class="ph"><div class="fall"><span class="fi">${CITYICON[a.city]||"📍"}</span>${a.city}</div><img data-wiki="${encodeURIComponent(a.wiki)}" alt="${a.n}" style="display:none" loading="lazy">
+      <span class="stars">${stars(a.s)}</span><span class="cost">${cost?fmt(cost):"FREE"}</span></div>
+    <div class="bd">
+      <div class="nm">${a.n}</div>
+      <div class="why">${a.why}</div>
+      <div class="meta"><span>⏱ ${a.t}</span><span>🌅 ${a.best}</span><span>🅿 ${a.park}</span><span>🕌 ${a.pray}</span><span>👧 Kids ${"●".repeat(a.kids)}${"○".repeat(5-a.kids)}</span><span>📷 ${"●".repeat(a.ph)}${"○".repeat(5-a.ph)}</span></div>
+      <div style="font-size:11px;color:var(--ink3)">🎟 ${a.cn}</div>
+    </div>
+    <div class="ft">
+      <label><input type="checkbox" data-sel="${a.id}" ${SEL[a.id]?"checked":""}> In budget</label>
+      <a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a.q)}">🗺 Maps</a>
+    </div></div>`;
+}
+function renderDays(){
+  $("#days").innerHTML=DAYS.map(x=>{
+    const acts=ATTS.filter(a=>a.d===x.d);
+    const hQ=Q(x.hCur,x.hV);
+    return `<div class="day" id="day${x.d}" data-search="day ${x.d} ${x.route.toLowerCase()} ${x.stay.toLowerCase()}">
+    <div class="day-head" style="border-left-color:${CCOL[x.cc]}" data-toggle="${x.d}">
+      <div class="dnum" style="background:${CCOL[x.cc]}"><span class="n">${x.d}</span><span class="d">${x.dow}</span></div>
+      <div class="rt"><div class="r1">${x.route}</div>
+        <div class="r2"><span>📅 ${x.date} 2026</span><span>🚗 ${x.km} km · ${x.drv}</span><span>🛏 ${x.stay}</span></div></div>
+      <div class="money-side"><div class="b" data-dtot="${x.d}">${fmt(dayTotal(x))}</div><div class="s">day budget</div></div>
+      <span class="car">▾</span>
+    </div>
+    <div class="day-body">
+      <div class="tl">
+        <div class="slot"><div class="st">🌅 Morning</div><div class="sx">${x.m}</div></div>
+        <div class="slot"><div class="st">☀ Afternoon</div><div class="sx">${x.a}</div></div>
+        <div class="slot"><div class="st">🌆 Evening</div><div class="sx">${x.e}</div></div>
+        <div class="slot nd"><div class="st" style="color:var(--ink3)">🌙 Night drive</div><div class="sx">${x.n}</div></div>
+      </div>
+      <div class="tipgrid">
+        <div class="tip"><b>⛽ Fuel stops</b>${x.fuel.join("<br>")}</div>
+        <div class="tip"><b>🍽 Food</b>${x.food}</div>
+        <div class="tip"><b>👨‍👩‍👧 Family tip</b>${x.fam}</div>
+        <div class="tip"><b>🧒 Kids tip</b>${x.kids}</div>
+        <div class="tip"><b>🌡 Weather</b>${x.wx}</div>
+        <div class="tip"><b>🛣 Road notes</b>${x.road}</div>
+        ${x.alt?`<div class="tip"><b>🔀 Alternative</b>${x.alt}</div>`:""}
+        <div class="tip"><b>🏨 Tonight</b>${x.hotel}${x.hV?` — <b>${fmt(hQ)}</b>/night`:""} <a class="gm" style="margin-left:4px" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("hotels near "+x.stay.replace(/🛏|🏁|\(\d\/\d\)|HOME —/g,""))}">🗺</a></div>
+      </div>
+      ${acts.length?`<div style="font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);margin-top:14px">Attractions & experiences — tick = in budget</div><div class="atts">${acts.map(attCard).join("")}</div>`:""}
+      <div class="dbudget"><div class="bh"><span>Day ${x.d} budget</span><label class="done-ck"><input type="checkbox" data-done="${x.d}"> mark day completed</label></div>
+        <div class="brow"><span>🏨 Accommodation</span><b data-b="acc">${fmt(hQ)}</b></div>
+        <div class="brow"><span>⛽ Fuel (${x.km} km)</span><b>${fmt(x.fuelQ)}</b></div>
+        <div class="brow"><span>🍽 Food (family of 5)</span><b>${fmt(x.foodQ)}</b></div>
+        <div class="brow"><span>🅿 Parking & tolls</span><b>${fmt(x.parkQ)}</b></div>
+        <div class="brow"><span>🎟 Activities (selected)</span><b data-dact="${x.d}">${fmt(dayActs(x.d))}</b></div>
+        <div class="brow"><span>✨ Miscellaneous</span><b>${fmt(x.miscQ)}</b></div>
+        <div class="brow tot"><span>DAY ${x.d} TOTAL</span><b data-dtot2="${x.d}">${fmt(dayTotal(x))}</b></div>
+      </div>
+      <div class="note" style="margin-bottom:0">📝 <b>Day summary:</b> ${summary(x)}</div>
+    </div></div>`;
+  }).join("");
+}
+function summary(x){
+  const n=ATTS.filter(a=>a.d===x.d&&SEL[a.id]).length;
+  return `${x.km} km ${x.km>500?"(split around sightseeing)":""} ending in ${x.stay.replace("🛏","").replace("🏁","").trim()} — ${n} experience${n!=1?"s":""} selected, ${fmt(dayTotal(x))} all-in.`;
+}
+
+/* ================= BUDGET DASHBOARD ================= */
+const CATS=[["Accommodation","#8A1538",x=>Q(x.hCur,x.hV)],["Fuel","#D97B29",x=>x.fuelQ],["Food","#0E7A45",x=>x.foodQ],["Activities","#1B5FAA",x=>dayActs(x.d)],["Parking","#7a6ea8",x=>x.parkQ],["Misc","#b98a2e",x=>x.miscQ]];
+function renderBudget(){
+  const catTot=CATS.map(([n,c,f])=>[n,c,DAYS.reduce((s,x)=>s+f(x),0)]);
+  const daysSum=DAYS.reduce((s,x)=>s+dayTotal(x),0), pre=preTotal(), grand=grandTotal();
+  const all=[...catTot,["Pre-trip (visas & prep)","#556",pre]];
+  const totForPie=all.reduce((s,a)=>s+a[2],0);
+  let acc=0;
+  const segs=all.map(([n,c,v])=>{const p=v/totForPie*100,o=acc;acc+=p;return `<circle r="15.9155" cx="21" cy="21" fill="none" stroke="${c}" stroke-width="7" stroke-dasharray="${p} ${100-p}" stroke-dashoffset="${25-o}"></circle>`}).join("");
+  const fuelSplit=[["🇶🇦 Qatar",190,2.10,"QAR"],["🇦🇪 UAE",1155,3.29,"AED"],["🇸🇦 Saudi",5525,2.18,"SAR"]];
+  $("#budgetDash").innerHTML=`
+  <div class="grid g3">
+    <div class="card" style="text-align:center"><div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3)">Grand total — everything</div>
+      <div class="bigtotal" id="grandT">${fmt(grand)}</div>
+      <div style="font-size:12.5px;color:var(--ink2)">= ${fmt(daysSum)} on the road + ${fmt(pre)} pre-trip<br>≈ ${fmt(grand/5)} per person · ${fmt(grand/18)} per day</div></div>
+    <div class="card"><h4>Where it goes</h4><div class="donutwrap">
+      <svg width="130" height="130" viewBox="0 0 42 42" style="transform:rotate(0deg)">${segs}<circle r="11" cx="21" cy="21" fill="var(--card)"></circle><text x="21" y="22.5" text-anchor="middle" style="font-size:5px;fill:var(--ink);font-weight:700">QAR</text></svg>
+      <div class="dlegend">${all.map(([n,c,v])=>`<div class="li"><span class="sw" style="background:${c}"></span>${n}<b style="margin-left:auto">${fmt(v)}</b></div>`).join("")}</div></div></div>
+    <div class="card"><h4>⛽ Fuel Cost Analysis</h4>
+      <table class="tbl"><tr><th>Country</th><th class="right">km</th><th class="right">Litres</th><th class="right">QAR</th></tr>
+      ${fuelSplit.map(([n,km,p,cur])=>{const L=km/10,c=Q(cur==="QAR"?"QAR":cur,L*p);return `<tr><td>${n} <span style="color:var(--ink3);font-size:11px">(${p} ${cur}/L)</span></td><td class="right">${km.toLocaleString()}</td><td class="right">${Math.round(L)}</td><td class="right money">${fmt(c)}</td></tr>`}).join("")}
+      <tr><td><b>Total (X-Trail @ 10 L/100 km)</b></td><td class="right"><b>6,870</b></td><td class="right"><b>687</b></td><td class="right money">${fmt(DAYS.reduce((s,x)=>s+x.fuelQ,0))}</td></tr></table>
+      <div style="font-size:11px;color:var(--ink3);margin-top:6px">Saudi fuel is ~35% cheaper than UAE — always fill on the Saudi side of borders.</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h4>🧾 Pre-trip costs</h4>${PRETRIP.map(p=>`<div class="kv"><span class="k">${p.n}</span><span class="v money">${fmt(p.v)}</span></div>`).join("")}<div class="kv" style="border-top:2px solid var(--gold)"><span class="k"><b>Pre-trip total</b></span><span class="v money">${fmt(pre)}</span></div></div>
+    <div class="card"><h4>🏨 Accommodation (17 nights)</h4><table class="tbl"><tr><th>Night</th><th>City</th><th class="right">QAR</th></tr>
+      ${DAYS.filter(x=>x.hV).map(x=>`<tr><td>${x.date}</td><td>${x.stay.replace("🛏","").trim()} <span style="color:var(--ink3);font-size:11px">${x.hotel}</span></td><td class="right money">${fmt(Q(x.hCur,x.hV))}</td></tr>`).join("")}
+      <tr><td colspan="2"><b>Total accommodation</b></td><td class="right money">${fmt(DAYS.reduce((s,x)=>s+Q(x.hCur,x.hV),0))}</td></tr></table></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h4>📅 Daily totals — every subtotal audited</h4>
+    <div class="bar">${DAYS.map(x=>`<div title="Day ${x.d}: ${fmt(dayTotal(x))}" style="background:${CCOL[x.cc]};flex:${dayTotal(x)}"></div>`).join("")}</div>
+    <table class="tbl"><tr><th>Day</th><th>Route</th><th class="right">Hotel</th><th class="right">Fuel</th><th class="right">Food</th><th class="right">Park</th><th class="right">Activities</th><th class="right">Misc</th><th class="right">Total</th></tr>
+    ${DAYS.map(x=>`<tr><td><b style="color:${CCOL[x.cc]}">D${x.d}</b></td><td style="max-width:220px">${x.route}</td><td class="right">${fmt(Q(x.hCur,x.hV))}</td><td class="right">${fmt(x.fuelQ)}</td><td class="right">${fmt(x.foodQ)}</td><td class="right">${fmt(x.parkQ)}</td><td class="right">${fmt(dayActs(x.d))}</td><td class="right">${fmt(x.miscQ)}</td><td class="right money">${fmt(dayTotal(x))}</td></tr>`).join("")}
+    <tr><td colspan="8"><b>18-day road total</b></td><td class="right money">${fmt(daysSum)}</td></tr>
+    <tr><td colspan="8"><b>+ Pre-trip</b></td><td class="right money">${fmt(pre)}</td></tr>
+    <tr><td colspan="8" style="font-size:15px"><b>GRAND TOTAL</b></td><td class="right money" style="font-size:15px">${fmt(grand)}</td></tr></table></div>`;
+  const sb=$("#statBudget");if(sb)sb.textContent=fmt(grand).replace("QAR ","")+ " QR";
+}
+
+/* ================= MAP ================= */
+function renderMap(){
+  const P={};Object.entries(CITIES).forEach(([k,v])=>P[k]=PX(v.ll[0],v.ll[1]));
+  const line=(l)=>{const a=P[l.f],b=P[l.t];
+    if(l.curve){const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),nx=-dy/len*l.curve,ny=dx/len*l.curve;
+      return `<path d="M${a[0]},${a[1]} Q${mx+nx},${my+ny} ${b[0]},${b[1]}" fill="none" stroke="${CCOL[l.c]}" stroke-width="3.5" stroke-linecap="round" ${l.c==="RET"?'stroke-dasharray="9 6"':''}/>`}
+    return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${CCOL[l.c]}" stroke-width="3.5" stroke-linecap="round" ${l.c==="RET"?'stroke-dasharray="9 6"':''}/>`};
+  const badge=(l)=>{if(!l.lbl)return"";const a=P[l.f],b=P[l.t],mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;
+    return `<g><rect x="${mx-44}" y="${my-24}" width="88" height="17" rx="8" fill="var(--card)" stroke="${CCOL[l.c]}" stroke-width="1.2"/><text x="${mx}" y="${my-11.5}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:var(--ink)">${l.lbl}</text></g>`};
+  const cityG=Object.entries(CITIES).map(([k,v])=>{const[x,y]=P[k];const lbl=v.lbl||k;
+    return `<g style="cursor:pointer" onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lbl)}','_blank')">
+      <circle cx="${x}" cy="${y}" r="6" fill="var(--card)" stroke="var(--ink)" stroke-width="2"/>
+      <text x="${x}" y="${y-11}" text-anchor="middle" style="font-size:12px">${v.icon}</text>
+      <text x="${x}" y="${y+21}" text-anchor="middle" style="font-size:10.5px;font-weight:700;fill:var(--ink);letter-spacing:.4px">${lbl}</text></g>`}).join("");
+  const pen="M38,133 L115,266 L151,300 L192,407 L241,470 L272,489 L346,608 L423,733 L560,700 L720,640 L830,560 L962,361 L940,300 L858,224 L819,240 L800,250 L783,268 L740,290 L700,290 L676,300 L672,262 L662,250 L648,262 L630,240 L619,213 L560,150 L519,95 L430,60 L200,60 L38,133 Z";
+  $("#svgmap").innerHTML=`<svg viewBox="0 0 1000 780" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Route map">
+    <rect width="1000" height="780" fill="#bcd6e4" opacity="${document.documentElement.dataset.theme==="dark"?".18":".55"}" rx="12"/>
+    <path d="${pen}" fill="var(--paper)" stroke="var(--line)" stroke-width="2"/>
+    <text x="80" y="600" style="font-size:20px;fill:var(--ink3);font-family:Georgia;font-style:italic" opacity=".6">Red Sea</text>
+    <text x="760" y="140" style="font-size:20px;fill:var(--ink3);font-family:Georgia;font-style:italic" opacity=".6">Arabian Gulf</text>
+    <text x="470" y="480" style="font-size:26px;fill:var(--ink3);font-family:Georgia;letter-spacing:6px" opacity=".35">SAUDI ARABIA</text>
+    <text x="795" y="330" style="font-size:13px;fill:var(--ink3);font-family:Georgia;letter-spacing:3px" opacity=".45">U.A.E.</text>
+    <text x="655" y="225" style="font-size:11px;fill:var(--ink3);font-family:Georgia;letter-spacing:2px" opacity=".45">QATAR</text>
+    <text x="255" y="440" style="font-size:15px" opacity=".8">⛰</text><text x="300" y="500" style="font-size:15px" opacity=".8">⛰</text><text x="335" y="555" style="font-size:15px" opacity=".8">⛰</text>
+    ${LEGS.map(line).join("")}${LEGS.map(badge).join("")}${cityG}
+    <g transform="translate(940,60)"><circle r="26" fill="var(--card)" stroke="var(--line)" stroke-width="1.5"/><path d="M0,-18 L5,0 L0,18 L-5,0 Z" fill="var(--qa)"/><text y="-30" text-anchor="middle" style="font-size:11px;font-weight:700;fill:var(--ink)">N</text></g>
+    <g transform="translate(60,740)"><rect width="77" height="5" fill="var(--ink)"/><rect width="38.5" height="5" fill="var(--gold)"/><text y="-5" style="font-size:10px;fill:var(--ink2)">0&#160;&#160;&#160;&#160;100&#160;&#160;&#160;200 km</text></g>
+  </svg>`;
+  $("#legTable").innerHTML=`<div class="card"><h4>🛣 Driving legs — open any leg in Google Maps</h4><table class="tbl"><tr><th>Day</th><th>Leg</th><th class="right">km</th><th class="right">Drive</th><th></th></tr>
+    ${LEGS.filter(l=>l.lbl).map(l=>{const f=CITIES[l.f].lbl||l.f,t=CITIES[l.t].lbl||l.t;return `<tr><td><b style="color:${CCOL[l.c]}">D${l.d}</b></td><td>${(CBYD[l.d]||{}).route||f+" → "+t}</td><td class="right">${l.km}</td><td class="right">${l.h}</td><td class="right"><a class="gm" target="_blank" href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(f)}&destination=${encodeURIComponent(t)}&travelmode=driving">🗺 Route</a></td></tr>`}).join("")}</table>
+    <div style="font-size:11px;color:var(--ink3);margin-top:8px">Tip: open each leg while online and tap “Download offline map” in Google Maps before departure.</div></div>`;
+}
+
+/* ================= CHECKLISTS ================= */
+function renderChecklists(){
+  const ck=store.get("ck",{});
+  const block=(key,obj)=>{const done=obj.items.filter((_,i)=>ck[key+i]).length;
+    return `<div class="card" data-cklist="${key}"><h4>${obj.t} <span class="chip">${done}/${obj.items.length}</span></h4>
+    <div class="ckbar"><i style="width:${done/obj.items.length*100}%"></i></div>
+    ${obj.items.map((it,i)=>`<label class="ck ${ck[key+i]?"done":""}"><input type="checkbox" data-ck="${key}${i}" ${ck[key+i]?"checked":""}><span class="tx">${it}</span></label>`).join("")}</div>`};
+  $("#ckGrid").innerHTML=["docs","vehicle","packing"].map(k=>block(k,CHECKLISTS[k])).join("");
+  $("#ckIhram").innerHTML=CHECKLISTS.ihram.items.map((it,i)=>{const on=ck["ihram"+i];return `<label class="ck ${on?"done":""}"><input type="checkbox" data-ck="ihram${i}" ${on?"checked":""}><span class="tx">${it}</span></label>`}).join("");
+}
+
+/* ================= SEARCH ================= */
+const INDEX=[
+ ...ATTS.map(a=>({t:a.n,s:a.city+" · Day "+a.d+" · "+stars(a.s),go:"day"+a.d,k:(a.n+" "+a.city).toLowerCase()})),
+ ...DAYS.map(x=>({t:"Day "+x.d+" — "+x.date,s:x.route,go:"day"+x.d,k:("day "+x.d+" "+x.route+" "+x.stay).toLowerCase()})),
+ {t:"Budget Dashboard",s:"totals, fuel, hotels",go:"budget",k:"budget money cost total fuel"},
+ {t:"Umrah Guide",s:"miqat, tawaf, sa'i, ihram",go:"umrah",k:"umrah miqat ihram tawaf makkah kaaba"},
+ {t:"Visas & Borders",s:"Saudi eVisa, UAE eVisa, Salwa, Ghuwaifat",go:"docs",k:"visa border salwa ghuwaifat abu samra batha documents"},
+ {t:"Checklists",s:"packing, vehicle, documents",go:"checklists",k:"packing checklist vehicle"},
+ {t:"Emergency contacts",s:"911, 999, embassies",go:"emergency",k:"emergency police ambulance embassy"}];
+function doSearch(q){
+  const res=$("#searchRes");
+  if(!q){res.style.display="none";return}
+  const hits=INDEX.filter(i=>i.k.includes(q.toLowerCase())).slice(0,9);
+  res.innerHTML=hits.length?hits.map(h=>`<a data-go="${h.go}"><b>${h.t}</b><div class="t">${h.s}</div></a>`).join(""):"<a><i>No matches</i></a>";
+  res.style.display="block";
+}
+
+/* ================= NAV / EVENTS ================= */
+function goTo(id){const el=document.getElementById(id);if(!el)return;
+  if(el.classList.contains("day"))el.classList.add("open");
+  el.scrollIntoView({behavior:"smooth",block:"start"});
+  $("#sidebar").classList.remove("open");$("#searchRes").style.display="none";}
+document.addEventListener("click",e=>{
+  const go=e.target.closest("[data-go]");if(go){goTo(go.dataset.go);return}
+  const tg=e.target.closest("[data-toggle]");if(tg){tg.parentElement.classList.toggle("open");return}
+});
+document.addEventListener("change",e=>{
+  const sel=e.target.closest("[data-sel]");
+  if(sel){SEL[sel.dataset.sel]=sel.checked?1:0;store.set("sel",SEL);
+    sel.closest(".att").classList.toggle("unsel",!sel.checked);refreshMoney();return}
+  const ck=e.target.closest("[data-ck]");
+  if(ck){const c=store.get("ck",{});c[ck.dataset.ck]=ck.checked?1:0;store.set("ck",c);
+    ck.closest(".ck").classList.toggle("done",ck.checked);
+    const card=ck.closest("[data-cklist]");if(card){renderChecklists()}return}
+  const dn=e.target.closest("[data-done]");
+  if(dn){const d=store.get("done",{});d[dn.dataset.done]=dn.checked?1:0;store.set("done",d);paintProgress()}
+});
+function refreshMoney(){
+  DAYS.forEach(x=>{const t=fmt(dayTotal(x));
+    const a=$(`[data-dtot="${x.d}"]`),b=$(`[data-dtot2="${x.d}"]`),c=$(`[data-dact="${x.d}"]`);
+    if(a)a.textContent=t;if(b)b.textContent=t;if(c)c.textContent=fmt(dayActs(x.d));});
+  renderBudget();
+}
+
+/* topbar buttons */
+$("#burger").onclick=()=>$("#sidebar").classList.toggle("open");
+$("#darkBtn").onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==="dark"?"light":"dark";store.set("theme",h.dataset.theme);renderMap()};
+$("#printBtn").onclick=()=>{$$(".day").forEach(d=>d.classList.add("open"));window.print()};
+window.addEventListener("beforeprint",()=>$$(".day").forEach(d=>d.classList.add("open")));
+$("#toTop").onclick=()=>window.scrollTo({top:0,behavior:"smooth"});
+$("#searchIn").addEventListener("input",e=>doSearch(e.target.value));
+$("#searchIn").addEventListener("keydown",e=>{if(e.key==="Enter"){const f=$("#searchRes a[data-go]");if(f)goTo(f.dataset.go)}if(e.key==="Escape"){e.target.value="";doSearch("")}});
+document.addEventListener("keydown",e=>{
+  if(e.target.tagName==="INPUT")return;
+  if(e.key==="/"){e.preventDefault();$("#searchIn").focus()}
+  if(e.key==="d"||e.key==="D")$("#darkBtn").click();
+  if(e.key==="p"||e.key==="P")$("#printBtn").click();
+  if(e.key==="e"||e.key==="E")$$(".day").forEach(d=>d.classList.add("open"));
+  if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+    const cur=[...$$(".day")].findIndex(d=>d.getBoundingClientRect().top>-100);
+    let idx=e.key==="ArrowRight"?Math.min(cur+ (($$(".day")[cur]&&$$(".day")[cur].getBoundingClientRect().top<50)?1:0),DAYS.length-1):Math.max(cur-1,0);
+    const t=$$(".day")[idx];if(t){t.classList.add("open");t.scrollIntoView({behavior:"smooth"})}}
+});
+window.addEventListener("scroll",()=>{
+  const h=document.documentElement;
+  $("#progBar").style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+"%";
+  $("#toTop").style.display=h.scrollTop>800?"block":"none";
+  let cur="overview";$$("section").forEach(s=>{if(s.getBoundingClientRect().top<120)cur=s.id});
+  $$(".sb-a").forEach(a=>a.classList.toggle("active",a.dataset.go===cur));
+},{passive:true});
+
+/* ================= TRIP PROGRESS ================= */
+function paintProgress(){
+  const done=store.get("done",{});const n=Object.values(done).filter(Boolean).length;
+  const t0=new Date("2026-08-05"),t1=new Date("2026-08-22"),now=new Date();
+  let stage;
+  if(now<t0)stage="🗓 "+Math.ceil((t0-now)/864e5)+" days to departure";
+  else if(now>t1)stage="🏁 Trip completed — "+n+"/18 days logged";
+  else stage="🚗 Day "+(Math.floor((now-t0)/864e5)+1)+" of 18 · "+n+" done";
+  $("#tripStage").textContent=stage;
+  $$("[data-sbd]").forEach(s=>s.textContent=done[s.dataset.sbd]?" ✓":"");
+  $$("[data-done]").forEach(c=>c.checked=!!done[c.dataset.done]);
+}
+
+/* ================= LIVE DATA (online refresh) ================= */
+function currentCityKey(){
+  const t0=new Date("2026-08-05"),now=new Date();
+  const dn=Math.min(Math.max(Math.floor((now-t0)/864e5)+1,1),18);
+  const m={1:"AbuDhabi",2:"AbuDhabi",3:"Dubai",4:"Dubai",5:"Ruwais",6:"Riyadh",7:"Buraydah",8:"AlUla",9:"AlUla",10:"Madinah",11:"Madinah",12:"Taif",13:"AlBaha",14:"Abha",15:"Abha",16:"Makkah",17:"Dawadimi",18:"Doha"};
+  return now<t0?"Doha":(m[dn]||"Doha");
+}
+async function liveRefresh(){
+  const on=navigator.onLine;
+  $("#netdot").classList.toggle("on",on);$("#netlbl").textContent=on?"live":"offline";
+  if(!on){const c=store.get("live",null);if(c)paintLive(c,true);return}
+  try{
+    const key=currentCityKey(),city=CITIES[key],[lon,lat]=city.ll,name=city.lbl||key;
+    const w=await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto`)).json();
+    let p=null;
+    try{const pj=await (await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now()/1000)}?latitude=${lat}&longitude=${lon}&method=4`)).json();p=pj.data&&pj.data.timings}catch(e){}
+    const data={name,t:w.current&&w.current.temperature_2m,feel:w.current&&w.current.apparent_temperature,hi:w.daily&&w.daily.temperature_2m_max[0],lo:w.daily&&w.daily.temperature_2m_min[0],pray:p,ts:new Date().toLocaleString()};
+    store.set("live",data);paintLive(data,false);
+  }catch(e){const c=store.get("live",null);if(c)paintLive(c,true)}
+}
+function paintLive(d,cached){
+  $("#livebar").innerHTML=`
+   <div class="live"><div class="lt">Route position ${cached?"(cached "+d.ts+")":"· live"}</div><b>📍 ${d.name}</b></div>
+   ${d.t!=null?`<div class="live"><div class="lt">Now</div><b>🌡 ${Math.round(d.t)}°C</b> feels ${Math.round(d.feel)}°</div>
+   <div class="live"><div class="lt">Today</div><b>${Math.round(d.hi)}° / ${Math.round(d.lo)}°</b></div>`:""}
+   ${d.pray?`<div class="live"><div class="lt">Prayer — ${d.name}</div><b>🕌</b> Fajr ${d.pray.Fajr} · Dhuhr ${d.pray.Dhuhr} · Asr ${d.pray.Asr} · Maghrib ${d.pray.Maghrib} · Isha ${d.pray.Isha}</div>`:""}`;
+  if(d.pray){$("#ptCity").textContent=d.name;
+    $("#ptimes").innerHTML=["Fajr","Sunrise","Dhuhr","Asr","Maghrib","Isha"].map(k=>`<div class="kv"><span class="k">${k}</span><span class="v">${d.pray[k]}</span></div>`).join("")+ (cached?`<div style="font-size:11px;color:var(--ink3);margin-top:6px">Cached ${d.ts} — connect to refresh</div>`:"");}
+}
+window.addEventListener("online",liveRefresh);window.addEventListener("offline",liveRefresh);
+
+/* ================= WIKIPEDIA IMAGES (online; cached for offline) ================= */
+async function loadImages(){
+  if(!navigator.onLine)applyImgCache();else{
+    const cache=store.get("wimg",{});
+    const jobs=[...new Set($$("img[data-wiki]").map(i=>i.dataset.wiki))].filter(t=>cache[t]===undefined);
+    await Promise.all(jobs.map(async t=>{
+      try{const r=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${t}`);
+        if(!r.ok){cache[t]=null;return}
+        const j=await r.json();
+        cache[t]=(j.thumbnail&&j.thumbnail.source)?j.thumbnail.source.replace(/\/\d+px-/,"/640px-"):null;
+      }catch(e){/* leave undefined to retry next time */}
+    }));
+    store.set("wimg",cache);applyImgCache();
+  }
+}
+function applyImgCache(){
+  const cache=store.get("wimg",{});
+  $$("img[data-wiki]").forEach(img=>{
+    if(img.dataset.custom)return;const u=cache[img.dataset.wiki];
+    if(u){img.src=u;img.onload=()=>{img.style.display="block";const f=img.parentElement.querySelector(".fall");if(f)f.style.display="none"};img.onerror=()=>{img.style.display="none"}}
+  });
+}
+
+/* ================= INIT ================= */
+document.documentElement.dataset.theme=store.get("theme","light");
+renderDays();renderBudget();renderMap();renderChecklists();paintProgress();liveRefresh();loadImages();
+setInterval(liveRefresh, 30*60*1000);
+</script>
+                                                                            <style>
+/* ============ TAMIL BILINGUAL MODE ============ */
+.ta{display:none}
+html[data-lang="ta"] .ta{display:revert}
+.tam,div.ta{font-family:'Nirmala UI','Noto Sans Tamil','Latha',var(--sans);font-size:.95em;color:var(--ink2);line-height:1.7;margin-top:5px}
+span.ta{font-family:'Nirmala UI','Noto Sans Tamil','Latha',var(--sans);color:var(--ink2);font-weight:500}
+.day .tl div.ta,.tip div.ta{border-top:1px dashed var(--line2);padding-top:4px;margin-top:6px}
+.att div.ta{font-size:12px}
+#langBtn.on{border-color:var(--gold);background:var(--goldL);color:var(--gold);font-weight:700}
+@media print{html[data-lang="ta"] .ta{display:revert}}
+</style>
+<script>
+"use strict";
+/* ================= TAMIL TRANSLATIONS ================= */
+const TA={
+ui:{slots:["காலை","மதியம்","மாலை","இரவு ஓட்டம்"],
+ tips:{fuel:"எரிபொருள் நிறுத்தங்கள்",food:"உணவு",fam:"குடும்ப குறிப்பு",kids:"குழந்தைகள் குறிப்பு",wx:"வானிலை",road:"சாலை குறிப்புகள்",alt:"மாற்றுத் திட்டம்",hotel:"இன்றிரவு தங்குமிடம்"},
+ brows:["தங்குமிடம்","எரிபொருள்","உணவு (5 பேர்)","பார்க்கிங் & சுங்கம்","நுழைவுச்சீட்டுகள் (தேர்வு)","இதர செலவு","நாள் மொத்தம்"],
+ stats:["நாட்கள்","இரவுகள்","மொத்த தூரம்","தேவையான எரிபொருள்","நாடுகள்","எல்லை கடப்புகள்","நகரங்கள்","மதிப்பிடு பட்ஜெட்"],
+ nav:{overview:"மேலோட்டம்",map:"வழித்தட வரைபடம்",itinerary:"18 நாள் திட்டம்",budget:"பட்ஜெட்",checklists:"பட்டியல்கள்",docs:"விசா & எல்லைகள்",umrah:"உம்ரா வழிகாட்டி",prayer:"தொழுகை",driving:"ஓட்டுதல் & பாதுகாப்பு",emergency:"அவசரம்"},
+ daybudget:"நாள் பட்ஜெட்",inbudget:"பட்ஜெட்டில் சேர்",summary:"நாள் சுருக்கம்",attHead:"சுற்றுலா இடங்கள் — டிக் = பட்ஜெட்டில்",markdone:"நாள் முடிந்தது",
+ search:"நகரம், இடம் தேடுங்கள்… ( / )"},
+secs:{map:["பயண வழித்தட வரைபடம்","நகரக் குண்டூசியைத் தட்டினால் உண்மையான வழி கூகுள் மேப்ஸில் திறக்கும்"],
+ itinerary:["18 நாள் பயணத் திட்டம்","பகல் முழுவதும் சுற்றுலா · மாலை ஓட்டம் · குழந்தைகள் கார்-படுக்கையில் தூக்கம். நாளைத் தட்டி விரிக்கவும்."],
+ budget:["பட்ஜெட் டாஷ்போர்டு","அனைத்தும் கத்தார் ரியாலில் (QAR). இடங்களின் டிக்கை மாற்றினால் அனைத்தும் உடனே புதுப்பிக்கப்படும்."],
+ checklists:["பயண சரிபார்ப்புப் பட்டியல்கள்","டிக் செய்தவை இந்த சாதனத்திலேயே சேமிக்கப்படும் (ஆஃப்லைனிலும் வேலை செய்யும்)"],
+ docs:["ஆவணங்கள், விசாக்கள் & எல்லை வழிகாட்டி","கத்தார் RP வைத்திருக்கும் இலங்கை பாஸ்போர்ட் — சொந்த கத்தார் பதிவு கார்"],
+ umrah:["உம்ரா வழிகாட்டி — நாள் 16 & 17","வியாழன் (ஆக 20) மாலை மக்கா வருகை → அன்றிரவே உம்ரா → வெள்ளி கஅபாவில் ஜுமுஆ → ஊர் திரும்பல்"],
+ prayer:["பயணத்தில் தொழுகை","ஆன்லைனில் இருக்கும்போது நேரடி தொழுகை நேரங்கள் ஏற்றப்படும்"],
+ driving:["வாகனம் ஓட்டுதல், மலை & பாலைவனம்",""],
+ emergency:["அவசரத் தொடர்பு எண்கள்",""]},
+hero:{tag:"18 நாள் குடும்ப சாலைப் பயணம் & உம்ரா — 3 நாடுகள் வழியாக 6,870 கி.மீ. எமிரேட்ஸ் வானளாவிகள், ஹெக்ராவின் கல்லறைகள், மூடுபனி சூழ்ந்த அசீர் மலைகள் — இறுதியில் புனித கஅபா.",
+ note:"⭐ மதிப்பீடுகள்: ★★★★★ கட்டாயம் பார்க்க வேண்டியவை · ★★★★ பரிந்துரை · ★★★ விருப்பம். ஒவ்வொரு இடத்திற்கும் டிக் பாக்ஸ் உண்டு — எதை நீக்கினாலும் முழு பட்ஜெட்டும் உடனடியாக மாறும். உங்கள் தேர்வுகள் இந்த சாதனத்தில் சேமிக்கப்படும்.",
+ cards:["ஜனாஸ் 37 — முதன்மை ஓட்டுநர் · ஜஃபீன் 32 — வழிகாட்டி · ஜைஷ் 8 · அலிஷா 6 · அலீனா 4 · தேசியம்: இலங்கை · வதிவிடம்: கத்தார் RP",
+ "நிசான் எக்ஸ்-டிரெயில் — ~10 லி/100 கி.மீ. (AC, முழு சுமை) · 60 லி டேங்க் ≈ 550 கி.மீ. · தொலைதூர வழிகளில் அரை டேங்கிலேயே நிரப்பவும் · குழந்தைகள் இரவு தூக்கத்திற்கு பின் இருக்கை கார்-படுக்கை · சவூதி 91 பெட்ரோல் போதும், UAE-யில் Special 95 · புறப்படும் முன் முழு சர்வீஸ் + டயர் + உதிரி கருவிகள்",
+ "UAE முதலில் — அனைவரும் புத்துணர்வுடன் இருக்கும்போது. கிழக்கு சவூதி நகரங்கள் (ஹொஃபூஃப், ரியாத், புறைதா) வார இறுதி தூரம்தான் — அவை வழிமாற்று நிறுத்தங்கள் மட்டுமே. அதிக நேரம்: அல்உலா, மதீனா, தாயிஃப், அல் பாஹா, அப்ஹா & ரிஜால் அல்மா. உம்ரா நாள் 16–17 இல் — ஆகஸ்ட் 22 இரவு தோஹா சேர பாதுகாப்பான இரு-கட்ட திரும்பல். ஒவ்வொரு நாளும்: 07:00–18:00 சுற்றுலா + 18:00–23:30 ஓட்டம் (குழந்தைகள் தூக்கம்)."]},
+days:{
+1:{m:"அதிகாலை 3:30 தோஹாவிலிருந்து புறப்பாடு (குழந்தைகள் கார்-படுக்கையில்). 4:30 அபு சம்ரா எல்லை (முன்பதிவு செய்யப்பட்டது) → சல்வா. சவூதி பாலைவனத்தில் சூரிய உதயம்.",a:"~9:30 பத்ஹா → குவைஃபாத் வழியாக UAE. ADNOC நிறுத்தத்தில் மதிய உணவு. ~14:00 ஹோட்டல் செக்-இன், குளிர் ஓய்வு + நீச்சல்.",e:"17:00 ஷேக் ஸாயித் பெரிய மசூதி (சூரிய அஸ்தமன ஸ்லாட்). 19:30 கார்னிஷ் நடை & இரவு உணவு.",n:"இன்று இரவு ஓட்டம் இல்லை — சீக்கிரம் தூக்கம்.",fam:"காலை உணவு பெட்டிகளை முந்தைய இரவே தயாரிக்கவும்; எல்லை வரிசைகளில் நிழல் இல்லை — தண்ணீர் கையருகில்.",kids:"பாஸ்போர்ட் விளையாட்டு: ஒவ்வொரு எல்லையிலும் நோட்டில் 'முத்திரை' + ஸ்டிக்கர் (மொத்தம் 4 எல்லைகள்!).",wx:"42° / 31° — கடற்கரையில் ஈரப்பதம்",road:"சல்வா சாலை + E11: நேரான வேக சாலை, ஒட்டக வேலி உண்டு, ரேடார் அதிகம்.",food:"ADNOC-இல் கரக் & சப்பாத்தி; இரவு: லெபனீஸ் ஃப்ளவர் (~AED 90)",alt:"எல்லை 3 மணிக்கு மேல் ஆனால், மசூதியை நாள் 2 மாலைக்கு மாற்றவும்."},
+2:{m:"9:00 லூவ்ர் அபுதாபி — 'ஒளி மழை' குவிமாடம் (முழு A/C).",a:"12:30 மதிய உணவு; 14:00 கஸ்ர் அல் வதன் அரண்மனை. மாற்று: முழு நாள் ஃபெராரி வேர்ல்ட்.",e:"17:30 பாரம்பரிய கிராமம் + எமிரேட்ஸ் பேலஸ் புகைப்படம். 19:30 யாஸ் பே இரவு உணவு & விளக்குகள்.",n:"22:00 திரும்பல் — சக்தி இருந்தால் நீச்சல் குள ஐஸ்கிரீம்.",fam:"லூவ்ரில் இலவச தள்ளுவண்டி; கஸ்ர் அல் வதனில் நிழல் தோட்டங்கள்.",kids:"லூவ்ர் குழந்தைகள் அருங்காட்சியகம் இலவசம் — 45 நிமிடம் ஒதுக்குங்கள்.",wx:"42° / 31° — திட்டமிட்ட உள்ளரங்க நாள்",road:"நகர ஓட்டம் மட்டும்; அபுதாபியில் சுங்கம் இல்லை.",food:"மால் உணவகம் (~AED 120); யாஸ் பே (~AED 140)",alt:"குழந்தைகள் வென்றால்: ஃபெராரி வேர்ல்ட் நாள் (குடும்பம் ~AED 1,290)."},
+3:{m:"9:00 கஸ்ர் அல் ஹொஸ்ன் கோட்டை. 11:00 ஹோட்டல் நீச்சல்.",a:"12:15 ஜுமுஆ தொழுகை. 13:30 மதிய உணவு & செக்-அவுட். 15:00 துபாய் நோக்கி (சாலிக் சுங்கம் AED 4–6/கேட்).",e:"17:30 துபாய் செக்-இன். 18:30 துபாய் மால்: நீரூற்று ஷோ, புர்ஜ் கலீஃபா கீழிருந்து, அருவி நடை.",n:"21:30 இறுதி நீரூற்று ஷோ, ஜெலட்டோ, 22:30 அறை.",fam:"வெள்ளி = மெதுவான காலை; உணவகங்கள் முன்பே திறக்கும்.",kids:"துபாய் மாலின் இலவச மீன்காட்சி சுவர் = டிக்கெட் இல்லாத 20 நிமிட 'வாவ்'.",wx:"41° / 31°",road:"E11: 8 வழி, 140 கி.மீ. பகுதிகள், ரேடார் மிக அதிகம். சாலிக் ஆப்பில் பிளேட் பதிவு செய்யவும்.",food:"ஜுமுஆ பின்: அல் மர்ஸாப் / ஹோட்டல்; இரவு: மால் உணவரங்கு (~AED 150)"},
+4:{m:"8:30 பழைய துபாய்: அல் ஃபஹிதி → 1 திர்ஹம் அப்ரா படகு → தங்க & மசாலா சூக் (11:30க்குள்).",a:"12:00 துபாய் ஃப்ரேம். 13:30 ராவி உணவகம். 14:30–16:30 கட்டாய ஓய்வு/நீச்சல்.",e:"17:30 புர்ஜ் கலீஃபா 'அட் தி டாப்' (முன்பதிவு). பின் நீரூற்று ஷோ.",n:"வீட்டு வழியில் எதிர்கால அருங்காட்சியக வெளிப்புற புகைப்படம் (விளக்கொளியில்).",fam:"சூக் தந்திரம்: கேட்கும் விலை ÷ 3 இல் பேரம் தொடங்குங்கள்.",kids:"அப்ரா படகு = இந்த பயணத்தின் 'திர்ஹத்திற்கு சிறந்த மகிழ்ச்சி' சாம்பியன்!",wx:"41° / 31°",road:"சனிக்கிழமை ஃப்ரேம் பார்க்கிங் 11:00க்குள் நிரம்பும்.",food:"ராவி சத்வா (~AED 80 — 5 பேருக்கு!); இரவு லேசாக",alt:"முன்பதிவு இருந்தால் ஃப்ரேமுக்கு பதில் எதிர்கால அருங்காட்சியகம் (AED 676)."},
+5:{m:"7:30 JBR கடற்கரை நீச்சல் + மரீனா நடை காலை உணவு.",a:"11:30 விருப்பம்: தி வியூ அட் தி பாம்; 13:00 உணவு; 14:00–16:00 ஓய்வு & லேட் செக்-அவுட்.",e:"16:30 மேற்கு நோக்கி. 20:00 ADNOC ருவைஸ் பிளாசாவில் இரவு உணவு.",n:"20:30 ருவைஸ் செக்-இன் — நாளை எல்லைக்கான நிலை-பிடிப்பு இரவு.",fam:"இன்றிரவே பெரிய மறு-பேக்கிங்: ஆவண கோப்பு முன் இருக்கையில், SAR பணம் வெளியில்.",kids:"கடற்கரை வாளி செட் (AED 15) = 2 மணி நேர இலவச பொழுதுபோக்கு.",wx:"41° / 30°, ஈரப்பதம்",road:"AD மேற்கே E11 அமைதி, நேர் — சோர்வு கவனம்; மிர்ஃபாவில் ஓட்டுநர் மாற்றம்.",food:"கடற்கரை காலை (~AED 90); ADNOC உணவரங்கு (~AED 100)",alt:"தி வியூ தவிர்த்து நீண்ட கடற்கரை காலை; அல்லது 15:00 புறப்பட்டு சீக்கிரம் தூக்கம்."},
+6:{m:"6:30 புறப்பாடு. 7:15 குவைஃபாத்/பத்ஹா எல்லை (2வது சவூதி நுழைவு = விரைவு). அல் அஹ்ஸா நோக்கி நீண்ட நேர் சாலை.",a:"12:30 ஹொஃபூஃப்: உணவு, லுஹர். 13:30 அல் காரா குகைகள் — உள்ளே 22°C! 16:30 இப்ராஹிம் அரண்மனை, 17:30 கைசரியா சூக்.",e:"18:30 புறப்பாடு. வழி உணவு. 19:30 குழந்தைகள் பைஜாமாவில்.",n:"330 கி.மீ. ஹொஃபூஃப் → ரியாத். ~22:00 வருகை.",fam:"மிக நீண்ட ஒருங்கிணைந்த நாள் — ஓட்டத்தை 50/50 பகிருங்கள்; குகை = உண்மையான ஓய்வு.",kids:"குகை எதிரொலி விளையாட்டு + பேரீச்சை சுவை போட்டி: 3 வகை தரம் பிரித்தல்.",wx:"ஹொஃபூஃப் 45° / 29° — பயணத்தின் வெப்பமான நாள்",road:"பத்ஹா→ஹொஃபூஃப் தொலை பகுதி: எரிபொருள் கட்டுப்பாடு. இரவில் லாரி அதிகம் — வலப்பக்கம், 110 max.",food:"ஹொஃபூஃப் பேக்கரிகள் + பிராஸ்டட்; வழியில் ஹெர்ஃபி/அல்பைக்",alt:"எல்லை காலையை விழுங்கினால் இப்ராஹிம் அரண்மனையை விடுங்கள்."},
+7:{m:"9:30 தேசிய அருங்காட்சியகம் — 2.5 மணி A/C அதிசயம்.",a:"12:30 மால் உணவு + லுஹர்; 14:00 ஓய்வு (15:00 செக்-அவுட்). 16:30 மஸ்மக் கோட்டை + தீரா சதுக்கம் + சூக் அல் ஸல்.",e:"18:30 வடக்கே ரூட் 65. ஹெர்ஃபி டிரைவ்-த்ரூ.",n:"330 கி.மீ. → புறைதா ~22:00. நேரான, வெளிச்சமான சாலை.",fam:"ரியாத் வேண்டுமென்றே லேசாக — இது தோஹாவிலிருந்து வார இறுதி நகரம். புலெவார்ட் ஆகஸ்டில் மூடு (அக்-மார்ச் சீசன்).",kids:"அருங்காட்சியக குழந்தைகள் அரங்கு — ஒவ்வொருவரும் ஒரு காட்சியை வழிநடத்தட்டும்.",wx:"43° / 29°, வறண்ட",road:"ரூட் 65 = சவூதியின் மென்மையான நெடுஞ்சாலை; மாலை பின் ஒட்டகம் கவனம்.",food:"மால் உணவரங்கு; ரூட் 65 குடு/ஹெர்ஃபி (~SAR 90)",alt:"சக்தி இருந்தால் ஸ்கை பிரிட்ஜ் அஸ்தமனம் (குடும்பம் ~SAR 480)."},
+8:{m:"6:30 ஒட்டக சந்தை ஏலம் (இலவசம், மறக்க முடியாதது), 8:00 பேரீச்சை திருவிழா — ஆகஸ்ட் = உச்ச அறுவடை; காலை உணவு = புதிய சுக்கரி + கஹ்வா.",a:"10:30 வடமேற்கு (300 கி.மீ.). 13:30 ஹாயில்: உணவு, லுஹர், ஓய்வு. 16:30 ஆரிஃப் கோட்டை. 18:00 பர்ஸான் சூக் இரவு உணவு.",e:"18:45 ரூட் 70 மேற்கு — சவூதியின் மிக அழகிய வெற்று பாலைவன சாலை.",n:"410 கி.மீ., ~22:45 அல்உலா வருகை. ஹாயிலில் முழு டேங்க் — நீண்ட இருண்ட பகுதி.",fam:"மிகப்பெரிய ஓட்ட நாள் — காலை + மாலை காட்சிகளுடன் இரு தூக்கப் பயணங்களாக பிரிக்கப்பட்டது. ஹெக்ரா 6:30 சுற்றுலாவை இன்றே முன்பதிவு!",kids:"ஒட்டக எண்ணும் போட்டி; இருட்டில் எரிமலை பாறை வயல்கள் — நிலா பார்க்கும் நிறுத்தம்!",wx:"புறைதா 42° · ஹாயில் 38° — வடக்கு இதம்",road:"ரூட் 70: தொலைதூரம், அரிதாக ஒட்டகம், ஒளி மாசு பூஜ்யம். 100–110, ஹை பீம் மரியாதை.",food:"சந்தை காலை; ஹாயில் மந்தி (~SAR 80); சூக் ஷவர்மா",alt:"சோர்வானால் ஹாயிலில் தங்கவும் (SAR ~220) — ஆனால் ஹெக்ரா காலை ஸ்லாட் போகும்."},
+9:{m:"6:30 ஹெக்ரா விடியல் சுற்றுலா — பொன்னிற ஒளியில் 110 கல்லறைகள். 9:30 தாதான் & ஜபல் இக்மா.",a:"12:00–16:30 ஆகஸ்ட் ஓய்வு: நீச்சல், உணவு, தூக்கம். மதியம் 43°C — விதிவிலக்கின்றி அனைவரும் ஓய்வு.",e:"17:00 பழைய நகர சந்துகள் விளக்கேற்றம். 18:30 யானைப் பாறை அஸ்தமனம் + கரக்.",n:"மாடியிலிருந்து நட்சத்திர தரிசனம் — அல்உலா 'இருண்ட வான்' பகுதி.",fam:"ஹெக்ராவில் சாதாரண பேருந்து சுற்றுலா குழந்தைகளுடன் போதும்; 7 மணிக்கும் தொப்பி அவசியம்.",kids:"கல்லறை துப்பறிவாளர்: கழுகு, சிங்கம், ஸ்பிங்க்ஸ் முகங்களை கண்டுபிடி!",wx:"42° / 27°, முற்றிலும் வறண்ட — மணிக்கொரு முறை தண்ணீர்",road:"தள சாலைகள் சிறப்பு; ஹெக்ராவிற்கு பார்க்-அண்ட்-ரைடு கட்டாயம்.",food:"பழைய நகர கஃபேக்கள்; யானைப் பாறை உணவு வண்டிகள் (~SAR 100)",alt:"குழந்தைகள் சோர்ந்தால் தாதானுக்கு பதில் சோலை நடை."},
+10:{m:"8:00 ஹர்ரத் காட்சி முனை — முழு சோலைக் காட்சி. 9:30 மராயா கண்ணாடி கட்டிடம். 11:30 அல்உலாவில் ஜுமுஆ + உணவு.",a:"14:00–16:30 இறுதி நீச்சல் & பேக்கிங். 17:00 ரூட் 375 தெற்கு — எரிமலை நிலக்காட்சி.",e:"பொன்மாலை ஓட்டம்; கைபர் சந்திப்பில் இரவு உணவு.",n:"~20:45 மதீனா வருகை. செக்-இன், இஷாவுக்குப் பின் நபவி முற்றங்களுக்கு முதல் நடை — மறக்கமுடியாத வருகை.",fam:"ஓட்டத்திற்கு முன்பே ஹராம் உடை அணியுங்கள். பெண்கள் நுழைவு: கேட் 13–25 பக்கம்.",kids:"முதல் தரிசன தருணம்: குடை முற்றத்தில் ஒன்றாக நுழையுங்கள் — கண்கள் மேலே!",wx:"அல்உலா 42° → மதீனா 43° / 29°",road:"ரூட் 375 மென்மை; சில 4G இல்லாத பகுதிகள் — ஆஃப்லைன் வரைபடம்.",food:"அல்உலா பண்ணை கஃபே; மதீனா ஹராம் பின் ஷவர்மா தெரு"},
+11:{m:"நபவியில் ஃபஜ்ர் (30 நிமிடம் முன் செல்லவும்). காலை உணவு, ஓய்வு. 8:30 குபா மசூதி — 2 ரக்அத்.",a:"நுசுக் முன்பதிவின்படி ரவ்தா. 14:00 ஓய்வு — ஹராம் A/C கூடங்கள்.",e:"16:30 உஹுத் மலை + ஷுஹதா. 17:45 கிப்லதைன். மஃக்ரிப் நபவியில்.",n:"இஷா பின் பேரீச்சை சந்தை — அஜ்வா வாங்கல்.",fam:"காலணிகளை துணி பையில் வைத்திருங்கள். ஸம்ஸம்: குழந்தைகள் தாமே நிரப்பட்டும்.",kids:"மஃக்ரிப் முன் புறா சதுக்கம்; விதை கப் SAR 5.",wx:"43° / 29° — பிரம்மாண்ட குடைகள் நிழல் தரும்",road:"ஹராம் சுற்று சாலைகள் ஒரு வழி; ஹோட்டல் பார்க்கிங் + நடை.",food:"ஹராம் அருகே அல் பைக் (~SAR 75) — குழந்தைகளின் 'உள் யாத்திரை'!",alt:"ஹிஜாஸ் ரயில் அருங்காட்சியகம் (திறந்திருந்தால்) மதிய மாற்று."},
+12:{m:"பிரியாவிடை ஃபஜ்ர் + குடை விரிதல் காட்சி. நினைவுப்பொருள், நிதான காலை, நீச்சல்.",a:"13:00 உணவு & செக்-அவுட். 14:00 இறுதி நபவி தரிசனம். 16:00 தெற்கே — துல்-ஹுலைஃபா மீகாத் புகைப்பட நிறுத்தம் (உங்கள் இஹ்ராம் இடம் அல்ல — நாள் 16 யலம்லம்).",e:"நெடுஞ்சாலையில் ஹிஜாஸ் மலை அஸ்தமனம்.",n:"~21:45 தாயிஃப் — 1,700 மீ உயரத்தில் இரவு 24°C. ஜன்னல் திறவுங்கள், ஜாக்கெட் எடுங்கள்!",fam:"மிக நீண்ட மாலை ஓட்டம் — ஓய்வோடு தொடங்குங்கள். குழந்தைகள் குளித்து, சாப்பிட்டு புறப்பாடு.",kids:"'குளிர் காற்றை முதலில் உணர்பவர் வெற்றி' — தாயிஃப் ஏற்றம் ஒரு அறிவியல் பாடம்.",wx:"மதீனா 43° → தாயிஃப் 33° / 22° 😍",road:"ரூட் 15 படிப்படியான ஏற்றம்; இறுதி தாயிஃப் பகுதியில் லாரி வழிகள் — வலப்பக்க மெது வாகனங்களை கடக்கவும்.",food:"மஹ்த் சந்திப்பில் இரவு உணவு; தாயிஃப் தேன் ரொட்டி + தேநீர்",alt:"14:00 புறப்பட்டால் 19:30 வருகை — சூக் நடைக்கு நேரம்."},
+13:{m:"8:30 ஷுப்ரா அரண்மனை. 9:30 அல் ஷஃபா மலை வளையம் — மாதுளை கடைகள், ஒட்டக சவாரி, குரங்குகள் (ஜன்னல் மூடு!).",a:"12:30 உணவு + லுஹர். 13:30 அல் ஹதா கேபிள் கார் → அல் கர் கிராமம் (நீர்சறுக்கு!). 17:00 மேலே திரும்பல்.",e:"18:00 சரவாத் மலைச் சாலை தெற்கு — அரேபியாவின் சிறந்த ஓட்டங்களில் ஒன்று.",n:"~21:00 அல் பாஹா. குளிர் (20°C!) மலை இரவு.",fam:"தாயிஃப் = சவூதியின் கோடை தலைநகர் — ஆகஸ்ட் மாலைகளில் உள்ளூர் கூட்டம்.",kids:"அல் கர் குளங்கள் & சறுக்குகள் = அத்தனை அருங்காட்சியகங்களுக்கும் பரிசு!",wx:"33° / 21° — அற்புதம்",road:"ரூட் 15 தாயிஃப்→பாஹா: தொடர் வளைவுகள், 19:00 பின் மூடுபனி. 80 கி.மீ., வளைவில் ஓவர்டேக் இல்லை.",food:"அல் ஷஃபா பழக்கடைகள்; தாயிஃப் ஜூஸ்; அல் பாஹா பிராஸ்டட்",alt:"அல் கர் தவிர்த்தால் பகல் வெளிச்சத்தில் மலை காட்சிகளுடன் முன்கூட்டி ஓட்டம்."},
+14:{m:"7:30 ரகதான் வனம் மூடுபனி நடை (குரங்குகள் — உணவு மறை!). 8:45 தீ ஐன் பளிங்கு கிராமம்.",a:"11:30 பல்ஜுரஷி உணவு. 13:00 ரூட் 15 மலை ஓட்டம் தெற்கு — சூரை காடுகள், கற்கோபுரங்கள், படிக்கட்டு மலைகள்.",e:"17:00 அப்ஹா செக்-இன். 19:00 ஹை சிட்டி — 22°C இல் மலை விளிம்பு இரவு உணவு.",n:"இரவு ஓட்டம் இல்லை — அப்ஹாவில் 2 இரவு தங்கல்.",fam:"பயணத்தின் மிக அழகிய ஓட்ட நாள் — வேண்டுமென்றே பகலில். அந்-நமாஸ் காட்சி பூங்காவில் நிறுத்தம்.",kids:"பிங்கோ அட்டை: குரங்கு, கோபுரம், படிக்கட்டு பண்ணை, சாலைக்கு கீழ் மேகம், தேன் பெட்டி!",wx:"29° / 18°, மதிய மூடுபனி — ஜாக்கெட்!",road:"2,000–2,400 மீ மலைத்தொடர்: மூடுபனி, திடீர் மழை, 20 கி.மீ.க்கொரு அழகிய நிறுத்தம். இறக்கத்தில் எஞ்சின் பிரேக்.",food:"பல்ஜுரஷி தேன் கடைகள் (சித்ர் சுவை!); ஹை சிட்டி (~SAR 140)"},
+15:{m:"8:00 அல் சூதா மலைச் சாலை வழியாக ரிஜால் அல்மா 'ஜிஞ்சர்பிரெட்' கிராமம் (அருங்காட்சியகத்துடன் 2.5 மணி).",a:"12:30 அப்ஹா உணவு. 15:30 ஜபல் சவ்தா உச்சி — சவூதியின் கூரை, 18–22°C மேக காடு பிக்னிக்.",e:"19:30 ஆர்ட் ஸ்ட்ரீட் & அல் முஃப்தஹா — கஹ்வா + ஜெலட்டோ. பச்சை மலை விளக்குகள்.",n:"சீக்கிரம் தூக்கம் — நாளை உம்ரா நாள். குளியல் தயாரிப்பு, இஹ்ராம் எடுத்து வைப்பு, நகம்/முடி இஹ்ராமுக்கு முன்பே.",fam:"ரிஜால் சாலை செங்குத்து முடிச்சுகள் — காலை = சிறந்த ஒளி + சிறந்த பிரேக்குகள்.",kids:"இன்றிரவு நாளையை விளக்குங்கள்: 5 நிமிட குழந்தைகள் உம்ரா வீடியோ ஒன்றாக பாருங்கள்.",wx:"28° / 17°, மதிய மழை/மூடுபனி சாத்தியம்",road:"சவ்தா–ரிஜால் இறக்கம் ~8%: L கியர், பிரேக் சூடு கவனம். 16:00 பின் மேலே மூடுபனி வேகம்.",food:"அசீரி காலை (அரீக்கா, தேன்); சவ்தா பிக்னிக்; ஆர்ட் ஸ்ட்ரீட் இரவு",alt:"சூதா கேபிள் கார் இயங்கினால் அதில் இறங்கி அருங்காட்சியகம் விடலாம்."},
+16:{m:"7:30 குளியல், லேசான காலை உணவு, புறப்பாடு. அப்ஹா→முஹாயில்: 30 கி.மீ.யில் 2,000 மீ இறக்கம் — முதலில் பிரேக் சரிபார்ப்பு. 9:30 திஹாமா சமவெளி.",a:"கடற்கரை ரூட் 5 வடக்கு: 12:30 அல் குன்ஃபுதா உணவு + லுஹர். 16:30 மீகாத் யலம்லம்: இஹ்ராம், 2 ரக்அத், நிய்யத், தல்பியா — கடைசி 100 கி.மீ. காரில் தல்பியா ஒலிக்கும்.",e:"18:30 மக்கா வருகை, செக்-இன், உணவு, குழந்தைகள் 20:00–22:00 தூக்கம்.",n:"22:30 ஹராம் நோக்கி நடை. கஅபாவின் முதல் தரிசனம் ஒன்றாக. இரவு உம்ரா — தவாஃப், மகாம், ஸம்ஸம், ஸயீ, ஹல்க். ~2:30 நிறைவு.",fam:"கடினமான, புனிதமான நாள் — மீகாத்தே இயற்கை நீண்ட இடைவேளை. இரவு உம்ரா = 43° பகல் பளிங்கை வெல்லும் யுக்தி.",kids:"தவாஃபில் அலீனா தோளில்/ஸ்ட்ரோலரில் (கூட்டமானால் மேல் தளம்); மூவருக்கும் எண் எழுதிய கை பட்டை.",wx:"கடற்கரை 40° ஈரம் → மக்கா 42° / இரவு ~33°",road:"முஹாயில் இறக்கம் = பயணத்தின் செங்குத்து; ரூட் 5 வேக சமவெளி; ஹராம் அருகே கார் வேண்டாம் — ஹோட்டலில் நிறுத்துங்கள்.",food:"அல் குன்ஃபுதா மீன்; உம்ரா வெற்றிக்குப் பின் 2:45 அல் பைக் — மரபு!",alt:"உள் வழி ரூட் 15 பின்நோக்கு + சாலையோர மீகாத் இல்லை — கடற்கரை வழியே சரி."},
+17:{m:"2:30 நிறைவுக்குப் பின் நிதான காலை. 10:30 ஹராம் நுழைவு — கஅபாவில் ஜுமுஆ (தெருக்கள் வரை நிரம்பும், சீக்கிரம்!).",a:"தொழுகைப் பின் உணவு. 15:00 விருப்பம்: நஃபில் தவாஃப் / கடிகார அருங்காட்சியகம்; ஸம்ஸம் நிரப்பல் (நபருக்கு 5 லி).",e:"16:45 பிரியாவிடை துஆ, ஜபல் அந்-நூர் வழி புறப்பாடு. ரூட் 40 கிழக்கு.",n:"20:00 அல் முவைஹ் SASCO இரவு உணவு. ~22:00 அத் தவாதிமி. குழந்தைகள் 20:30 முதல் தூக்கம்.",fam:"வெள்ளி அஸர் பின் மக்கா வெளியேறல் = கூட்டம்; பயணியின் துஆ ஏற்கப்படும் — கடிகார கோபுரம் சிறுக்கும்போது ஒன்றாக செய்யுங்கள்.",kids:"ஸம்ஸம் காவலர்கள்: ஒவ்வொருவரும் ஒரு பாட்டிலை தாத்தா-பாட்டிக்கு காக்கிறார்கள்.",wx:"42° / 29°, உள்நாடு வறண்ட",road:"ரூட் 40 அகலம், சலிப்பு (நல்லது!). அஃபீஃப் பின் ஒட்டகம். 120 ரேடார் மண்டலம்.",food:"ஹராம் பகுதி உணவு; SASCO குடு",alt:"புத்துணர்வு இருந்தால் ஷக்ரா வரை (+120 கி.மீ.) — நாள் 18 குறுகும்."},
+18:{m:"7:30 புறப்பாடு. 10:30 ரியாத் வளைவு: மால் brunch + விளையாட்டு மைதான இடைவேளை.",a:"12:30 ரூட் 10/75 — அல் கர்ஜ், ஹரத் வழியாக 'காலி கால்' விளிம்பு. SASCO-வில் லுஹர்+அஸர் சேர்த்து.",e:"~17:30 சல்வா எல்லை: சவூதி வெளியேறல் + கத்தார் நுழைவு (காப்பீடு முன்பே ஆன்லைன்). 5 ஹீரோக்களுக்கு டியூட்டி-ஃப்ரீ பரிசு.",n:"~20:30 தோஹா வீடு — 6,870 கி.மீ., 3 நாடுகள், 1 உம்ரா. அல்ஹம்துலில்லாஹ், மப்ரூக்! 🎉",fam:"பயணத்தின் ஒரே கனமான ஓட்ட நாள் — சனி இரவு வீடு சேர தவிர்க்க முடியாதது. 2 முழு நிறுத்தங்கள், 2 மணிக்கொரு ஓட்டுநர் மாற்றம்.",kids:"கார் விருது விழா: சிறந்த தருணம், வேடிக்கை தருணம், தைரிய தருணம் — குரல் பதிவாக சேமியுங்கள்!",wx:"44° / 30° உள்நாடு",road:"ரியாத்→ஹரத் லாரிகள்; ஹரத்→சல்வா நீண்ட வெற்று — கடைசி முறை எரிபொருள் கட்டுப்பாடு.",food:"ரியாத் மால்; வழி தின்பண்டங்கள்; கத்தார் எல்லையில் வெற்றி கரக்!",alt:"6:30 புறப்பட்டால் ~19:30 வீடு — மறுநாள் பள்ளி தயாரிப்புக்கு."}
+}};
+</script>
+<script>
+"use strict";
+TA.atts={
+szgm:["ஷேக் ஸாயித் பெரிய மசூதி","உலகின் மிக அழகிய மசூதிகளில் ஒன்று — 82 பளிங்கு குவிமாடங்கள், அஸ்தமனத்தில் பிரதிபலிப்புக் குளங்கள்."],
+corniche:["கார்னிஷ் கடற்கரை நடைபாதை","8 கி.மீ. பனைமர நடைபாதை, விளையாட்டு பூங்காக்கள் — முதல் மாலைக்கு ஏற்றது."],
+louvre:["லூவ்ர் அபுதாபி","'ஒளி மழை' குவிமாடத்தின் கீழ் உலகத்தரக் கலை — முழு A/C, ஸ்ட்ரோலர் நட்பு."],
+qasr:["கஸ்ர் அல் வதன் (ஜனாதிபதி அரண்மனை)","UAE ஆட்சியாளர்களின் வெண் அரண்மனை — தங்க குவிமாட மண்டபம் தவறவிடக்கூடாதது."],
+heritage:["பாரம்பரிய கிராமம்","பழைய சூக், ஒட்டகங்கள், முத்துக்குளிப்பு வரலாறு — விரைவு கலாச்சார நிறுத்தம்."],
+empalace:["எமிரேட்ஸ் பேலஸ் & எத்திஹாத் டவர்ஸ்","அடையாள ஹோட்டல் & வான்கோபுர வரிசை — போஸ்ட்கார்டு புகைப்படம்."],
+yasbay:["யாஸ் பே மாலை நடை","F1 சர்க்யூட் அருகே கலகல கடற்கரை — நீரூற்று, விளக்கு, ஐஸ்கிரீம்."],
+ferrari:["ஃபெராரி வேர்ல்ட் (விருப்பச் செலவு)","உலகின் வேகமான ரோலர் கோஸ்டர் — ஆனால் முழு நாளும் பட்ஜெட்டும் எடுக்கும்."],
+obs300:["அப்சர்வேஷன் டெக் 300","அபுதாபியின் உயரமான காட்சி + தேநீர் — வெப்பத்திலிருந்து தப்பிக்கும் இடம்."],
+alhosn:["கஸ்ர் அல் ஹொஸ்ன் கோட்டை","அபுதாபியின் மிகப் பழைய கட்டிடம் — நகரின் தோற்றக் கதை."],
+dxbmall:["துபாய் மால் + நீரூற்று ஷோ","உலகின் மிகப்பெரிய மால், இலவச மீன்காட்சி சுவர், புர்ஜ் கலீஃபாவின் கீழ் நடன நீரூற்று."],
+olddxb:["பழைய துபாய்: அல் ஃபஹிதி, அப்ரா, சூக்குகள்","1 திர்ஹம் படகு, காற்றுக் கோபுர சந்துகள், தங்கம் மின்னும் சூக்குகள்."],
+frame:["துபாய் ஃப்ரேம்","150 மீ தங்கச் சட்டகம் — ஒரு பக்கம் பழைய துபாய், மறுபக்கம் புதியது."],
+burj:["புர்ஜ் கலீஃபா — அட் தி டாப்","உலகின் உயரமான கட்டிடம் — 17:30 ஸ்லாட்டில் பகல்+அஸ்தமனம்+இரவு மூன்றும்."],
+motf:["எதிர்கால அருங்காட்சியகம்","விண்வெளி நிலைய அனுபவம் — விலை உயர்வு, ஆனால் மறக்கமுடியாதது."],
+aquarium:["துபாய் அக்வேரியம்","சுறா + பென்குயின் — முக்கிய சுவரை மாலில் இலவசமாகக் காணலாம்."],
+jbr:["JBR கடற்கரை & மரீனா நடை","மரீனா வானளாவிகளின் கீழ் மென்மணல் நீச்சல்; நடைபாதையில் ஒட்டகம்."],
+palmview:["தி வியூ அட் தி பாம்","52வது மாடியிலிருந்து பாம் தீவின் இலைக் காட்சி."],
+jummosque:["ஜுமைரா மசூதி சுற்றுலா","பார்வையாளர்களுக்குத் திறந்த துபாயின் அழகிய மசூதி — கேள்வி-பதில் சுற்றுலா."],
+qara:["அல் காரா மலைக் குகைகள்","வெளியே 45°C, உள்ளே 22°C — இயற்கையின் குளிர்சாதனம்! UNESCO சோலை."],
+ibrahim:["இப்ராஹிம் அரண்மனை","ஒட்டோமான் காலக் கோட்டை-அரண்மனை, வெண் குவிமாட மசூதி — UNESCO."],
+qaisariah:["கைசரியா சூக்","வளைகுடாவின் பழைமையான மூடு சூக் (1822) — கலாஸ் பேரீச்சை வாங்குங்கள்."],
+natmus:["சவூதி தேசிய அருங்காட்சியகம்","டைனோசர் முதல் நவீன அரசு வரை — ரியாதின் சிறந்த A/C காலை."],
+masmak:["மஸ்மக் கோட்டை","1902 கைப்பற்றலில் நவீன சவூதி பிறந்த மண் செங்கல் கோட்டை."],
+deera:["சூக் அல் ஸல் & தீரா சதுக்கம்","கம்பளம், பழம்பொருள், ஊத் புகை — பேரம் பேசும் அரங்கம்."],
+skybridge:["கிங்டம் சென்டர் ஸ்கை பிரிட்ஜ்","300 மீ உயரக் கண்ணாடி பாலம் — சிறப்பு, ஆனால் விலை கூடுதல்."],
+dates:["புறைதா பேரீச்சைத் திருவிழா","உலகின் மிகப்பெரிய பேரீச்சை சந்தை ஆகஸ்டில் உச்சம் — ஏலம், இலவச சுவை."],
+camel:["புறைதா ஒட்டக சந்தை","உலகின் மிகப்பெரிய ஒட்டக சூக் — உண்மையான நஜ்தி வாழ்க்கை."],
+aarif:["ஆரிஃப் கோட்டை","350 ஆண்டு மலைமேல் கோட்டை — ஹாயிலின் சிறந்த அஸ்தமனக் காட்சி."],
+barzan:["பர்ஸான் சூக் & கிஷ்லா அரண்மனை","இரவு ஓட்டத்திற்கு முன் களைகட்டும் மாலை சூக் + உணவு."],
+hegra:["ஹெக்ரா (மதாயின் சாலிஹ்) — UNESCO","சவூதியின் பெட்ரா — 110 நபதேயக் கல்லறைகள், கூட்டம் இல்லாமல்."],
+dadan:["தாதான் & ஜபல் இக்மா","சிங்கக் கல்லறைகள் + 2,500 ஆண்டு கல்வெட்டு பள்ளத்தாக்கு."],
+oldtown:["அல்உலா பழைய நகரம் & சோலை நடை","இரவில் விளக்கேறும் 900 ஆண்டு மண் நகரம், 20 லட்சம் பேரீச்சை மரங்கள்."],
+elephant:["யானைப் பாறை","அஸ்தமனத்தில் சிவக்கும் 52 மீ மணற்கல் யானை — கரக் தேநீருடன் மாயம்."],
+harrat:["ஹர்ரத் காட்சி முனை","முழு சோலையையும் 300 மீ மேலிருந்து — அல்உலாவின் சிறந்த புகைப்படம்."],
+maraya:["மராயா கண்ணாடி கட்டிடம்","உலகின் மிகப்பெரிய கண்ணாடி கட்டிடம் — பாலைவனத்தில் கரையும் மாயம்."],
+nabawi:["மஸ்ஜித் அந்-நபவி — முதல் தரிசனம்","பச்சை குவிமாடத்தின் கீழ் நபி ﷺ அவர்களின் மசூதி — இரவில் குளிர்ந்த பளிங்கு முற்றங்கள்."],
+rawdah:["ரவ்தா ஷரீஃபா (நுசுக் முன்பதிவு)","'சுவர்க்கத் தோட்டத்தில்' தொழுகை — ஆண்/பெண் தனித்தனி நேரம்."],
+quba:["குபா மசூதி","இஸ்லாத்தின் முதல் மசூதி — இங்கு 2 ரக்அத் = உம்ராவின் நன்மை (ஹதீஸ்)."],
+uhud:["உஹுத் மலை & ஷுஹதா","உஹுத் போர்க்களம், ஹம்ஸா (ரலி) அவர்களின் இடம்."],
+qiblatain:["மஸ்ஜித் அல்-கிப்லதைன் & ஏழு மசூதிகள்","இரு கிப்லாக்களின் மசூதி + அகழ்ப் போர் தளங்கள்."],
+mdates:["மதீனா பேரீச்சை சந்தை","அஜ்வா பேரீச்சை நேரடியாக — குழந்தைகளுக்கு நிறைய இலவச சுவை."],
+nabawi2:["பிரியாவிடை — ஃபஜ்ரில் நபவி","குடைகள் விரியும் காட்சியுடன் அமைதியான இறுதி ஃபஜ்ர்."],
+alhada:["அல் ஹதா கேபிள் கார் → அல் கர்","மலை முடிச்சுகளின் மேல் 4.2 கி.மீ. பறத்தல் — கீழே நீர்ச்சறுக்கு குளங்கள்!"],
+shubra:["ஷுப்ரா அரண்மனை","ஒட்டோமான்-ரோமன் பாணி ஜன்னல்கள் — மன்னரின் கோடை மாளிகை."],
+shafa:["அல் ஷஃபா மலைக் காட்சிகள்","2,400 மீ — மாதுளை & ரோஜா பண்ணைகள், 25°C, குரங்குகள் (ஜன்னல் மூடு!)."],
+rudaf:["அல் ருதஃப் பூங்கா","பாறைகளும் புல்வெளியும் — புறப்படும் முன் கால் நீட்டல்."],
+dheeayn:["தீ ஐன் பளிங்கு கிராமம்","பளிங்குக் குன்றின் மேல் 400 ஆண்டு கற்கிராமம், கீழே வாழைத் தோட்டம், வற்றாத ஊற்று."],
+raghadan:["ரகதான் வனப் பூங்கா","2,000 மீ சூரை காடு — மூடுபனி, விளையாட்டு மைதானம், குறும்பு குரங்குகள்."],
+highcity:["அப்ஹா ஹை சிட்டி","24°C இல் மலை விளிம்பு நடைபாதை — விளக்குக் கடலின் மேல் இரவு."],
+rijal:["ரிஜால் அல்மா பாரம்பரிய கிராமம்","'ஜிஞ்சர்பிரெட்' கிராமம் — வெண் குவார்ட்ஸ் அலங்கார 900 ஆண்டு கற்கோபுரங்கள், வண்ண கத் ஓவியங்கள்."],
+sawda:["ஜபல் சவ்தா உச்சி (3,015 மீ)","சவூதியின் கூரை — தோஹா 45°C இல் வேகும்போது இங்கு 18–22°C மேகக் காடு."],
+abhacable:["அப்ஹா/சூதா கேபிள் கார்","மலை விளிம்பிலிருந்து படிக்கட்டு பண்ணைகளின் மேல் — வானிலிருந்து அசீர்."],
+muftaha:["ஆர்ட் ஸ்ட்ரீட் & அல் முஃப்தஹா","சுவரோவியங்கள், நீரூற்றுகள், கஹ்வா — குளிர்ந்த மாலையில் அப்ஹாவின் கலை இதயம்."],
+umrahx:["உம்ரா — தவாஃப், ஸயீ, ஹல்க் 🕋","எல்லாவற்றின் நோக்கம். இரவு ~23:00: குளிர்ந்த பளிங்கு, மென்மையான கூட்டம், ஒளிரும் கஅபா."],
+haramday:["மஸ்ஜித் அல்-ஹராமில் ஜுமுஆ","கஅபாவை நோக்கி வெள்ளித் தொழுகை — சீக்கிரம் செல்லுங்கள், விரைவில் நிரம்பும்."],
+jabalnour:["ஜபல் அந்-நூர் / ஹிரா குகை","முதல் வஹீயின் மலை — அடிவாரத்திலிருந்து காணுங்கள்; ஆகஸ்டில் ஏற வேண்டாம்."],
+clocktower:["கடிகார கோபுர அருங்காட்சியகம்","400 மீ உயரே பிரம்மாண்ட கடிகார முகம் + ஹராம் பால்கனி."]};
+TA.ck={
+docs:["பாஸ்போர்ட் 5 (6+ மாத செல்லுபடி)","கத்தார் RP அட்டைகள் 5","சவூதி eVisa பிரிண்ட் ×5","UAE eVisa பிரிண்ட் ×5","கத்தார் + சர்வதேச ஓட்டுநர் உரிமம்","இஸ்திமாரா + கடன் இருந்தால் வங்கி NOC","சவூதி TPL + UAE TPL காப்பீடு சான்றுகள்","கத்தார் கார் காப்பீடு அட்டை","MSAR முன்பதிவு உறுதிப்படுத்தல்","ஹோட்டல் முன்பதிவு பட்டியல் (பிரிண்ட்)","பணம்: SAR 2,000 + AED 800 + QAR 300","2 வங்கி அட்டைகள் (வெவ்வேறு நெட்வொர்க்)"],
+vehicle:["முழு சர்வீஸ் முடிந்தது (எண்ணெய், ஃபில்டர், பிரேக்)","டயர்கள் + உதிரி சரிபார்ப்பு, வெப்ப PSI அமைப்பு","குளிர்நீர் மாற்றம் & நிரப்பல்","பேட்டரி சோதனை","AC சர்வீஸ் (18 நாள் தொடர்ந்து ஓடும்)","ஜாக், ஸ்பேனர், இழுவைக் கயிறு, ஜம்பர் கேபிள்","எச்சரிக்கை முக்கோணம் + ஒளிரும் மேலாடை (KSA கட்டாயம்)","தீயணைப்பான் + முதலுதவி பெட்டி","12V டயர் காற்றடிப்பான் + பஞ்சர் ஃபோம்","போன் மவுண்ட் + 4-போர்ட் சார்ஜர் + பவர் பேங்க்","கார்-படுக்கை & படுக்கை விரிப்பு சோதனை","10 லி அவசர தண்ணீர் + அனைத்து ஜன்னல் நிழல்கள்"],
+packing:["ஆவண ஜிப் கோப்பு (முன் இருக்கை)","இலேசான ஜாக்கெட்டுகள் — தாயிஃப்/அப்ஹா இரவுகள் 17–21°C!","அடக்கமான உடைகள்; ஹராம் நகரங்களுக்கு அபாயாக்கள்","5 நீர் பாட்டில்கள் + குளிர்பெட்டி","SPF50 சன்ஸ்கிரீன், தொப்பி, கண்ணாடி ×5","குழந்தைகள்: ஆஃப்லைன் டேப்லெட், வண்ணம், சர்ப்ரைஸ் பை ×6","அலீனாவுக்கு பூஸ்டர் + கழுத்து தலையணை ×3","மருந்துகள்: காய்ச்சல், ORS, பயண மயக்கம், பிளாஸ்டர்","சலவை பைகள் + பயண சோப்பு","நீச்சல் உடை ×5 (தினசரி பரிசு!)","பிக்னிக் பாய் + தொழுகை பாய்கள் + திசைகாட்டி","ஸம்ஸம் 5 லி கேன்கள் ×2","ஆஃப்லைன் வரைபடங்கள் (KSA + UAE)","நுசுக் ஆப் + ரவ்தா முன்பதிவு","ஹெக்ரா சுற்றுலா முன்பதிவு (நாள் 9, 6:30)","புர்ஜ் கலீஃபா 17:30 முன்பதிவு (நாள் 4)"],
+ihram:["ஆண்களுக்கு 2 இஹ்ராம் செட் (தலா 2 வெள்ளைத் துணி)","இஹ்ராம் பெல்ட் / பணப் பை","வாசனையற்ற சோப்பு & சன்ஸ்கிரீன்","செருப்புகள் (கணுக்கால் மூடாதவை)","பெண்கள்: வசதியான அபாயா (இஹ்ராமில் முகத்திரை கூடாது)","தக்ஸீருக்கு சிறிய கத்தரிக்கோல் (காரில்)","வெள்ளை குடை (பளிங்கு முற்றத்திற்கு)","3 குழந்தைகளுக்கும் எண் எழுதிய கைப்பட்டைகள்","அலீனாவுக்கு மடக்கு ஸ்ட்ரோலர் (மேல் மதாஃப் அனுமதி)","முழு குடும்பமும் எழுதிய துஆ பட்டியல்"]};
+TA.pre=["சவூதி பல-நுழைவு eVisa ×5 (காப்பீட்டுடன் SAR 380/நபர்)","UAE GCC-குடியிருப்பாளர் eVisa ×5 (≈AED 250/நபர்)","சவூதி வாகன TPL காப்பீடு (~3 வாரம்)","UAE வாகன TPL காப்பீடு","எக்ஸ்-டிரெயில் முழு சர்வீஸ் + உதிரி","eSIM / டேட்டா (KSA + UAE)"];
+TA.docsCards=[
+"கத்தார் RP (3+ மாத செல்லுபடி) உள்ள எந்த நாட்டவரும் — இலங்கையர் உட்பட — visitsaudi.com இல் விண்ணப்பிக்கலாம். இது 1 வருட பல-நுழைவு eVisa; ஒவ்வொரு தங்கலும் 90 நாள் வரை — UAE சென்று மீண்டும் சவூதி நுழைய இதுவே சரி. பாஸ்போர்ட் 6+ மாதம். 18 வயதுக்குட்பட்டோருக்கு பெற்றோர் விண்ணப்பிப்பர். ஒப்புதல் 24–48 மணி. ≈ SAR 380/நபர் · 5 பேர் ≈ QAR 1,845.",
+"கத்தாரில் வசிக்கும் இலங்கையருக்கு UAE 'GCC குடியிருப்பாளர் eVisa' தேவை — ICP போர்ட்டலில் முன்கூட்டியே (எல்லையில் வழங்கப்படாது). 30 நாள், ஒருமுறை நீட்டிப்பு. RP 3+ மாத செல்லுபடி & தொழில் பொருத்தம் வேண்டும். 2–3 வாரம் முன் 5 பேருக்கும் விண்ணப்பியுங்கள். ≈ AED 250/நபர் ≈ QAR 1,239.",
+"MSAR போர்ட்டலில் வாகன+பயணி முன்பதிவு = விரைவு வழி. கத்தார் வெளியேறல்: பாஸ்போர்ட்+RP ஸ்கேன், கார் வெளியேறு முத்திரை (இஸ்திமாரா ஓட்டுநர் பெயரில் / NOC). சவூதி நுழைவு: eVisa சரிபார்ப்பு, கைரேகை (முதல் முறை), எக்ஸ்ரே; சவூதி TPL காப்பீடு (~SAR 120/வாரம்) ஆன்லைனில் முன்பே. 1.5–3 மணி ஒதுக்கவும் — வியாழன்/வெள்ளி மாலை தவிர்க்கவும்.",
+"பத்ஹாவில் சவூதி வெளியேறல் விரைவு — எல்லைக்கு முன் சவூதி பக்கம் நிரப்பவும் (~40% மலிவு). குவைஃபாத்தில் UAE நுழைவு: eVisa, பயோமெட்ரிக் புகைப்படம், கார் எக்ஸ்ரே, UAE TPL (~AED 150). 45 நிமிடம்–2 மணி. நாள் 6 திரும்பலில்: UAE வெளியேறல் வேகம்; சவூதி மறு-நுழைவு பயோமெட்ரிக் ஏற்கனவே உள்ளதால் விரைவு.",
+"எடுத்துச் செல்ல: 5 பாஸ்போர்ட் + 5 RP + அனைத்து விசா பிரிண்ட்கள் + ஓட்டுநர் உரிமம் (சர்வதேச பரிந்துரை) + இஸ்திமாரா (கடன் காரெனில் வங்கி NOC) + 3 நாட்டு காப்பீட்டு சான்றுகள் + திருமண & பிறப்பு சான்றிதழ்கள் (அரிதாக கேட்பர்) + ஹோட்டல் பட்டியல் + பணம் SAR/AED/QAR + 2 அட்டைகள் + KSA/UAE மருத்துவ காப்பீடு.",
+"நாள் 1 அதிகாலை ~4:30 அபு சம்ரா கடக்கவும் — குழந்தைகள் இரு எல்லைகளிலும் தூங்கியிருப்பர். 10 ஆவணங்களும் ஒரே ஜிப் கோப்பில், நபர் வாரியாக. வரிசைகளில் நிழல் இல்லை — தண்ணீர்+தின்பண்டம் கைவசம். சிம்: STC/Mobily eSIM ஆன்லைன் + UAE eSIM; ஆஃப்லைன் வரைபடங்கள் முன்பே. எல்லைகளை புகைப்படம் எடுக்க வேண்டாம்; சவூதி எல்லைகளில் அடக்கமான உடை."];
+TA.umrahMiqat="மீகாத் = இஹ்ராம் இன்றி மக்கா நோக்கி கடக்கக்கூடாத எல்லை. அப்ஹாவிலிருந்து கடற்கரை ரூட் 5 வழி வருவதால் உங்கள் மீகாத் யலம்லம் (அஸ்-சஅதிய்யா) — மக்காவுக்கு ~100 கி.மீ. தெற்கே, உங்கள் சாலையிலேயே. பெரிய மசூதி, குளியல், வுளூ, பார்க்கிங், இஹ்ராம் கடைகள் உண்டு. திட்டம்: ~17:30 நிறுத்தம் — குளியல்/உடை மாற்றம், 2 ரக்அத், நிய்யத்: 'லப்பைக் அல்லாஹும்ம உம்ரா' — பின் மக்கா வரை தல்பியா. (மதீனா→மக்கா நேர் வழி என்றால் மீகாத் துல்-ஹுலைஃபா; தாயிஃப் வழி என்றால் கர்ன் அல்-மனாசில்.)";
+TA.umrahSteps=[
+"இஹ்ராம் & நிய்யத் (யலம்லம்) — குளியல், 2 ரக்அத், உம்ரா எண்ணம். ஆண்கள்: 2 வெள்ளை தையலில்லா துணிகள்; பெண்கள்: சாதாரண அடக்க உடை. இனி: வாசனை, முடி/நகம் வெட்டுதல், சண்டை கூடாது. குழந்தைகளும் பெற்றோர் வழிகாட்டுதலில் உம்ரா செய்யலாம்.",
+"சாலையில் தல்பியா — 'லப்பைக் அல்லாஹும்ம லப்பைக்…' கஅபா காணும் வரை. குழந்தைகளுக்கு கற்றுத் தாருங்கள் — 90 நிமிட ஓட்டம் சிறப்பாகும்.",
+"மஸ்ஜித் அல்-ஹராம் நுழைவு (வலது கால், துஆ) — ஓய்வுக்குப் பின் ~22:30. கஅபாவின் முதல் பார்வை: நின்று, தனிப்பட்ட துஆ — குழந்தைகள் என்றும் நினைவில் வைக்கும் தருணம்.",
+"தவாஃப் — 7 சுற்றுகள். ஹஜருல் அஸ்வத் மூலையில் (பச்சை விளக்கு) தொடக்கம், கஅபா இடப்பக்கம். ஒவ்வொரு முறையும் கல்லை நோக்கி 'பிஸ்மில்லாஹ், அல்லாஹு அக்பர்'. கூட்டமானால் அலீனா தோளில்/மேல் தள மதாஃபில் ஸ்ட்ரோலர். யமனி மூலை → ஹஜருல் அஸ்வத்: 'ரப்பனா ஆதினா ஃபித்துன்யா ஹசனா…'.",
+"மகாம் இப்ராஹீமுக்குப் பின்னால் 2 ரக்அத், பின் ஸம்ஸம் — குழந்தைகளின் பாட்டில்களை நிரப்புங்கள்; குளிர்ந்தது, வரம்பில்லை.",
+"ஸயீ — சஃபா ⇄ மர்வா 7 முறை (~2.5 கி.மீ., A/C நடைகூடம்). ஸ்ட்ரோலர் வழி உண்டு. பச்சை விளக்குகளுக்கு இடையில் ஆண்கள் மெது ஓட்டம். எங்கும் ஓய்வு எடுக்கலாம் — வழியில் ஸம்ஸம்.",
+"ஹல்க் / தக்ஸீர் — ஆண்கள்: மொட்டை அல்லது குறைத்தல் (வெளியே சலூன்கள் ~SAR 10–20). பெண்கள்: விரல் நுனி அளவு. உம்ரா நிறைவு — முபாரக்! இஹ்ராம் கட்டுப்பாடுகள் முடிவு."];
+TA.umrahKids="குழந்தைகளுடன் உம்ரா: தவாஃப் 22:30க்குப் பின் அல்லது ஃபஜ்ருக்குப் பின் (குளிர், அமைதி); கூட்டமானால் ஸ்ட்ரோலருடன் மேல் தளம்; பிரிந்தால் சந்திப்பு இடம் — கேட் 1 (கிங் அப்துல் அஸீஸ்); மூவருக்கும் தொலைபேசி எண் கைப்பட்டை; தின்பண்டங்கள் + ஸம்ஸம் தாராளம். மொத்த நேரம் குழந்தைகளுடன் ~3–4 மணி.";
+TA.prayerCards=["இணையம் கிடைத்தவுடன் உங்கள் தற்போதைய வழி நகரத்தின் நேரடி தொழுகை நேரங்கள் இங்கே ஏற்றப்படும்; ஆஃப்லைனில் கடைசி சேமிப்பு காட்டப்படும்.",
+"பயணி (முசாஃபிர்): லுஹர்/அஸர்/இஷா 2 ரக்அத் சுருக்கம் + லுஹர்+அஸர், மஃக்ரிப்+இஷா சேர்த்தல் அனுமதி — மாலை ஓட்டங்களுக்கு ஏற்றது. ஒவ்வொரு சவூதி எரிபொருள் நிலையத்திலும் தொழுமிடம்; SASCO/Naft/ADNOC இல் குடும்ப அறை + சுத்தமான வுளூ. மதீனாவில் ரவ்தா நுசுக் ஆப்பில் இலவச முன்பதிவு (1–3 நாள் முன்). வெள்ளி (நாள் 3, 10, 17): ஜுமுஆ ~11:45–13:00 சுற்றித் திட்டமிடுங்கள்."];
+TA.drivingCards=[
+"ரூட் 15 சரவாத் மலைத்தொடர் 2,000–2,900 மீ. இறக்கத்தில் எஞ்சின் பிரேக் (L/2 கியர்) — பிரேக்கை தொடர்ந்து அழுத்த வேண்டாம் (அல் ஹதா & ரிஜால் இறக்கங்கள் 8–10%). ஆகஸ்ட் மதியம் அசீரில் மூடுபனி + திடீர் மழை: மூடுபனி விளக்கு, 60 கி.மீ., குருட்டு வளைவில் ஓவர்டேக் இல்லை. குரங்குகள் — ஜன்னல் மூடு, உணவளிக்காதீர். மலைப் பகுதிக்கு முன் எரிபொருள். அப்ஹா→முஹாயில்: 30 கி.மீ.யில் 2,000 மீ இறக்கம் — முதலில் பிரேக் சோதனை.",
+"ஆகஸ்ட் சாலை மேற்பரப்பு 60°C+ — டயர் அழுத்தம் பரிந்துரையின் மேல் எல்லையில் (குளிர்ந்த நிலையில் அளக்கவும்). அந்தி நேர ஒட்டகங்கள் = சவூதி நெடுஞ்சாலைகளின் பெரும் ஆபத்து; 17:00 பின் ஓரங்களை தொடர்ந்து கவனி. மணற்புயல்: முழுவதுமாக விலகி, ஹசார்ட் ON, விளக்கு OFF. 10 லி தண்ணீர் + நிழல் திரைகள். 110–120 max; சாஹர் ரேடார் எங்கும், அபராதம் தானியங்கி.",
+"குழந்தைகள் எப்போதும் பெல்ட்; அலீனா (4) இரவிலும் பூஸ்டரில் — நிறுத்தி-தூங்குவதே சிறந்தது. 2 மணிக்கொரு ஓட்டுநர் மாற்றம்/நிறுத்தம்; 23:30க்கு பின் ஓட்டம் இல்லை. வேக வரம்பு: சவூதி 120–140 (பலகை), நகர் 50–80; UAE பலகைப்படி. KSA விபத்து: 911/993, கார்களை நகர்த்தாதீர், நஜ்ம்/முரூர் அறிக்கை காத்திருங்கள். ⛽ குறியிட்ட வழிகளில் டேங்க் ½க்கு மேல்.",
+"பயண இயந்திரம்: 07:00–18:00 சுற்றுலா, 18:00–23:30 ஓட்டம் — குழந்தைகள் தூக்கம். 17:30 இரவு உணவு, பைஜாமா + பல் துலக்கல், கார்-படுக்கை தயார். நாள் 6 & 17 பகல் ஓட்டங்களுக்கு ஆஃப்லைன் கார்ட்டூன். ஒவ்வொரு 3வது நாள் சர்ப்ரைஸ் பை (QAR 20). பொன் விதி: தினமும் ஒரு இடம் குழந்தைகள் தேர்வு. ஹோட்டல் நீச்சல் = உண்மையான பரிசு.",
+"வளைகுடா கடற்கரை 41–45°C — வெளிப்புற இடங்கள் 10:00 முன் / 17:00 பின் மட்டும்; மதியம் = அருங்காட்சியகம், மால், குகை, குளம். ஆசீர்வதிக்கப்பட்ட விதிவிலக்கு: தாயிஃப் 33°, அல் பாஹா 30°, அப்ஹா 28° — அதனால்தான் மலைப் பகுதி நடுப் பயணத்தில். காரில் நபருக்கு 3 லி தண்ணீர், குழந்தைகளுக்கு எலக்ட்ரோலைட், தொப்பி + SPF50. நிறுத்திய காரில் யாரையும் விடாதீர்கள் — 'ஒரு நிமிடம்' கூட."];
+TA.emergency=["சவூதி: அனைத்து அவசரமும் 911 · ஆம்புலன்ஸ் 997 · போக்குவரத்து 993 · நெடுஞ்சாலை பாதுகாப்பு 996 · நஜ்ம் விபத்து 920 000 560 · இலங்கை தூதரகம் ரியாத் +966 11 460 8689",
+"UAE: போலீஸ் 999 · ஆம்புலன்ஸ் 998 · தீ 997 · சயீத் (அபுதாபி விபத்து) 800 72233 · இலங்கை தூதரகம் அபுதாபி +971 2 631 6444",
+"கத்தார்: அவசரம் 999 · ஹமத் சாலை சேவை 40 407 407 · குடும்ப WhatsApp நேரடி இருப்பிடம் 24/7 · பிரிந்தால்: கடைசி ஹோட்டல் லாபி"];
+TA.budgetCards=["மொத்தத் தொகை — விசா, ஹோட்டல், எரிபொருள், உணவு, டிக்கெட், இதர அனைத்தும் சேர்ந்தது. நபர் & நாள் கணக்கும் கீழே.",
+"செலவு எங்கே போகிறது: தங்குமிடம், எரிபொருள், உணவு, நுழைவுச்சீட்டு, பார்க்கிங், இதர + பயண-முன் செலவுகள்.",
+"எரிபொருள் பகுப்பாய்வு: சவூதி பெட்ரோல் UAE-ஐ விட ~35% மலிவு — எல்லைகளில் எப்போதும் சவூதி பக்கம் நிரப்புங்கள். எக்ஸ்-டிரெயில் @ 10 லி/100 கி.மீ.",
+"பயண-முன் செலவுகள்: விசாக்கள், வாகன காப்பீடுகள், சர்வீஸ், சிம்கள்.",
+"17 இரவு தங்குமிடம் — நகர் வாரியாக, குடும்ப அறை/அபார்ட்-ஹோட்டல் விலைகள்.",
+"தினசரி மொத்தங்கள் — ஒவ்வொரு நாளின் உட்கூறுகள் அந்த நாளின் மொத்தத்திற்கு சரியாக சமம்; அனைத்து நாள் மொத்தங்களின் கூட்டு + பயண-முன் = மொத்தத் தொகை."];
+TA.footer="ஜனாஸ் குடும்பத்திற்காக வடிவமைக்கப்பட்டது · 6,870 கி.மீ. · 3 நாடுகள் · வாழ்நாள் நினைவு. விலைகள் 2026 நடுப்பகுதி மதிப்பீடுகள் — முன்பதிவு முன் உறுதிசெய்யவும். பயணம் இனிதாகட்டும் — رحلة سعيدة";
+
+/* ================= INJECTION ENGINE ================= */
+function el(tag,cls,html){const e=document.createElement(tag);e.className=cls;e.innerHTML=html;return e}
+function injectSecs(){
+  Object.entries(TA.secs).forEach(([id,[h,sub]])=>{const s=document.getElementById(id);if(!s)return;
+    const sh=s.querySelector(".sec-h");if(sh&&!sh.querySelector(".ta"))sh.appendChild(el("div","ta tam",h));
+    const ss=s.querySelector(".sec-sub");if(ss&&sub&&!ss.querySelector(".ta"))ss.appendChild(el("div","ta tam",sub));});
+  const tag=document.querySelector("#hero .tag");if(tag&&!tag.querySelector(".ta"))tag.appendChild(el("div","ta tam",TA.hero.tag));
+  const note=document.querySelector("#overview .note");if(note&&!note.querySelector(".ta"))note.appendChild(el("div","ta tam",TA.hero.note));
+  document.querySelectorAll("#overview .g3 > .card").forEach((c,i)=>{if(TA.hero.cards[i]&&!c.querySelector(".ta"))c.appendChild(el("div","ta tam",TA.hero.cards[i]))});
+  document.querySelectorAll("#docs .grid > .card").forEach((c,i)=>{if(TA.docsCards[i]&&!c.querySelector(":scope > .ta"))c.appendChild(el("div","ta tam",TA.docsCards[i]))});
+  const mi=document.querySelectorAll("#umrah .card")[0];if(mi&&!mi.querySelector(".ta"))mi.appendChild(el("div","ta tam",TA.umrahMiqat));
+  document.querySelectorAll("#umrah .steps .step > div").forEach((s,i)=>{if(TA.umrahSteps[i]&&!s.querySelector(".ta"))s.appendChild(el("div","ta tam",TA.umrahSteps[i]))});
+  const un=document.querySelector("#umrah .note");if(un&&!un.querySelector(".ta"))un.appendChild(el("div","ta tam",TA.umrahKids));
+  document.querySelectorAll("#prayer .card").forEach((c,i)=>{if(TA.prayerCards[i]&&!c.querySelector(":scope > .ta"))c.appendChild(el("div","ta tam",TA.prayerCards[i]))});
+  document.querySelectorAll("#driving .card").forEach((c,i)=>{if(TA.drivingCards[i]&&!c.querySelector(".ta"))c.appendChild(el("div","ta tam",TA.drivingCards[i]))});
+  document.querySelectorAll("#emergency .card").forEach((c,i)=>{if(TA.emergency[i]&&!c.querySelector(".ta"))c.appendChild(el("div","ta tam",TA.emergency[i]))});
+  const f=document.querySelector("footer");if(f&&!f.querySelector(".ta"))f.appendChild(el("div","ta tam",TA.footer));
+  document.querySelectorAll("#statsBar .stat .l").forEach((l,i)=>{if(TA.ui.stats[i]&&!l.querySelector(".ta"))l.appendChild(el("div","ta",TA.ui.stats[i]))});
+  document.querySelectorAll(".sb-a").forEach(a=>{const k=a.dataset.go,t=TA.ui.nav[k];if(t&&!a.querySelector(".ta"))a.appendChild(el("span","ta"," · "+t))});
+}
+function injectDays(){
+  DAYS.forEach(x=>{const card=document.getElementById("day"+x.d);if(!card||card.dataset.taDone)return;
+    const t=TA.days[x.d]||{};
+    const slots=card.querySelectorAll(".tl .slot");
+    const sl=[t.m,t.a,t.e,t.n];
+    slots.forEach((s,i)=>{const st=s.querySelector(".st");if(st)st.appendChild(el("span","ta"," · "+TA.ui.slots[i]));
+      if(sl[i])s.querySelector(".sx").appendChild(el("div","ta tam",sl[i]))});
+    const tipOrder=x.alt?["fuel","food","fam","kids","wx","road","alt","hotel"]:["fuel","food","fam","kids","wx","road","hotel"];
+    const tipTa={fam:t.fam,kids:t.kids,wx:t.wx,road:t.road,food:t.food,alt:t.alt};
+    card.querySelectorAll(".tipgrid .tip").forEach((tip,i)=>{const key=tipOrder[i];if(!key)return;
+      tip.querySelector("b").appendChild(el("span","ta"," · "+TA.ui.tips[key]));
+      if(tipTa[key])tip.appendChild(el("div","ta tam",tipTa[key]))});
+    card.querySelectorAll(".dbudget .brow").forEach((r,i)=>{if(TA.ui.brows[i])r.querySelector("span").appendChild(el("span","ta"," · "+TA.ui.brows[i]))});
+    const ms=card.querySelector(".money-side .s");if(ms)ms.appendChild(el("div","ta",TA.ui.daybudget));
+    const ah=card.querySelector(".atts");if(ah&&ah.previousElementSibling)ah.previousElementSibling.appendChild(el("span","ta"," · "+TA.ui.attHead));
+    const dc=card.querySelector(".done-ck");if(dc)dc.appendChild(el("span","ta",TA.ui.markdone));
+    card.querySelectorAll(".att").forEach(a=>{const tr=TA.atts[a.dataset.att];if(!tr)return;
+      a.querySelector(".nm").appendChild(el("div","ta tam",tr[0]));
+      a.querySelector(".why").appendChild(el("div","ta tam",tr[1]));
+      const lb=a.querySelector(".ft label");if(lb)lb.appendChild(el("span","ta"," · "+TA.ui.inbudget));});
+    card.dataset.taDone=1;});
+}
+function injectBudget(){
+  const cards=[...document.querySelectorAll("#budgetDash .card")];
+  cards.forEach((c,i)=>{if(TA.budgetCards[i]&&!c.querySelector(":scope > .ta"))c.appendChild(el("div","ta tam",TA.budgetCards[i]))});
+  document.querySelectorAll("#budgetDash .kv .k").forEach((k,i)=>{/* pretrip rows */});
+  const pc=document.querySelectorAll("#budgetDash .g2 .card")[0];
+  if(pc)pc.querySelectorAll(".kv .k").forEach((k,i)=>{if(TA.pre[i]&&!k.querySelector(".ta"))k.appendChild(el("div","ta tam",TA.pre[i]))});
+}
+function injectCK(){
+  const blocks={docs:0,vehicle:1,packing:2};
+  Object.entries(blocks).forEach(([key,idx])=>{
+    const card=document.querySelector(`[data-cklist="${key}"]`);if(!card)return;
+    card.querySelectorAll(".ck .tx").forEach((tx,i)=>{if(TA.ck[key][i]&&!tx.querySelector(".ta"))tx.appendChild(el("div","ta tam",TA.ck[key][i]))});});
+  document.querySelectorAll("#ckIhram .ck .tx").forEach((tx,i)=>{if(TA.ck.ihram[i]&&!tx.querySelector(".ta"))tx.appendChild(el("div","ta tam",TA.ck.ihram[i]))});
+}
+function injectAll(){injectSecs();injectDays();injectBudget();injectCK()}
+
+/* re-render hooks */
+const _rb=renderBudget;renderBudget=function(){_rb();injectBudget()};
+const _rc=renderChecklists;renderChecklists=function(){_rc();injectCK()};
+
+/* ================= LANGUAGE TOGGLE ================= */
+const langBtn=document.createElement("button");
+langBtn.id="langBtn";langBtn.className="tbtn";langBtn.title="Tamil bilingual mode (L) — தமிழ்";langBtn.textContent="அ";
+document.querySelector("#darkBtn").before(langBtn);
+function setLang(l){
+  document.documentElement.dataset.lang=l;store.set("lang",l);
+  langBtn.classList.toggle("on",l==="ta");
+  langBtn.textContent=l==="ta"?"A·அ":"அ";
+  document.querySelector("#searchIn").placeholder=l==="ta"?"Search / தேடுங்கள்… ( / )":"Search cities, attractions… ( / )";
+}
+langBtn.onclick=()=>setLang(document.documentElement.dataset.lang==="ta"?"en":"ta");
+document.addEventListener("keydown",e=>{if(e.target.tagName!=="INPUT"&&(e.key==="l"||e.key==="L"))langBtn.click()});
+
+/* Tamil in search index */
+ATTS.forEach(a=>{const tr=TA.atts[a.id];if(tr){const it=INDEX.find(i=>i.go==="day"+a.d&&i.t===a.n);if(it)it.k+=" "+tr[0]}});
+
+injectAll();
+setLang(store.get("lang","en"));
+</script>
+<style>
+/* ============ SELF-MEMORY EDIT LAYER ============ */
+.ebtn{display:none;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px 9px;cursor:pointer;color:var(--ink);font-size:12px;line-height:1.5}
+.ebtn:hover{border-color:var(--gold)}
+body.editing .ebtn{display:inline-flex;align-items:center;gap:4px}
+.ebtn.danger{color:#b3541e}
+.eaddrow{display:none;gap:10px;margin:14px 0 4px;flex-wrap:wrap}
+body.editing .eaddrow{display:flex}
+#addDayWrap{display:none;text-align:center;margin:6px 0 10px}
+body.editing #addDayWrap{display:block}
+.dayimg{position:relative;margin:12px 0 4px}
+.dayimg img{width:100%;max-height:420px;object-fit:cover;border-radius:12px;display:block;border:1px solid var(--line)}
+.dayimg .ebtn{position:absolute;top:8px;right:8px}
+#mapCustom img{width:100%;border-radius:12px;display:block}
+.ggeOverlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:30px 12px;overflow:auto}
+.ggeModal{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow2);width:100%;max-width:660px;padding:20px;margin-bottom:40px}
+.ggeModal h3{font-family:var(--serif);margin-bottom:14px}
+.ggeModal .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.ggeModal label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink3)}
+.ggeModal .f.full{grid-column:1/-1}
+.ggeModal input,.ggeModal select,.ggeModal textarea{width:100%;margin-top:3px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:inherit;font-size:13px}
+.ggeModal textarea{min-height:58px;resize:vertical}
+.ggeModal .btns{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.ggeModal .btns .primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+#editBtn.on{border-color:var(--gold);background:var(--goldL);color:var(--gold);font-weight:700}
+.day-ebtns{display:flex;gap:6px;flex:none;align-items:center}
+@media print{.ebtn,.eaddrow,#addDayWrap,.ggeOverlay,.dayimg .ebtn{display:none!important}}
+</style>
+<script>
+"use strict";
+/* ============ SELF-MEMORY EDIT ENGINE ============ */
+/* ---- IndexedDB for uploaded images (much bigger than localStorage) ---- */
+const IDB={_db:null,
+ open(){return new Promise((res,rej)=>{if(IDB._db)return res(IDB._db);
+  const r=indexedDB.open("gge",1);
+  r.onupgradeneeded=()=>r.result.createObjectStore("img");
+  r.onsuccess=()=>{IDB._db=r.result;res(IDB._db)};r.onerror=()=>rej(r.error)})},
+ async set(k,v){const db=await IDB.open();return new Promise((res,rej)=>{const t=db.transaction("img","readwrite");t.objectStore("img").put(v,k);t.oncomplete=res;t.onerror=()=>rej(t.error)})},
+ async del(k){const db=await IDB.open();return new Promise((res,rej)=>{const t=db.transaction("img","readwrite");t.objectStore("img").delete(k);t.oncomplete=res;t.onerror=()=>rej(t.error)})},
+ async all(){const db=await IDB.open();return new Promise((res,rej)=>{const out={};const c=db.transaction("img").objectStore("img").openCursor();
+  c.onsuccess=()=>{const cur=c.result;if(cur){out[cur.key]=cur.value;cur.continue()}else res(out)};c.onerror=()=>rej(c.error)})},
+ async clear(){const db=await IDB.open();return new Promise((res,rej)=>{const t=db.transaction("img","readwrite");t.objectStore("img").clear();t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+};
+function pickImage(cb){const i=document.createElement("input");i.type="file";i.accept="image/*";
+ i.onchange=()=>{const f=i.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{const im=new Image();im.onload=()=>{
+    const M=1280;let w=im.width,h=im.height;
+    if(Math.max(w,h)>M){const s=M/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}
+    const c=document.createElement("canvas");c.width=w;c.height=h;
+    c.getContext("2d").drawImage(im,0,0,w,h);
+    cb(c.toDataURL("image/jpeg",.82))};im.src=rd.result};
+  rd.readAsDataURL(f)};
+ i.click()}
+
+/* ---- persistence ---- */
+function saveAll(){store.set("udays",DAYS);store.set("uatts",ATTS);
+ Object.keys(CBYD).forEach(k=>delete CBYD[k]);DAYS.forEach(x=>CBYD[x.d]=x)}
+function rerenderAll(){renderHero();renderDays();try{injectDays()}catch(e){}
+ renderBudget();renderMap();paintProgress();applyImgCache();enhanceAll();applyCustomImages()}
+function commit(){saveAll();rerenderAll()}
+
+/* ---- generic form modal ---- */
+function openForm(title,fields,vals,onSave,onDelete){
+ const esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+ const ov=document.createElement("div");ov.className="ggeOverlay";
+ ov.innerHTML='<div class="ggeModal"><h3>'+esc(title)+'</h3><div class="fgrid">'+fields.map(f=>{
+  let v=vals[f.k];if(v===undefined||v===null)v=(f.def!==undefined?f.def:"");
+  if(f.type==="textarea")return '<label class="f full">'+f.l+'<textarea data-f="'+f.k+'">'+esc(Array.isArray(v)?v.join("\n"):v)+'</textarea></label>';
+  if(f.type==="select")return '<label class="f">'+f.l+'<select data-f="'+f.k+'">'+f.opts.map(o=>'<option value="'+o+'"'+(o==v?" selected":"")+'>'+o+'</option>').join("")+'</select></label>';
+  return '<label class="f'+(f.full?" full":"")+'">'+f.l+'<input data-f="'+f.k+'" type="'+(f.type==="number"?"number":"text")+'" step="any" value="'+esc(v)+'"></label>';
+ }).join("")+'</div><div class="btns">'+
+ (onDelete?'<button class="tbtn" data-act="del" style="margin-right:auto;color:#b3541e">🗑 Delete</button>':"")+
+ '<button class="tbtn" data-act="cancel">Cancel</button><button class="tbtn primary" data-act="save">💾 Save</button></div></div>';
+ document.body.appendChild(ov);
+ ov.addEventListener("click",e=>{
+  const act=e.target.dataset&&e.target.dataset.act;
+  if(e.target===ov||act==="cancel"){ov.remove();return}
+  if(act==="del"){if(confirm("Delete this? It cannot be undone (unless you restore a backup).")){ov.remove();onDelete()}return}
+  if(act==="save"){const out={};
+   ov.querySelectorAll("[data-f]").forEach(el2=>{const f=fields.find(x=>x.k===el2.dataset.f);let v=el2.value;
+    if(f.type==="number")v=parseFloat(v)||0;
+    if(f.arr)v=v.split("\n").map(s=>s.trim()).filter(Boolean);
+    out[f.k]=v});
+   ov.remove();onSave(out)}});
+}
+
+/* ---- field definitions ---- */
+const DAYF=[
+ {k:"date",l:"Date (e.g. Wed 5 Aug)"},{k:"dow",l:"Weekday (3 letters)"},
+ {k:"cc",l:"Colour code",type:"select",opts:["QA","AE","SA","RET"]},
+ {k:"route",l:"Route / day title",full:1},
+ {k:"km",l:"Driving km",type:"number"},{k:"drv",l:"Drive time (text)"},
+ {k:"stay",l:"Overnight city"},
+ {k:"hotel",l:"🏨 Hotel — name & notes",full:1},
+ {k:"hCur",l:"Hotel currency",type:"select",opts:["QAR","SAR","AED"]},
+ {k:"hV",l:"Hotel cost / night",type:"number"},
+ {k:"m",l:"🌅 Morning plan",type:"textarea"},{k:"a",l:"☀ Afternoon plan",type:"textarea"},
+ {k:"e",l:"🌆 Evening plan",type:"textarea"},{k:"n",l:"🌙 Night plan",type:"textarea"},
+ {k:"fuel",l:"⛽ Fuel stops (one per line)",type:"textarea",arr:1},
+ {k:"food",l:"🍽 Food",type:"textarea"},{k:"fam",l:"👨‍👩‍👧 Family tip",type:"textarea"},
+ {k:"kids",l:"🧒 Kids tip",type:"textarea"},{k:"wx",l:"🌡 Weather"},
+ {k:"road",l:"🛣 Road notes",type:"textarea"},{k:"alt",l:"🔀 Alternative (optional)",type:"textarea"},
+ {k:"fuelQ",l:"Fuel budget QAR",type:"number"},{k:"foodQ",l:"Food budget QAR",type:"number"},
+ {k:"parkQ",l:"Parking/tolls QAR",type:"number"},{k:"miscQ",l:"Misc QAR",type:"number"}];
+const ATTF=[
+ {k:"n",l:"Place name",full:1},{k:"city",l:"City"},
+ {k:"s",l:"Stars 1–5",type:"number",def:4},{k:"cur",l:"Currency",type:"select",opts:["QAR","SAR","AED"]},
+ {k:"fam",l:"Family ticket cost",type:"number",def:0},
+ {k:"cn",l:"Ticket note (e.g. Free)",def:"Free"},
+ {k:"t",l:"Time needed",def:"1–2 h"},{k:"best",l:"Best time",def:"Evening"},
+ {k:"park",l:"Parking",def:"—"},{k:"pray",l:"Prayer nearby",def:"—"},
+ {k:"kids",l:"Kids score 0–5",type:"number",def:3},{k:"ph",l:"Photo score 0–5",type:"number",def:3},
+ {k:"why",l:"Why visit",type:"textarea"},
+ {k:"q",l:"Google Maps search text",full:1},{k:"wiki",l:"Wikipedia page title (auto photo)",full:1}];
+function sanAtt(o){o.s=Math.min(5,Math.max(1,Math.round(o.s)||1));
+ o.kids=Math.min(5,Math.max(0,Math.round(o.kids)||0));o.ph=Math.min(5,Math.max(0,Math.round(o.ph)||0));return o}
+
+/* ---- day & attraction actions ---- */
+function editDay(d){const x=CBYD[d];if(!x)return;
+ openForm("Edit Day "+d+" — plans, hotel & budget",DAYF,x,out=>{Object.assign(x,out);commit()},()=>deleteDay(d))}
+function deleteDay(d){
+ for(let i=ATTS.length-1;i>=0;i--){
+  if(ATTS[i].d===d){IDB.del("att:"+ATTS[i].id);delete SEL[ATTS[i].id];ATTS.splice(i,1)}
+  else if(ATTS[i].d>d)ATTS[i].d--}
+ const idx=DAYS.findIndex(x=>x.d===d);
+ if(idx>-1){IDB.del("day:"+DAYS[idx].uid);DAYS.splice(idx,1)}
+ DAYS.forEach((x,i)=>x.d=i+1);store.set("sel",SEL);commit()}
+function addDay(){
+ let pos=parseInt(prompt("Insert the new day AFTER which day number? (0 = at the very start)",DAYS.length));
+ if(isNaN(pos))pos=DAYS.length;pos=Math.min(Math.max(pos,0),DAYS.length);
+ openForm("New Day (will become Day "+(pos+1)+")",DAYF,
+  {cc:"SA",hCur:"SAR",fuel:[],km:0,hV:0,fuelQ:0,foodQ:0,parkQ:0,miscQ:0,dow:"DAY",route:"New day",drv:"",date:"",stay:"",hotel:"",m:"",a:"",e:"",n:"",food:"",fam:"",kids:"",wx:"",road:"",alt:""},
+  out=>{ATTS.forEach(a2=>{if(a2.d>pos)a2.d++});
+   DAYS.splice(pos,0,Object.assign({uid:"n"+Date.now().toString(36)},out));
+   DAYS.forEach((x,i)=>x.d=i+1);commit();
+   setTimeout(()=>goTo("day"+(pos+1)),150)})}
+function editAtt(id){const a=ATTS.find(x=>x.id===id);if(!a)return;
+ openForm("Edit — "+a.n,ATTF,a,out=>{Object.assign(a,sanAtt(out));commit()},()=>{
+  const i=ATTS.findIndex(x=>x.id===id);IDB.del("att:"+id);delete SEL[id];
+  ATTS.splice(i,1);store.set("sel",SEL);commit()})}
+function addAtt(d){
+ openForm("New place — Day "+d,ATTF,{cur:"SAR",city:((CBYD[d]||{}).stay||"").replace(/🛏|🏁|\(\d\/\d\)/g,"").trim(),why:"",q:"",wiki:"",n:""},
+  out=>{const a=Object.assign({id:"a"+Date.now().toString(36),d:d,on:1},sanAtt(out));
+   ATTS.push(a);SEL[a.id]=1;store.set("sel",SEL);commit();
+   setTimeout(()=>goTo("day"+d),150)})}
+
+/* ---- inject edit buttons into rendered DOM ---- */
+function enhanceAll(){
+ $$(".day").forEach(card=>{
+  const d=parseInt(card.id.replace("day",""));
+  if(!card.querySelector(".day-ebtns")){
+   const ms=card.querySelector(".money-side");
+   const div=document.createElement("div");div.className="day-ebtns";
+   div.innerHTML='<button class="ebtn" data-eday="'+d+'" title="Edit day / hotel">✎</button><button class="ebtn" data-eimg="'+d+'" title="Upload a photo/map for this day">📷</button>';
+   ms.before(div)}
+  const body=card.querySelector(".day-body");
+  if(body&&!body.querySelector(".eaddrow")){
+   const row=document.createElement("div");row.className="eaddrow";
+   row.innerHTML='<button class="ebtn" data-eadd="'+d+'">＋ Add place / attraction</button><button class="ebtn" data-eday="'+d+'">✎ Edit day details & hotel</button><button class="ebtn" data-eimg="'+d+'">📷 Add day photo / route map</button>';
+   body.appendChild(row)}
+  card.querySelectorAll(".att").forEach(at=>{
+   if(at.querySelector("[data-eatt]"))return;
+   at.querySelector(".ft").insertAdjacentHTML("beforeend",
+    '<button class="ebtn" data-eatt="'+at.dataset.att+'" title="Edit place">✎</button><button class="ebtn" data-eattimg="'+at.dataset.att+'" title="Upload photo">📷</button>')});
+ });
+ if(!document.getElementById("addDayWrap")){
+  const w=document.createElement("div");w.id="addDayWrap";
+  w.innerHTML='<button class="ebtn" style="font-size:14px;padding:9px 20px" data-eaddday="1">＋ Add a new day</button> <button class="ebtn danger" data-ereset="1">↺ Reset everything to the original plan</button>';
+  document.getElementById("days").after(w)}
+ if(!document.getElementById("mapEbtns")){
+  const mb=document.createElement("div");mb.id="mapEbtns";mb.className="eaddrow";mb.style.padding="0 8px 8px";
+  mb.innerHTML='<button class="ebtn" data-emap="1">📷 Upload your own map / route image</button><button class="ebtn danger" data-emapdel="1">✖ Remove custom map</button>';
+  document.getElementById("mapbox").appendChild(mb)}
+}
+
+/* ---- apply uploaded images from IndexedDB ---- */
+async function applyCustomImages(){
+ let imgs={};try{imgs=await IDB.all()}catch(e){return}
+ Object.entries(imgs).forEach(([k,v])=>{
+  if(k.indexOf("att:")===0){const card=document.querySelector('.att[data-att="'+k.slice(4)+'"]');
+   if(card){const im=card.querySelector(".ph img");im.dataset.custom=1;im.src=v;im.style.display="block";
+    const f=card.querySelector(".fall");if(f)f.style.display="none"}}
+  else if(k.indexOf("day:")===0){const day=DAYS.find(x=>x.uid===k.slice(4));if(!day)return;
+   const card=document.getElementById("day"+day.d);if(!card)return;
+   let w=card.querySelector(".dayimg");
+   if(!w){w=document.createElement("div");w.className="dayimg";
+    w.innerHTML='<img alt="Day photo"><button class="ebtn danger" data-edimgdel="'+day.d+'">✖ Remove photo</button>';
+    const body=card.querySelector(".day-body");body.insertBefore(w,body.firstChild)}
+   w.querySelector("img").src=v}
+  else if(k==="map"){let w=document.getElementById("mapCustom");
+   if(!w){w=document.createElement("div");w.id="mapCustom";document.getElementById("svgmap").before(w)}
+   w.innerHTML='<img src="'+v+'" alt="Custom map">';
+   document.getElementById("svgmap").style.display="none"}
+ })
+}
+
+/* ---- clicks (capture phase so day-cards don't toggle) ---- */
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-eday],[data-eadd],[data-eatt],[data-eattimg],[data-eimg],[data-eaddday],[data-emap],[data-emapdel],[data-edimgdel],[data-ereset]");
+ if(!b)return;e.stopPropagation();e.preventDefault();
+ const ds=b.dataset;
+ if(ds.eday)editDay(+ds.eday);
+ else if(ds.eadd)addAtt(+ds.eadd);
+ else if(ds.eatt)editAtt(ds.eatt);
+ else if(ds.eattimg)pickImage(u=>IDB.set("att:"+ds.eattimg,u).then(applyCustomImages));
+ else if(ds.eimg){const day=CBYD[+ds.eimg];pickImage(u=>IDB.set("day:"+day.uid,u).then(applyCustomImages))}
+ else if(ds.eaddday)addDay();
+ else if(ds.emap)pickImage(u=>IDB.set("map",u).then(applyCustomImages));
+ else if(ds.emapdel)IDB.del("map").then(()=>{const w=document.getElementById("mapCustom");if(w)w.remove();document.getElementById("svgmap").style.display=""});
+ else if(ds.edimgdel){const day=CBYD[+ds.edimgdel];IDB.del("day:"+day.uid).then(()=>{const c=document.getElementById("day"+day.d),w=c&&c.querySelector(".dayimg");if(w)w.remove()})}
+ else if(ds.ereset){if(confirm("Reset EVERYTHING to the original built-in plan?\nAll edits, added days/places, ticks and uploaded photos will be erased.\n(Tip: download a backup ⤓ first.)")){
+   ["udays","uatts","sel","ck","done"].forEach(k=>localStorage.removeItem("gge_"+k));
+   IDB.clear().then(()=>location.reload())}}
+},true);
+
+/* ---- topbar: edit toggle + backup / restore ---- */
+const editBtn=document.createElement("button");
+editBtn.id="editBtn";editBtn.className="tbtn";editBtn.title="Edit mode — add/change days, places, hotels & photos";editBtn.textContent="✎ Edit";
+const bkBtn=document.createElement("button");bkBtn.className="tbtn";bkBtn.title="Download full backup (edits, ticks & photos)";bkBtn.textContent="⤓";
+const rsBtn=document.createElement("button");rsBtn.className="tbtn";rsBtn.title="Restore from a backup file";rsBtn.textContent="⤒";
+document.getElementById("printBtn").before(editBtn,bkBtn,rsBtn);
+editBtn.onclick=()=>{const on=document.body.classList.toggle("editing");editBtn.classList.toggle("on",on)};
+bkBtn.onclick=async()=>{
+ const data={v:1,app:"gge",ls:{},img:{}};
+ ["udays","uatts","sel","ck","done","theme","lang"].forEach(k=>{const v=localStorage.getItem("gge_"+k);if(v!=null)data.ls[k]=v});
+ if(!data.ls.udays)data.ls.udays=JSON.stringify(DAYS);
+ if(!data.ls.uatts)data.ls.uatts=JSON.stringify(ATTS);
+ try{data.img=await IDB.all()}catch(e){}
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));
+ a.download="trip-backup-"+new Date().toISOString().slice(0,10)+".json";a.click()};
+rsBtn.onclick=()=>{const i=document.createElement("input");i.type="file";i.accept=".json,application/json";
+ i.onchange=async()=>{const f=i.files[0];if(!f)return;
+  try{const data=JSON.parse(await f.text());
+   if(!data.ls)throw 0;
+   Object.entries(data.ls).forEach(([k,v])=>localStorage.setItem("gge_"+k,v));
+   for(const kv of Object.entries(data.img||{}))await IDB.set(kv[0],kv[1]);
+   alert("Backup restored — reloading.");location.reload()
+  }catch(e){alert("Could not read that backup file.")}};
+ i.click()};
+
+/* ---- init ---- */
+enhanceAll();applyCustomImages();
+</script>
+
+</body>
+</html>
