@@ -1,35 +1,64 @@
-# Gulf Grand Expedition 2026 — Trip Planner
+# 🧭 Family Trip Planner
 
-A single-file, self-contained trip planner. No database, no server — everything you change is saved **inside your browser** on the device you use it on.
+A multi-trip family travel planner with a real cloud database — plan itineraries day by day, pick hotels, pin your route on a map, upload photos from any device, track every expense against your budget, and export it all to CSV. English + தமிழ். Free to run.
 
-## Host it on GitHub Pages
+**What's inside**
 
-1. Create a new repository on github.com (e.g. `gulf-trip`), set it to **Public**.
-2. Upload `index.html` to the repository root (Add file → Upload files → Commit).
-3. Go to **Settings → Pages**.
-4. Under *Build and deployment*: Source = **Deploy from a branch**, Branch = **main**, Folder = **/ (root)** → Save.
-5. Wait ~1 minute. Your site will be live at `https://<your-username>.github.io/<repo-name>/`.
+- **Multiple trips** — the Gulf Grand Expedition 2026 loads as your first trip with all 18 days, 58 attractions, hotels, checklists, and the Umrah / visa / driving guides (with Tamil).
+- **Itinerary** — add/edit/delete days and places, change hotels, day photos, everything recalculates.
+- **Route map** — interactive OpenStreetMap: tap to add stops, drag pins, reorder, leg distances, open any leg in Google Maps.
+- **Budget** (planned) / **Expenses** (daily entry from your phone) / **Budget vs Actual** (day-by-day and by category, cumulative chart) / **CSV export**.
+- **Checklists**, **Guides**, **Settings** (currencies & rates, family access, Tamil mode, dark mode).
+- **Syncs live** between laptop and phones via Firestore; works offline and syncs when you're back online.
 
-## How editing works
+---
 
-Click the **✎ Edit** button in the top bar to switch on edit mode. Then you can:
+## Setup (once, ~20 minutes)
 
-- **✎ on any day** — edit every detail: route, dates, plans (morning/afternoon/evening/night), tips, weather, road notes, budget figures, and the **hotel** (name, cost, currency).
-- **＋ Add place / attraction** — inside any day, add new places with cost, stars, why-visit, Google Maps link, etc. Existing places also get ✎ (edit/delete) buttons.
-- **＋ Add a new day** — at the bottom of the itinerary; you choose where it slots in and all days renumber automatically.
-- **📷 buttons** — upload your own photo for any attraction, any day (e.g. a route screenshot), or replace the whole route map with your own image. Images are compressed and stored in the browser (IndexedDB), so they survive reloads.
-- The budget dashboard, sidebar, and stats all recalculate automatically after any change.
+### 1. Create the Firebase project
+1. Go to **console.firebase.google.com** → *Add project* → name it (e.g. `family-trips`) → Analytics off → Create.
+2. **Build → Authentication → Get started → Google → Enable** → Save.
+3. **Build → Firestore Database → Create database** → *Start in production mode* → pick a close region (e.g. `europe-west` or `asia-south`) → Create.
 
-## Where your data lives (important)
+### 2. Connect the app
+1. Project overview → **⚙ Project settings → Your apps → Web (</>)** → register app (no hosting checkbox needed) → copy the `firebaseConfig` object.
+2. Open `js/firebase-config.js` in this folder and paste your values over the `PASTE_ME` placeholders.
 
-- All edits, ticks, and photos are saved in **this browser on this device** (localStorage + IndexedDB). The GitHub copy stays unchanged — it's just the starting template.
-- Opening the site on a different device/browser starts from the original plan.
-- **Clearing browser data / site data will erase your edits.**
+### 3. Security rules
+1. Firestore → **Rules** tab → replace everything with the contents of `firestore.rules` → **Publish**.
+2. These rules mean: the **first Google account to sign in claims the app** as owner; only emails on the allowed list can read/write anything.
 
-### Moving or backing up your data
+### 4. Host it (pick one — all free)
+**Firebase Hosting (recommended — same console, fastest):**
+```
+npm install -g firebase-tools
+firebase login
+firebase init hosting        # select your project, public dir = . , single-page app = No
+firebase deploy
+```
+Your app: `https://YOUR-PROJECT.web.app`
 
-- **⤓** (top bar) — downloads a single `trip-backup-YYYY-MM-DD.json` with all your edits, ticks, and photos.
-- **⤒** — restores from a backup file on any device. This is how you move your trip between phone ↔ laptop.
-- **↺ Reset** (in edit mode, below the itinerary) — wipes everything back to the original plan.
+**GitHub Pages:** create a repo, upload ALL files/folders, Settings → Pages → deploy from branch.
+**Also fine:** Netlify / Cloudflare Pages (drag-and-drop the folder).
 
-Tip: download a backup every few days while planning.
+### 5. Authorize your domain for sign-in
+Authentication → **Settings → Authorized domains** → *Add domain* → add where you hosted
+(e.g. `your-username.github.io`). `*.web.app` is pre-authorized automatically.
+
+### 6. First run
+1. Open the site → **Sign in with Google** → tap **Make me the owner**.
+2. Tap **Load the Gulf Expedition 2026 sample trip** → your full trip appears.
+3. Settings → **Family access** → add Jafeen's (and other) Google emails, one per line.
+
+---
+
+## Daily use during the trip
+- Phone → **Expenses** → amount, category, currency (SAR/AED/QAR — converted automatically) → add. Two taps.
+- **Budget vs Actual** shows instantly whether the day is over or under plan.
+- After the trip: **Expenses → ⬇ Export CSV** for Excel.
+
+## Notes
+- **Photos** are compressed (~1100 px) and stored inside Firestore documents — free, synced, no billing card ever needed. Don't use it as a photo archive; keep originals in Google Photos.
+- **Free limits** (Firestore Spark): 50k reads / 20k writes / 1 GiB per day-storage — a family trip uses a tiny fraction.
+- **Offline**: pages you've opened keep working without signal; changes queue and sync automatically.
+- **Tamil**: அ button in the top bar switches the whole app to bilingual mode.

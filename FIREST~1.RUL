@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isFamily() {
+      return signedIn()
+        && request.auth.token.email in
+           get(/databases/$(database)/documents/app/config).data.allowedEmails;
+    }
+
+    // App config: the very first signed-in user "claims" the app and becomes owner.
+    match /app/config {
+      allow read: if signedIn();
+      allow create: if signedIn();          // only possible while it doesn't exist
+      allow update, delete: if isFamily();
+    }
+
+    // All trip data: family only.
+    match /trips/{tripId} {
+      allow read, write: if isFamily();
+      match /{sub}/{docId} {
+        allow read, write: if isFamily();
+      }
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}
