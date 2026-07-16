@@ -1,4 +1,4 @@
-# 🧭 Family Trip Planner
+# 🧭 Family Trip Planner MJ
 
 A multi-trip family travel planner with a real cloud database — plan itineraries day by day, pick hotels, pin your route on a map, upload photos from any device, track every expense against your budget, and export it all to CSV. English + தமிழ். Free to run.
 
