@@ -1,7 +1,7 @@
 /* ================= BUDGET vs ACTUAL ================= */
-import {t,tb} from "./i18n.js";
-import {$,esc,fmt,fmtDate,CCOL} from "./util.js";
-import {EXCATS,CATLBL,dayPlanned,dayPlannedCats,spentByDay,spentByCat,spentTotal,plannedTotal,preTotal} from "./calc.js";
+import {t,tb} from "../i18n.js";
+import {$,esc,fmt,fmtDate,CCOL} from "../util.js";
+import {EXCATS,CATLBL,dayPlanned,dayPlannedCats,spentByDay,spentByCat,spentTotal,plannedTotal,preTotal} from "../calc.js";
 
 export function render(state){
  const tr=state.trip,cur=tr.currency,days=state.days,ps=state.places;

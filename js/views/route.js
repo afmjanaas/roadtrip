@@ -1,7 +1,7 @@
 /* ================= ROUTE MAP (Leaflet) ================= */
-import {t,tb} from "./i18n.js";
-import {$,esc,haversine,openForm,toast} from "./util.js";
-import {sub,subDoc,fs,db} from "./db.js";
+import {t,tb} from "../i18n.js";
+import {$,esc,haversine,openForm,toast} from "../util.js";
+import {sub,subDoc,fs,db} from "../db.js";
 
 let map=null,layer=null;
 export function render(state){

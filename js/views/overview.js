@@ -1,8 +1,8 @@
 /* ================= TRIP OVERVIEW / DASHBOARD ================= */
-import {t,tb,getLang} from "./i18n.js";
-import {$,esc,fmt,fmtDate,todayISO,CCOL,pickImage,toast} from "./util.js";
-import {plannedTotal,spentTotal,preTotal} from "./calc.js";
-import {tripRef,fs} from "./db.js";
+import {t,tb,getLang} from "../i18n.js";
+import {$,esc,fmt,fmtDate,todayISO,CCOL,pickImage,toast} from "../util.js";
+import {plannedTotal,spentTotal,preTotal} from "../calc.js";
+import {tripRef,fs} from "../db.js";
 
 export function render(state){
  const tr=state.trip,days=state.days,places=state.places,exps=state.expenses;

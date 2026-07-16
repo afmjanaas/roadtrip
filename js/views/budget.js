@@ -1,8 +1,8 @@
 /* ================= BUDGET (planned) ================= */
-import {t,tb} from "./i18n.js";
-import {$,esc,fmt,fmtDate,CCOL,openForm,toast} from "./util.js";
-import {Q,dayActs,dayPlanned,preTotal,plannedTotal} from "./calc.js";
-import {tripRef,fs} from "./db.js";
+import {t,tb} from "../i18n.js";
+import {$,esc,fmt,fmtDate,CCOL,openForm,toast} from "../util.js";
+import {Q,dayActs,dayPlanned,preTotal,plannedTotal} from "../calc.js";
+import {tripRef,fs} from "../db.js";
 
 const CATS=[["accommodation","#8A1538",(tr,ps,d)=>Q(tr,d.hCur,d.hV)],["fuel","#D97B29",(tr,ps,d)=>d.fuelQ||0],
  ["foodB","#0E7A45",(tr,ps,d)=>d.foodQ||0],["activities","#1B5FAA",(tr,ps,d)=>dayActs(tr,ps,d.ord)],

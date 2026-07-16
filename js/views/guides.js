@@ -1,8 +1,8 @@
 /* ================= GUIDES (seeded Gulf guides + custom pages) ================= */
-import {t,tb,getLang} from "./i18n.js";
-import {$,$$,esc,openForm,toast} from "./util.js";
-import {sub,subDoc,fs} from "./db.js";
-import {TA} from "./seed-data.js";
+import {t,tb,getLang} from "../i18n.js";
+import {$,$$,esc,openForm,toast} from "../util.js";
+import {sub,subDoc,fs} from "../db.js";
+import {TA} from "../seed-data.js";
 
 let active=null;
 export function render(state){

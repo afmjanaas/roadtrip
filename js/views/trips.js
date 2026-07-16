@@ -1,9 +1,9 @@
 /* ================= TRIPS HOME ================= */
-import {tripsCol,fs,watch,signOut} from "./db.js";
-import {t,tb,getLang,setLang} from "./i18n.js";
-import {$,esc,fmtDate,dateRange,DOWS,openForm,pickImage,toast} from "./util.js";
-import {seedGulfTrip} from "./seed.js";
-import {batchSet,serverTimestamp} from "./db.js";
+import {tripsCol,fs,watch,signOut} from "../db.js";
+import {t,tb,getLang,setLang} from "../i18n.js";
+import {$,esc,fmtDate,dateRange,DOWS,openForm,pickImage,toast} from "../util.js";
+import {seedGulfTrip} from "../seed.js";
+import {batchSet,serverTimestamp} from "../db.js";
 
 let unsub=null,trips=[];
 export function render(state){

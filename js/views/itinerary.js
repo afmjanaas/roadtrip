@@ -1,8 +1,8 @@
 /* ================= ITINERARY (fully editable) ================= */
-import {t,tb,getLang} from "./i18n.js";
-import {$,$$,esc,fmt,fmtDate,stars,dots,CCOL,DOWS,openForm,pickImage,toast} from "./util.js";
-import {Q,dayActs,dayPlanned,placesOfDay,spentByDay} from "./calc.js";
-import {sub,subDoc,fs,db} from "./db.js";
+import {t,tb,getLang} from "../i18n.js";
+import {$,$$,esc,fmt,fmtDate,stars,dots,CCOL,DOWS,openForm,pickImage,toast} from "../util.js";
+import {Q,dayActs,dayPlanned,placesOfDay,spentByDay} from "../calc.js";
+import {sub,subDoc,fs,db} from "../db.js";
 
 const CITYICON={"Abu Dhabi":"🕌","Dubai":"🌆","Hofuf (Al Ahsa)":"🏜","Riyadh":"🏙","Buraydah":"🐪","Hail":"🏰","AlUla":"🗿","Madinah":"🕌","Taif":"🌹","Al Baha":"🌲","Abha":"⛰","Rijal Almaa":"🏘","Makkah":"🕋"};
 const wikiCache=JSON.parse(localStorage.getItem("ftp_wimg")||"{}");

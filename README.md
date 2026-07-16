@@ -1,5 +1,3 @@
-> **This is the FLAT build** — all files sit in one folder (no subfolders), so you can upload them to GitHub with the normal file picker: Add file → Upload files → *choose your files* → select ALL files at once (Ctrl+A).
-
 # 🧭 Family Trip Planner
 
 A multi-trip family travel planner with a real cloud database — plan itineraries day by day, pick hotels, pin your route on a map, upload photos from any device, track every expense against your budget, and export it all to CSV. English + தமிழ். Free to run.
@@ -24,7 +22,7 @@ A multi-trip family travel planner with a real cloud database — plan itinerari
 
 ### 2. Connect the app
 1. Project overview → **⚙ Project settings → Your apps → Web (</>)** → register app (no hosting checkbox needed) → copy the `firebaseConfig` object.
-2. Open `firebase-config.js` in this folder and paste your values over the `PASTE_ME` placeholders.
+2. Open `js/firebase-config.js` in this folder and paste your values over the `PASTE_ME` placeholders.
 
 ### 3. Security rules
 1. Firestore → **Rules** tab → replace everything with the contents of `firestore.rules` → **Publish**.

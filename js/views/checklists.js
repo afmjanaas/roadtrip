@@ -1,7 +1,7 @@
 /* ================= CHECKLISTS ================= */
-import {t,tb} from "./i18n.js";
-import {$,esc,openForm,toast} from "./util.js";
-import {sub,subDoc,fs} from "./db.js";
+import {t,tb} from "../i18n.js";
+import {$,esc,openForm,toast} from "../util.js";
+import {sub,subDoc,fs} from "../db.js";
 
 export function render(state){
  $("#view").innerHTML=`<section>

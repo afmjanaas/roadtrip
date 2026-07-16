@@ -1,7 +1,7 @@
 /* ================= SETTINGS ================= */
-import {t,tb,getLang,setLang} from "./i18n.js";
-import {$,esc,toast,pickImage} from "./util.js";
-import {tripRef,fs,configRef,deleteTripDeep,user} from "./db.js";
+import {t,tb,getLang,setLang} from "../i18n.js";
+import {$,esc,toast,pickImage} from "../util.js";
+import {tripRef,fs,configRef,deleteTripDeep,user} from "../db.js";
 
 export function render(state){
  const tr=state.trip,cfg=state.config||{allowedEmails:[]};

@@ -1,8 +1,8 @@
 /* ================= EXPENSES (daily entry + CSV) ================= */
-import {t,tb} from "./i18n.js";
-import {$,esc,fmt,fmtDate,todayISO,downloadCSV,openForm,toast} from "./util.js";
-import {EXCATS,CATLBL,Q,expHome,spentTotal,dayOrdForDate} from "./calc.js";
-import {sub,subDoc,fs,user,serverTimestamp} from "./db.js";
+import {t,tb} from "../i18n.js";
+import {$,esc,fmt,fmtDate,todayISO,downloadCSV,openForm,toast} from "../util.js";
+import {EXCATS,CATLBL,Q,expHome,spentTotal,dayOrdForDate} from "../calc.js";
+import {sub,subDoc,fs,user,serverTimestamp} from "../db.js";
 
 export function render(state){
  const tr=state.trip,cur=tr.currency,exps=state.expenses;
