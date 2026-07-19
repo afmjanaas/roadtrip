@@ -1,5 +1,5 @@
 /* ================= APP SHELL / ROUTER ================= */
-import {configured,onAuth,signIn,signOut,user,loadConfig,claimApp,tripRef,sub,fs,watch} from "./db.js";
+import {configured,onAuth,signIn,signOut,user,loadConfig,claimApp,tripRef,sub,fs,watch,logActivity} from "./db.js";
 import {t,tb,getLang,setLang} from "./i18n.js";
 import {$,$$,esc,toast,debounce} from "./util.js";
 import * as vTrips from "./views/trips.js";
@@ -12,12 +12,13 @@ import * as vCmp from "./views/compare.js";
 import * as vCk from "./views/checklists.js";
 import * as vGuides from "./views/guides.js";
 import * as vSet from "./views/settings.js";
+import * as vAct from "./views/activity.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
  days:[],places:[],stops:[],expenses:[],lists:[],guides:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
- expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet};
+ expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct};
 const NAV=[["overview","⌂"],["itinerary","📅"],["route","🗺"],["budget","💰"],
  ["expenses","🧾"],["compare","📊"],["checklists","☑"],["guides","📖"],["settings","⚙"]];
 
@@ -109,7 +110,8 @@ export function render(){
  // sidebar
  $("#sbTrip").textContent=state.trip.name;
  $("#sbSub").textContent=(state.trip.start||"")+" → "+(state.trip.end||"");
- $("#sbLinks").innerHTML=NAV.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span>'+tb(k==="route"?"routeMap":k)+'</a>').join("");
+ const nav=[...NAV];if(state.config&&state.user&&state.config.owner===state.user.email)nav.push(["activity","📜"]);
+ $("#sbLinks").innerHTML=nav.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span>'+tb(k==="route"?"routeMap":k)+'</a>').join("");
  $("#crumb").textContent=state.trip.name+" — "+t(r.page==="route"?"routeMap":r.page);
  const mod=PAGES[r.page]||vOverview;
  mod.render(state);
@@ -133,6 +135,7 @@ async function boot(){
   state.config=cfg;
   if(!cfg){showClaim(u);return}
   if(!(cfg.allowedEmails||[]).includes(u.email)){showDenied(u);return}
+  if(!sessionStorage.getItem("ftp_loggedin")){sessionStorage.setItem("ftp_loggedin","1");logActivity("login","","")}
   shellOrHome()});
 }
 boot();

@@ -38,6 +38,9 @@ en:{
  setupText:"The app isn't connected to Firebase yet. Follow README.md: create a free Firebase project, then paste your config into js/firebase-config.js and re-upload.",
  confirmDelTrip:"Delete the ENTIRE trip with all days, places, expenses and photos? Type the trip name to confirm:",
  progress:"Trip progress",done:"done",
+ activity:"📜 Activity log",activitySub:"Who signed in and what they changed — visible only to the owner",
+ ownerOnly:"Only the app owner can view the activity log.",
+ act_login:"signed in",act_logout:"signed out",act_create:"added",act_update:"edited",act_delete:"deleted",act_bulk:"bulk change —",
 },
 ta:{
  appName:"குடும்ப பயணத் திட்டமிப்பான்",trips:"என் பயணங்கள்",newTrip:"＋ புதிய பயணம்",loadSample:"கல்ஃப் 2026 மாதிரி பயணத்தை ஏற்று",
@@ -77,6 +80,9 @@ ta:{
  setupText:"ஆப் இன்னும் Firebase உடன் இணைக்கப்படவில்லை. README.md படி: இலவச Firebase project உருவாக்கி, config-ஐ js/firebase-config.js இல் ஒட்டி மீண்டும் பதிவேற்றவும்.",
  confirmDelTrip:"முழு பயணத்தையும் நீக்கவா? உறுதிப்படுத்த பயணப் பெயரை உள்ளிடவும்:",
  progress:"பயண முன்னேற்றம்",done:"முடிந்தது",
+ activity:"📜 செயல்பாட்டு பதிவு",activitySub:"யார் உள்நுழைந்தார், என்ன மாற்றினார் — உரிமையாளருக்கு மட்டும்",
+ ownerOnly:"செயல்பாட்டு பதிவை உரிமையாளர் மட்டுமே பார்க்க முடியும்.",
+ act_login:"உள்நுழைந்தார்",act_logout:"வெளியேறினார்",act_create:"சேர்த்தார்",act_update:"திருத்தினார்",act_delete:"நீக்கினார்",act_bulk:"மொத்த மாற்றம் —",
 }};
 export function getLang(){return localStorage.getItem("ftp_lang")||"en"}
 export function setLang(l){localStorage.setItem("ftp_lang",l);document.documentElement.dataset.lang=l}

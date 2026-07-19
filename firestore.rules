@@ -3,17 +3,23 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function signedIn() { return request.auth != null; }
-    function isFamily() {
-      return signedIn()
-        && request.auth.token.email in
-           get(/databases/$(database)/documents/app/config).data.allowedEmails;
-    }
+    function cfg() { return get(/databases/$(database)/documents/app/config).data; }
+    function isFamily() { return signedIn() && request.auth.token.email in cfg().allowedEmails; }
+    function isOwner()  { return signedIn() && request.auth.token.email == cfg().owner; }
 
     // App config: the very first signed-in user "claims" the app and becomes owner.
     match /app/config {
       allow read: if signedIn();
       allow create: if signedIn();          // only possible while it doesn't exist
       allow update, delete: if isFamily();
+    }
+
+    // Activity log: family members write their own entries; ONLY the owner can read.
+    // Entries are immutable — nobody can edit or delete them, not even the owner.
+    match /activity/{entryId} {
+      allow create: if isFamily() && request.resource.data.email == request.auth.token.email;
+      allow read: if isOwner();
+      allow update, delete: if false;
     }
 
     // All trip data: family only.
