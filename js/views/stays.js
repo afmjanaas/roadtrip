@@ -13,7 +13,7 @@ export function render(state){
  const totalCost=days.reduce((s,d)=>s+Q(tr,d.hCur,d.hV),0);
  const booked=days.filter(d=>d.hStatus==="booked"||d.hStatus==="paid").length;
  $("#view").innerHTML=`<section>
-  <div class="sec-h">${tb("stays")}</div>
+  <div class="sec-h">🏨 ${tb("stays")}</div>
   <div class="sec-sub">${t("staysSub")}</div><div class="rule"></div>
   <div class="stats">
    <div class="stat"><div class="v">${nights.length}</div><div class="l">${t("nights")}</div></div>

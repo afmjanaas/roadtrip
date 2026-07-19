@@ -7,10 +7,10 @@ let unsub=null,rows=[];
 const ICON={login:"🔓",logout:"🔒",create:"➕",update:"✏️",delete:"🗑",bulk:"📦"};
 export function render(state){
  const isOwner=state.config&&state.config.owner===(user()&&user().email);
- if(!isOwner){$("#view").innerHTML=`<section><div class="sec-h">${tb("activity")}</div><div class="rule"></div>
+ if(!isOwner){$("#view").innerHTML=`<section><div class="sec-h">📜 ${tb("activity")}</div><div class="rule"></div>
   <div class="warn">🔐 ${t("ownerOnly")}</div></section>`;return}
  $("#view").innerHTML=`<section>
-  <div class="sec-h">${tb("activity")}</div>
+  <div class="sec-h">📜 ${tb("activity")}</div>
   <div class="sec-sub">${t("activitySub")}</div><div class="rule"></div>
   <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
    <button class="tbtn" id="actCsv">${t("exportCSV")}</button>
