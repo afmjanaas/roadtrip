@@ -22,6 +22,11 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // Document vault: ONLY the owner can read or write.
+    match /vault/{docId} {
+      allow read, write: if isOwner();
+    }
+
     // All trip data: family only.
     match /trips/{tripId} {
       allow read, write: if isFamily();

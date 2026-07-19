@@ -239,7 +239,7 @@ footer{border-top:1px solid var(--line);padding:24px;text-align:center;color:var
 /* print */
 @page{size:A4;margin:9mm}
 @media print{
-  #sidebar,#topbar,.ebtn,.eaddrow,.gm,#toast,.btns,.exform{display:none!important}
+  #sidebar,#topbar,.ebtn,.eaddrow,.gm,#toast,.btns,.exform,.noprint,.mini{display:none!important}
   #main{margin-left:0}
   body{background:#fff;font-size:11.5px}
   .day-body{display:block!important}

@@ -1,7 +1,13 @@
 /* ================= SETTINGS ================= */
 import {t,tb,getLang,setLang} from "../i18n.js";
 import {$,esc,toast,pickImage} from "../util.js";
-import {tripRef,fs,configRef,deleteTripDeep,user} from "../db.js";
+import {tripRef,fs,configRef,deleteTripDeep,user,tripsCol,batchSet,serverTimestamp} from "../db.js";
+async function writeTrip(d,name){
+ const clean=o=>{const {id,...rest}=o;return rest};
+ const ref=await fs.addDoc(tripsCol(),{...d.trip,name,createdAt:serverTimestamp()});
+ for(const k of ["days","places","stops","expenses","lists","guides","journal","fuel"])
+  if(d[k]&&d[k].length)await batchSet(ref.id,k,d[k].map(clean));
+ return ref.id}
 
 export function render(state){
  const tr=state.trip,cfg=state.config||{allowedEmails:[]};
@@ -38,6 +44,12 @@ export function render(state){
     <div class="kv"><span class="k">${t("theme")}</span><span class="v"><button class="tbtn" id="sDark">◐</button></span></div>
     <div class="kv"><span class="k">Signed in</span><span class="v">${esc(user()?user().email:"")}</span></div></div>
   </div>
+  <div class="card" style="margin-top:16px"><h4>🗃 ${t("dataTools")}</h4>
+   <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="tbtn" id="expTrip">${t("exportTrip")}</button>
+    <button class="tbtn" id="impTrip">${t("importTrip")}</button>
+    <button class="tbtn" id="dupTrip">${t("duplicateTrip")}</button></div>
+   <div style="font-size:12px;color:var(--ink3);margin-top:8px">${t("dataToolsNote")}</div></div>
   <div class="card" style="margin-top:16px;border-color:var(--warn)"><h4 style="color:var(--warn)">⚠ ${t("dangerZone")}</h4>
    <button class="tbtn danger" id="delTrip">${t("deleteTrip")}</button></div>
  </section>`;
@@ -57,6 +69,26 @@ export function render(state){
   fs.updateDoc(configRef(),{allowedEmails:emails}).then(()=>toast("✓")).catch(e=>toast(e.message))};
  $("#sLang").onclick=()=>{setLang(getLang()==="ta"?"en":"ta");location.reload()};
  $("#sDark").onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==="dark"?"light":"dark";localStorage.setItem("ftp_theme",h.dataset.theme)};
+ $("#expTrip").onclick=()=>{
+  const data={v:1,app:"ftp-trip",trip:{...tr},days:state.days,places:state.places,stops:state.stops,
+   expenses:state.expenses,lists:state.lists,guides:state.guides,journal:state.journal||[],fuel:state.fuel||[]};
+  delete data.trip.id;delete data.trip.createdAt;
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));
+  a.download=(tr.name||"trip").replace(/\W+/g,"-").toLowerCase()+"-export.json";a.click()};
+ $("#impTrip").onclick=()=>{const i=document.createElement("input");i.type="file";i.accept=".json,application/json";
+  i.onchange=async()=>{const f=i.files[0];if(!f)return;
+   try{const d=JSON.parse(await f.text());if(d.app!=="ftp-trip")throw 0;
+    toast("Importing…");const id=await writeTrip(d,d.trip.name+" (imported)");
+    toast("✓");location.hash="#/t/"+id+"/overview"}
+   catch(e){toast("Not a valid trip export file")}};
+  i.click()};
+ $("#dupTrip").onclick=async()=>{
+  const data={trip:{...tr},days:state.days,places:state.places,stops:state.stops,
+   expenses:[],lists:state.lists.map(l=>({...l,items:l.items.map(x=>({...x,done:false}))})),guides:state.guides,journal:[],fuel:[]};
+  delete data.trip.id;delete data.trip.createdAt;
+  toast("Duplicating…");const id=await writeTrip(data,tr.name+" (copy)");
+  toast("✓");location.hash="#/t/"+id+"/overview"};
  $("#delTrip").onclick=async()=>{
   const typed=prompt(t("confirmDelTrip")+"\n\n"+tr.name);
   if(typed!==tr.name){toast("Name didn't match — nothing deleted");return}

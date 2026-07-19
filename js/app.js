@@ -14,14 +14,22 @@ import * as vGuides from "./views/guides.js";
 import * as vSet from "./views/settings.js";
 import * as vAct from "./views/activity.js";
 import * as vStays from "./views/stays.js";
+import * as vToday from "./views/today.js";
+import * as vJournal from "./views/journal.js";
+import * as vFuel from "./views/fuel.js";
+import * as vVault from "./views/vault.js";
+import * as vBook from "./views/book.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
- days:[],places:[],stops:[],expenses:[],lists:[],guides:[],unsubs:[],ready:{}};
+ days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
- expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays};
-const NAV=[["overview","⌂"],["itinerary","📅"],["stays","🏨"],["route","🗺"],["budget","💰"],
- ["expenses","🧾"],["compare","📊"],["checklists","☑"],["guides","📖"],["settings","⚙"]];
+ expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays,
+ today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook};
+const GROUPS=[
+ ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["route","🗺"],["book","🖨"]]],
+ ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
+ ["gMore",[["journal","📔"],["checklists","☑"],["guides","📖"],["settings","⚙"]]]];
 
 document.documentElement.dataset.theme=localStorage.getItem("ftp_theme")||"light";
 document.documentElement.dataset.lang=getLang();
@@ -81,13 +89,13 @@ function updateNet(){const on=navigator.onLine;const d=$("#netdot"),l=$("#netlbl
 /* ---------- trip subscription ---------- */
 function clearTrip(){state.unsubs.forEach(u=>u());state.unsubs=[];
  state.tripId=null;state.trip=null;state.days=[];state.places=[];state.stops=[];
- state.expenses=[];state.lists=[];state.guides=[];state.ready={}}
+ state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.ready={}}
 const rerender=debounce(()=>render(),80);
 function subscribeTrip(id){
  if(state.tripId===id)return;
  clearTrip();state.tripId=id;
  state.unsubs.push(watch(tripRef(id),s=>{state.trip=s.exists()?{id:s.id,...s.data()}:null;state.ready.trip=1;rerender()}));
- const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"]];
+ const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"]];
  subs.forEach(([name,ord])=>{
   state.unsubs.push(watch(fs.query(sub(id,name),fs.orderBy(ord)),ss=>{
    state[name]=ss.docs.map(d=>({id:d.id,...d.data()}));state.ready[name]=1;rerender()}))});
@@ -111,8 +119,9 @@ export function render(){
  // sidebar
  $("#sbTrip").textContent=state.trip.name;
  $("#sbSub").textContent=(state.trip.start||"")+" → "+(state.trip.end||"");
- const nav=[...NAV];if(state.config&&state.user&&state.config.owner===state.user.email)nav.push(["activity","📜"]);
- $("#sbLinks").innerHTML=nav.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span>'+tb(k==="route"?"routeMap":k)+'</a>').join("");
+ const groups=[...GROUPS];
+ if(state.config&&state.user&&state.config.owner===state.user.email)groups.push(["gAdmin",[["activity","📜"],["vault","🪪"]]]);
+ $("#sbLinks").innerHTML=groups.map(([g,items])=>'<div class="sb-h">'+t(g)+'</div>'+items.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span>'+tb(k==="route"?"routeMap":k)+'</a>').join("")).join("");
  $("#crumb").textContent=state.trip.name+" — "+t(r.page==="route"?"routeMap":r.page);
  const mod=PAGES[r.page]||vOverview;
  mod.render(state);
