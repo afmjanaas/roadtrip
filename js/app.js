@@ -13,13 +13,14 @@ import * as vCk from "./views/checklists.js";
 import * as vGuides from "./views/guides.js";
 import * as vSet from "./views/settings.js";
 import * as vAct from "./views/activity.js";
+import * as vStays from "./views/stays.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
  days:[],places:[],stops:[],expenses:[],lists:[],guides:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
- expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct};
-const NAV=[["overview","⌂"],["itinerary","📅"],["route","🗺"],["budget","💰"],
+ expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays};
+const NAV=[["overview","⌂"],["itinerary","📅"],["stays","🏨"],["route","🗺"],["budget","💰"],
  ["expenses","🧾"],["compare","📊"],["checklists","☑"],["guides","📖"],["settings","⚙"]];
 
 document.documentElement.dataset.theme=localStorage.getItem("ftp_theme")||"light";

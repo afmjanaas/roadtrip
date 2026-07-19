@@ -41,6 +41,11 @@ en:{
  activity:"📜 Activity log",activitySub:"Who signed in and what they changed — visible only to the owner",
  ownerOnly:"Only the app owner can view the activity log.",
  act_login:"signed in",act_logout:"signed out",act_create:"added",act_update:"edited",act_delete:"deleted",act_bulk:"bulk change —",
+ stays:"🏨 Stays",staysSub:"Every night's hotel — price, photo, booking status, and alternatives to compare",
+ night:"Night",stBooked:"Booked",noStay:"No stay planned this night (home / overnight drive?)",freeStay:"Free — own beds / family",
+ st_idea:"💭 Idea",st_shortlist:"⭐ Shortlisted",st_booked:"✅ Booked",st_paid:"💳 Paid",
+ alternatives:"Alternatives — similar price options",addAlt:"＋ Add an alternative hotel",chooseThis:"Choose",
+ howToChoose:"How to choose a hotel — what smart families check",
 },
 ta:{
  appName:"குடும்ப பயணத் திட்டமிப்பான்",trips:"என் பயணங்கள்",newTrip:"＋ புதிய பயணம்",loadSample:"கல்ஃப் 2026 மாதிரி பயணத்தை ஏற்று",
@@ -83,6 +88,11 @@ ta:{
  activity:"📜 செயல்பாட்டு பதிவு",activitySub:"யார் உள்நுழைந்தார், என்ன மாற்றினார் — உரிமையாளருக்கு மட்டும்",
  ownerOnly:"செயல்பாட்டு பதிவை உரிமையாளர் மட்டுமே பார்க்க முடியும்.",
  act_login:"உள்நுழைந்தார்",act_logout:"வெளியேறினார்",act_create:"சேர்த்தார்",act_update:"திருத்தினார்",act_delete:"நீக்கினார்",act_bulk:"மொத்த மாற்றம் —",
+ stays:"🏨 தங்குமிடங்கள்",staysSub:"ஒவ்வொரு இரவின் ஹோட்டல் — விலை, படம், முன்பதிவு நிலை, மாற்று விருப்பங்கள்",
+ night:"இரவு",stBooked:"முன்பதிவு",noStay:"இந்த இரவு தங்குமிடம் இல்லை (வீடு / இரவு ஓட்டம்?)",freeStay:"இலவசம் — சொந்த படுக்கை",
+ st_idea:"💭 யோசனை",st_shortlist:"⭐ தேர்வுப்பட்டியல்",st_booked:"✅ முன்பதிவு",st_paid:"💳 பணம் செலுத்தியது",
+ alternatives:"மாற்று ஹோட்டல்கள் — ஒத்த விலை",addAlt:"＋ மாற்று ஹோட்டல் சேர்",chooseThis:"தேர்வு",
+ howToChoose:"ஹோட்டல் எப்படி தேர்வு செய்வது — புத்திசாலி குடும்பங்கள் பார்ப்பவை",
 }};
 export function getLang(){return localStorage.getItem("ftp_lang")||"en"}
 export function setLang(l){localStorage.setItem("ftp_lang",l);document.documentElement.dataset.lang=l}
