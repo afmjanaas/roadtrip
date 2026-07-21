@@ -7,7 +7,7 @@ export const fmt=(n,cur="QAR")=>cur+" "+Math.round(n||0).toLocaleString("en-US")
 export const todayISO=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 export const stars=n=>"★".repeat(Math.max(0,Math.min(5,Math.round(n||0))));
 export const dots=n=>"●".repeat(Math.max(0,Math.min(5,n||0)))+"○".repeat(5-Math.max(0,Math.min(5,n||0)));
-export const CCOL={QA:"#8A1538",AE:"#1B5FAA",SA:"#0E7A45",RET:"#D97B29"};
+export const CCOL={QA:"#8A1538",AE:"#1B5FAA",SA:"#0E7A45",OM:"#1a7f6b",RET:"#D97B29"};
 export const DOWS=["SUN","MON","TUE","WED","THU","FRI","SAT"];
 export function dateRange(a,b){const out=[];const d=new Date(a+"T12:00:00"),e=new Date(b+"T12:00:00");
  while(d<=e){out.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1)}return out}
