@@ -26,6 +26,7 @@ export const state={user:null,config:null,tripId:null,trip:null,
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays,
  today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook};
+const NAVKEY={route:"routeMap",fuel:"fuelLog"};
 const GROUPS=[
  ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["route","🗺"],["book","🖨"]]],
  ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
@@ -121,8 +122,8 @@ export function render(){
  $("#sbSub").textContent=(state.trip.start||"")+" → "+(state.trip.end||"");
  const groups=[...GROUPS];
  if(state.config&&state.user&&state.config.owner===state.user.email)groups.push(["gAdmin",[["activity","📜"],["vault","🪪"]]]);
- $("#sbLinks").innerHTML=groups.map(([g,items])=>'<div class="sb-h">'+t(g)+'</div>'+items.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span>'+tb(k==="route"?"routeMap":k)+'</a>').join("")).join("");
- $("#crumb").textContent=state.trip.name+" — "+t(r.page==="route"?"routeMap":r.page);
+ $("#sbLinks").innerHTML=groups.map(([g,items])=>'<div class="sb-h">'+t(g)+'</div>'+items.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span>'+tb(NAVKEY[k]||k)+'</a>').join("")).join("");
+ $("#crumb").textContent=state.trip.name+" — "+t(NAVKEY[r.page]||r.page);
  const mod=PAGES[r.page]||vOverview;
  mod.render(state);
  window.scrollTo(0,0)}
