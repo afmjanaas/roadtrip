@@ -15,6 +15,7 @@ export function render(state){
  const maxPA=Math.max(...rows.map(r=>Math.max(r.p,r.a)),1);
  // planned by category (across days)
  const pCats={};days.forEach(d=>{const c=dayPlannedCats(tr,ps,d);Object.keys(c).forEach(k=>pCats[k]=(pCats[k]||0)+c[k])});
+ pCats.pretrip=preTotal(tr);
  $("#view").innerHTML=`<section>
   <div class="sec-h">${tb("compare")}</div>
   <div class="sec-sub">${esc(tr.name)}</div><div class="rule"></div>

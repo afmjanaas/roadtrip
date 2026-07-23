@@ -1,8 +1,8 @@
 /* ================= SHARED BUDGET / EXPENSE MATH ================= */
 export const EXCATS=[
  {k:"fuel",i:"⛽"},{k:"food",i:"🍽"},{k:"hotel",i:"🏨"},{k:"tickets",i:"🎟"},
- {k:"parking",i:"🅿"},{k:"shopping",i:"🛍"},{k:"other",i:"✨"}];
-export const CATLBL={fuel:"catFuel",food:"catFood",hotel:"catHotel",tickets:"catTickets",parking:"catParking",shopping:"catShopping",other:"catOther"};
+ {k:"parking",i:"🅿"},{k:"shopping",i:"🛍"},{k:"pretrip",i:"🛂"},{k:"other",i:"✨"}];
+export const CATLBL={fuel:"catFuel",food:"catFood",hotel:"catHotel",tickets:"catTickets",parking:"catParking",shopping:"catShopping",pretrip:"catPretrip",other:"catOther"};
 
 export const Q=(trip,cur,v)=>(v||0)*((trip.fx&&trip.fx[cur])!=null?trip.fx[cur]:1);
 
