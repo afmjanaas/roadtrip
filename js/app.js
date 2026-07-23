@@ -20,16 +20,17 @@ import * as vFuel from "./views/fuel.js";
 import * as vVault from "./views/vault.js";
 import * as vBook from "./views/book.js";
 import * as vSos from "./views/sos.js";
+import * as vBookings from "./views/bookings.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
- days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],unsubs:[],ready:{}};
+ days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays,
- today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos};
+ today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings};
 const NAVKEY={route:"routeMap",fuel:"fuelLog"};
 const GROUPS=[
- ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["route","🗺"],["book","🖨"]]],
+ ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["bookings","🧾"],["route","🗺"],["book","🖨"]]],
  ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
  ["gMore",[["journal","📔"],["checklists","☑"],["guides","📖"],["sos","🆘"],["settings","⚙"]]]];
 
@@ -91,13 +92,13 @@ function updateNet(){const on=navigator.onLine;const d=$("#netdot"),l=$("#netlbl
 /* ---------- trip subscription ---------- */
 function clearTrip(){state.unsubs.forEach(u=>u());state.unsubs=[];
  state.tripId=null;state.trip=null;state.days=[];state.places=[];state.stops=[];
- state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.ready={}}
+ state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.bookings=[];state.ready={}}
 const rerender=debounce(()=>render(),80);
 function subscribeTrip(id){
  if(state.tripId===id)return;
  clearTrip();state.tripId=id;
  state.unsubs.push(watch(tripRef(id),s=>{state.trip=s.exists()?{id:s.id,...s.data()}:null;state.ready.trip=1;rerender()}));
- const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"]];
+ const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"],["bookings","date"]];
  subs.forEach(([name,ord])=>{
   state.unsubs.push(watch(fs.query(sub(id,name),fs.orderBy(ord)),ss=>{
    state[name]=ss.docs.map(d=>({id:d.id,...d.data()}));state.ready[name]=1;rerender()}))});

@@ -6,7 +6,7 @@ import {prepareOffline,preparedAt,preparedDaysAgo} from "../offline.js";
 async function writeTrip(d,name){
  const clean=o=>{const {id,...rest}=o;return rest};
  const ref=await fs.addDoc(tripsCol(),{...d.trip,name,createdAt:serverTimestamp()});
- for(const k of ["days","places","stops","expenses","lists","guides","journal","fuel"])
+ for(const k of ["days","places","stops","expenses","lists","guides","journal","fuel","bookings"])
   if(d[k]&&d[k].length)await batchSet(ref.id,k,d[k].map(clean));
  return ref.id}
 
@@ -92,7 +92,7 @@ export function render(state){
   btn.disabled=false};
  $("#expTrip").onclick=()=>{
   const data={v:1,app:"ftp-trip",trip:{...tr},days:state.days,places:state.places,stops:state.stops,
-   expenses:state.expenses,lists:state.lists,guides:state.guides,journal:state.journal||[],fuel:state.fuel||[]};
+   expenses:state.expenses,lists:state.lists,guides:state.guides,journal:state.journal||[],fuel:state.fuel||[],bookings:state.bookings||[]};
   delete data.trip.id;delete data.trip.createdAt;
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));
@@ -106,7 +106,7 @@ export function render(state){
   i.click()};
  $("#dupTrip").onclick=async()=>{
   const data={trip:{...tr},days:state.days,places:state.places,stops:state.stops,
-   expenses:[],lists:state.lists.map(l=>({...l,items:l.items.map(x=>({...x,done:false}))})),guides:state.guides,journal:[],fuel:[]};
+   expenses:[],lists:state.lists.map(l=>({...l,items:l.items.map(x=>({...x,done:false}))})),guides:state.guides,journal:[],fuel:[],bookings:[]};
   delete data.trip.id;delete data.trip.createdAt;
   toast("Duplicating…");const id=await writeTrip(data,tr.name+" (copy)");
   toast("✓");location.hash="#/t/"+id+"/overview"};

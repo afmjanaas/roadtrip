@@ -36,6 +36,9 @@ export function render(state){
     ${days.map(d=>`<tr><td>D${d.ord} ${esc((d.stay||d.route||"").slice(0,40))}</td><td class="right money">${fmt(dayPlanned(tr,ps,d),cur)}</td></tr>`).join("")}
     <tr><td><b>+ ${t("preTrip")}</b></td><td class="right money">${fmt(preTotal(tr),cur)}</td></tr>
     <tr style="font-size:15px"><td><b>${t("grandTotal").toUpperCase()}</b></td><td class="right money">${fmt(planned,cur)}</td></tr></table></div>
+  ${(state.bookings&&state.bookings.length)?`<div class="card" style="break-inside:avoid;margin-top:14px"><h4>🧾 ${t("bookings")}</h4>
+   <table class="tbl"><tr><th>${t("date")}</th><th>${t("type")}</th><th></th><th class="right">${t("confirmationNo")}</th></tr>
+   ${[...state.bookings].sort((a,b)=>a.date.localeCompare(b.date)).map(b=>`<tr><td>${fmtDate(b.date)}${b.time?" "+esc(b.time):""}</td><td>${esc(b.type||"")}</td><td>${esc(b.title||"")}</td><td class="right" style="font-family:monospace">${esc(b.ref||"")}</td></tr>`).join("")}</table></div>`:""}
   ${state.lists.length?`<div class="grid g2" style="margin-top:14px">${state.lists.map(l=>`
    <div class="card" style="break-inside:avoid"><h4>${esc(l.title)}</h4>
     ${l.items.map(i=>`<div style="font-size:12.5px;padding:2px 0">${i.done?"☑":"☐"} ${esc(i.t)}</div>`).join("")}</div>`).join("")}</div>`:""}
