@@ -5,6 +5,14 @@
    produced from any device once back online. */
 import {sub,subDoc,fs,rawGet,rawSet,rawDelete,serverTimestamp} from "./db.js";
 
+/* ---- Capacitor (native app) detection — harmless on the web ---- */
+const CAP=(typeof window!=="undefined")&&window.Capacitor;
+export const isNative=!!(CAP&&CAP.isNativePlatform&&CAP.isNativePlatform());
+function bgPlugin(){if(!CAP)return null;
+ return (CAP.Plugins&&CAP.Plugins.BackgroundGeolocation)||
+  (CAP.registerPlugin&&CAP.registerPlugin("BackgroundGeolocation"))||null}
+let bgWatchId=null;
+
 /* ---- tunables ---- */
 const MIN_M=40;        // don't record a point unless moved >= 40 m
 const MIN_S=20;        // ...or 20 s elapsed
@@ -69,16 +77,18 @@ export function trackDays(id){const s=load(TK(id||TID||id),{days:{}});return s.d
 export function pointsForDate(id,date){return (load(TK(id),{days:{}}).days||{})[date]||[]}
 
 /* ---- recording ---- */
-function record(pos){
- const c=pos.coords;if(c.accuracy>MAX_ACC && last)return;
- const t=Math.round(pos.timestamp/1000);
- const p=[+c.latitude.toFixed(5),+c.longitude.toFixed(5),t,Math.round(c.accuracy)];
+function record(lat,lng,acc,tMs){
+ if(lat==null||lng==null)return;
+ if(acc>MAX_ACC && last)return;
+ const t=Math.round((tMs||Date.now())/1000);
+ const p=[+(+lat).toFixed(5),+(+lng).toFixed(5),t,Math.round(acc||0)];
  if(last){const gap=t-last.t, moved=dm([last.lat,last.lng],[p[0],p[1]]);
   if(moved<MIN_M && gap<MIN_S)return}
  last={lat:p[0],lng:p[1],t,acc:p[3]};
  const s=store();const date=localDate(t);
  (s.days[date]=s.days[date]||[]).push(p);
  s.dirty[date]=1;setStore(s);emit()}
+function recordPos(pos){const c=pos.coords;record(c.latitude,c.longitude,c.accuracy,pos.timestamp)}
 
 async function acquireWake(){
  try{if("wakeLock" in navigator){wake=await navigator.wakeLock.request("screen");
@@ -88,22 +98,35 @@ function reWake(){if(!isActive())return;
   if(!wake)acquireWake();
   // dropped a fresh fix each time you return from another app (e.g. Google Maps navigation)
   if("geolocation" in navigator)navigator.geolocation.getCurrentPosition(
-   p=>record(p),()=>{},{enableHighAccuracy:true,timeout:12000,maximumAge:5000})}}
+   p=>recordPos(p),()=>{},{enableHighAccuracy:true,timeout:12000,maximumAge:5000})}}
 
 export async function start(tripId){
- TID=tripId;
- if(!("geolocation" in navigator))throw new Error("No geolocation on this device");
- last=null;
- watchId=navigator.geolocation.watchPosition(record,e=>{console.warn("geo",e.message);emit()},
-  {enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+ TID=tripId;last=null;
+ const bg=bgPlugin();
+ if(isNative&&bg){
+  // TRUE background tracking (records with the screen off, persistent notification)
+  bgWatchId=await bg.addWatcher({
+   backgroundMessage:"Recording your journey — tap to open",
+   backgroundTitle:"Trip tracker",
+   requestPermissions:true, stale:false, distanceFilter:MIN_M},
+   (loc,err)=>{if(err){console.warn("bg-geo",err);emit();return}
+    if(loc)record(loc.latitude,loc.longitude,loc.accuracy,loc.time)});
+  watchId="native";
+ }else{
+  if(!("geolocation" in navigator))throw new Error("No geolocation on this device");
+  watchId=navigator.geolocation.watchPosition(recordPos,e=>{console.warn("geo",e.message);emit()},
+   {enableHighAccuracy:true,maximumAge:5000,timeout:20000});
+  await acquireWake();
+  document.addEventListener("visibilitychange",reWake);
+ }
  localStorage.setItem(SK(tripId),"1");
- await acquireWake();
- document.addEventListener("visibilitychange",reWake);
  clearInterval(flushTimer);flushTimer=setInterval(()=>flush(),FLUSH_MS);
  emit();return status()}
 
 export async function stop(){
- if(watchId!=null){navigator.geolocation.clearWatch(watchId);watchId=null}
+ const bg=bgPlugin();
+ if(watchId==="native"&&bg&&bgWatchId){try{await bg.removeWatcher({id:bgWatchId})}catch(e){}bgWatchId=null;watchId=null}
+ else if(watchId!=null&&watchId!=="native"){navigator.geolocation.clearWatch(watchId);watchId=null}
  if(wake){try{await wake.release()}catch(e){}wake=null}
  clearInterval(flushTimer);flushTimer=null;
  if(TID)localStorage.removeItem(SK(TID));

@@ -1,7 +1,7 @@
 /* ================= FIREBASE / FIRESTORE LAYER (with activity logging) ================= */
 import {firebaseConfig} from "./firebase-config.js";
 import {initializeApp} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import {getAuth,GoogleAuthProvider,signInWithPopup,signInWithRedirect,onAuthStateChanged,signOut as fbSignOut}
+import {getAuth,GoogleAuthProvider,signInWithPopup,signInWithRedirect,signInWithCredential,onAuthStateChanged,signOut as fbSignOut}
  from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import {initializeFirestore,persistentLocalCache,persistentMultipleTabManager,
  collection,doc,getDoc,getDocs,setDoc,addDoc,updateDoc,deleteDoc,onSnapshot,query,orderBy,limit,writeBatch,serverTimestamp}
@@ -48,12 +48,28 @@ export const fs={collection,doc,getDoc,getDocs,onSnapshot,query,orderBy,limit,
 
 /* ---- auth ---- */
 export function onAuth(cb){return onAuthStateChanged(auth,cb)}
+const CAP=(typeof window!=="undefined")&&window.Capacitor;
+const isNative=!!(CAP&&CAP.isNativePlatform&&CAP.isNativePlatform());
+function faPlugin(){if(!CAP)return null;
+ return (CAP.Plugins&&CAP.Plugins.FirebaseAuthentication)||
+  (CAP.registerPlugin&&CAP.registerPlugin("FirebaseAuthentication"))||null}
 export async function signIn(){
+ const fa=faPlugin();
+ if(isNative&&fa){
+  // native Google sign-in (Google blocks its web sign-in inside Android webviews)
+  const r=await fa.signInWithGoogle();
+  const idToken=r&&r.credential&&r.credential.idToken;
+  const accessToken=r&&r.credential&&r.credential.accessToken;
+  const cred=GoogleAuthProvider.credential(idToken,accessToken);
+  await signInWithCredential(auth,cred);
+  return}
  const p=new GoogleAuthProvider();
  try{await signInWithPopup(auth,p)}
  catch(e){if(e.code==="auth/popup-blocked"||e.code==="auth/popup-closed-by-user")await signInWithRedirect(auth,p);
   else throw e}}
-export function signOut(){logActivity("logout","","");return fbSignOut(auth)}
+export function signOut(){logActivity("logout","","");
+ const fa=faPlugin();if(isNative&&fa){try{fa.signOut()}catch(e){}}
+ return fbSignOut(auth)}
 export const user=()=>auth&&auth.currentUser;
 
 /* ---- config / allowlist ---- */
