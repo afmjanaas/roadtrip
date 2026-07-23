@@ -21,16 +21,18 @@ import * as vVault from "./views/vault.js";
 import * as vBook from "./views/book.js";
 import * as vSos from "./views/sos.js";
 import * as vBookings from "./views/bookings.js";
+import * as vJourneylog from "./views/journeylog.js";
+import * as TK from "./tracker.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
- days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],unsubs:[],ready:{}};
+ days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],track:[],waypoints:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays,
- today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings};
+ today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog};
 const NAVKEY={route:"routeMap",fuel:"fuelLog"};
 const GROUPS=[
- ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["bookings","🧾"],["route","🗺"],["book","🖨"]]],
+ ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["bookings","🧾"],["route","🗺"],["journeylog","🛰"],["book","🖨"]]],
  ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
  ["gMore",[["journal","📔"],["checklists","☑"],["guides","📖"],["sos","🆘"],["settings","⚙"]]]];
 
@@ -66,6 +68,7 @@ function shell(){
     <button class="tbtn" id="editBtn" title="${t("editOn")}">${t("edit")}</button>
     <button class="tbtn" id="langBtn" title="${t("language")}">${getLang()==="ta"?"A·அ":"அ"}</button>
     <button class="tbtn" id="darkBtn" title="${t("theme")}">◐</button>
+    <button class="tbtn" id="recChip" style="display:none;border-color:var(--bad);color:var(--bad);font-weight:700" title="${t("recording")}">● REC</button>
     <button class="tbtn" id="printBtn">${t("print")}</button>
     <img class="avatar" id="avatar" alt="">
     <button class="tbtn" id="outBtn">${t("signOut")}</button>
@@ -82,6 +85,8 @@ function shell(){
  $("#outBtn").onclick=()=>signOut();
  const av=$("#avatar");if(state.user&&state.user.photoURL)av.src=state.user.photoURL;else av.style.display="none";
  updateNet();window.addEventListener("online",updateNet);window.addEventListener("offline",updateNet);
+ $("#recChip").onclick=()=>{location.hash="#/t/"+state.tripId+"/journeylog"};
+ TK.onTracker(s=>{const c=$("#recChip");if(c)c.style.display=(s.active&&s.trip===state.tripId)?"inline-block":"none"});
  document.addEventListener("click",e=>{const n=e.target.closest("[data-nav]");if(!n)return;
   $("#sidebar").classList.remove("open");
   if(n.dataset.nav==="home")location.hash="#/";else location.hash="#/t/"+state.tripId+"/"+n.dataset.nav});
@@ -92,13 +97,14 @@ function updateNet(){const on=navigator.onLine;const d=$("#netdot"),l=$("#netlbl
 /* ---------- trip subscription ---------- */
 function clearTrip(){state.unsubs.forEach(u=>u());state.unsubs=[];
  state.tripId=null;state.trip=null;state.days=[];state.places=[];state.stops=[];
- state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.bookings=[];state.ready={}}
+ state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.bookings=[];state.track=[];state.waypoints=[];state.ready={}}
 const rerender=debounce(()=>render(),80);
 function subscribeTrip(id){
  if(state.tripId===id)return;
  clearTrip();state.tripId=id;
  state.unsubs.push(watch(tripRef(id),s=>{state.trip=s.exists()?{id:s.id,...s.data()}:null;state.ready.trip=1;rerender()}));
- const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"],["bookings","date"]];
+ TK.resumeIfNeeded(id);
+ const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"],["bookings","date"],["track","date"],["waypoints","ts"]];
  subs.forEach(([name,ord])=>{
   state.unsubs.push(watch(fs.query(sub(id,name),fs.orderBy(ord)),ss=>{
    state[name]=ss.docs.map(d=>({id:d.id,...d.data()}));state.ready[name]=1;rerender()}))});

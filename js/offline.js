@@ -6,7 +6,7 @@ import {fs,sub,tripRef} from "./db.js";
 
 const PKEY=id=>"ftp_pray_"+id;
 const SKEY=id=>"ftp_prep_"+id;
-const SUBS=["days","places","stops","expenses","lists","guides","journal","fuel","bookings"];
+const SUBS=["days","places","stops","expenses","lists","guides","journal","fuel","bookings","track","waypoints"];
 
 export function prayerCache(tripId){
  try{return JSON.parse(localStorage.getItem(PKEY(tripId))||"{}")}catch(e){return{}}}

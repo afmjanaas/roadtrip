@@ -246,6 +246,14 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
   font-family:'Traditional Arabic','Segoe UI',serif}
 .phrase .ar .tr{font-size:11px;color:var(--ink3);direction:ltr;text-align:right;font-family:var(--sans)}
 
+.wpbtn{font-size:13px}
+@keyframes recpulse{0%,100%{opacity:1}50%{opacity:.35}}
+#recChip{animation:recpulse 1.4s infinite}
+.printjournal{display:none}
+@media print{.printjournal{display:block}
+ #view section > *:not(.printjournal){display:none!important}
+ .printjournal *{display:revert}}
+
 /* toast */
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.on{opacity:1}

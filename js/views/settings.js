@@ -6,7 +6,7 @@ import {prepareOffline,preparedAt,preparedDaysAgo} from "../offline.js";
 async function writeTrip(d,name){
  const clean=o=>{const {id,...rest}=o;return rest};
  const ref=await fs.addDoc(tripsCol(),{...d.trip,name,createdAt:serverTimestamp()});
- for(const k of ["days","places","stops","expenses","lists","guides","journal","fuel","bookings"])
+ for(const k of ["days","places","stops","expenses","lists","guides","journal","fuel","bookings","track","waypoints"])
   if(d[k]&&d[k].length)await batchSet(ref.id,k,d[k].map(clean));
  return ref.id}
 
@@ -92,7 +92,7 @@ export function render(state){
   btn.disabled=false};
  $("#expTrip").onclick=()=>{
   const data={v:1,app:"ftp-trip",trip:{...tr},days:state.days,places:state.places,stops:state.stops,
-   expenses:state.expenses,lists:state.lists,guides:state.guides,journal:state.journal||[],fuel:state.fuel||[],bookings:state.bookings||[]};
+   expenses:state.expenses,lists:state.lists,guides:state.guides,journal:state.journal||[],fuel:state.fuel||[],bookings:state.bookings||[],track:state.track||[],waypoints:state.waypoints||[]};
   delete data.trip.id;delete data.trip.createdAt;
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:"application/json"}));
