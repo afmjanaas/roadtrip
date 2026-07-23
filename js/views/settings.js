@@ -2,6 +2,7 @@
 import {t,tb,getLang,setLang} from "../i18n.js";
 import {$,esc,toast,pickImage} from "../util.js";
 import {tripRef,fs,configRef,deleteTripDeep,user,tripsCol,batchSet,serverTimestamp} from "../db.js";
+import {prepareOffline,preparedAt,preparedDaysAgo} from "../offline.js";
 async function writeTrip(d,name){
  const clean=o=>{const {id,...rest}=o;return rest};
  const ref=await fs.addDoc(tripsCol(),{...d.trip,name,createdAt:serverTimestamp()});
@@ -44,6 +45,13 @@ export function render(state){
     <div class="kv"><span class="k">${t("theme")}</span><span class="v"><button class="tbtn" id="sDark">◐</button></span></div>
     <div class="kv"><span class="k">Signed in</span><span class="v">${esc(user()?user().email:"")}</span></div></div>
   </div>
+  <div class="card" style="margin-top:16px"><h4>📴 ${t("offlineArmour")}</h4>
+   <div class="sec-sub" style="margin-bottom:10px">${t("offlineArmourSub")}</div>
+   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <button class="tbtn primary" id="prepBtn">⬇ ${t("prepareOffline")}</button>
+    <span class="pill" id="prepState">${preparedAt(tr.id)?"💾 "+t("lastPrepared")+": "+new Date(preparedAt(tr.id)).toLocaleString():t("neverPrepared")}</span></div>
+   <div id="prepBar" class="ckbar" style="display:none"><i></i></div>
+   <div id="prepMsg" style="font-size:12px;color:var(--ink3);margin-top:4px"></div></div>
   <div class="card" style="margin-top:16px"><h4>🗃 ${t("dataTools")}</h4>
    <div style="display:flex;gap:10px;flex-wrap:wrap">
     <button class="tbtn" id="expTrip">${t("exportTrip")}</button>
@@ -69,6 +77,19 @@ export function render(state){
   fs.updateDoc(configRef(),{allowedEmails:emails}).then(()=>toast("✓")).catch(e=>toast(e.message))};
  $("#sLang").onclick=()=>{setLang(getLang()==="ta"?"en":"ta");location.reload()};
  $("#sDark").onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==="dark"?"light":"dark";localStorage.setItem("ftp_theme",h.dataset.theme)};
+ $("#prepBtn").onclick=async()=>{
+  if(!navigator.onLine){toast(t("needOnline"));return}
+  const bar=$("#prepBar"),msg=$("#prepMsg"),btn=$("#prepBtn");
+  bar.style.display="block";btn.disabled=true;
+  try{
+   const rep=await prepareOffline(state,(done,total,label)=>{
+    bar.querySelector("i").style.width=(done/total*100)+"%";
+    msg.textContent=t("preparing")+" "+done+"/"+total+" — "+label});
+   msg.textContent="✅ "+t("offlineReady")+" — "+rep.docs+" items, "+rep.prayer+" "+t("daysOfPrayer")+(rep.failed?" ("+rep.failed+" failed)":"");
+   $("#prepState").textContent="💾 "+t("lastPrepared")+": "+new Date().toLocaleString();
+   toast("✓ "+t("offlineReady"));
+  }catch(e){msg.textContent="⚠ "+e.message}
+  btn.disabled=false};
  $("#expTrip").onclick=()=>{
   const data={v:1,app:"ftp-trip",trip:{...tr},days:state.days,places:state.places,stops:state.stops,
    expenses:state.expenses,lists:state.lists,guides:state.guides,journal:state.journal||[],fuel:state.fuel||[]};

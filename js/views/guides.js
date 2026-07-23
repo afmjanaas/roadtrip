@@ -3,6 +3,7 @@ import {t,tb,getLang} from "../i18n.js";
 import {$,$$,esc,openForm,toast} from "../util.js";
 import {sub,subDoc,fs} from "../db.js";
 import {TA} from "../seed-data.js";
+import {prayerFor,stopForDay} from "../offline.js";
 
 let active=null;
 export function render(state){
@@ -42,12 +43,19 @@ function fillIhram(state){
   const items=list.items.map((it,i)=>i===+c.dataset.ick?{...it,done:c.checked}:it);
   fs.updateDoc(subDoc(state.tripId,"lists",list.id),{items})}}
 async function fillPrayer(state){
- const host=$("#ptimes");if(!host||!navigator.onLine)return;
- const stop=state.stops[0];if(!stop)return;
+ const host=$("#ptimes");if(!host)return;
+ const today=new Date().toISOString().slice(0,10);
+ const dayNow=state.days.find(d=>d.date===today);
+ const stop=stopForDay(state.stops,dayNow?dayNow.ord:1);if(!stop)return;
+ const paint=(p,cached)=>{
+  const c=$("#ptCity");if(c)c.textContent=stop.name+(cached?" 💾":"");
+  host.innerHTML=["Fajr","Sunrise","Dhuhr","Asr","Maghrib","Isha"]
+   .map(k=>`<div class="kv"><span class="k">${k}</span><span class="v">${p[k]||"—"}</span></div>`).join("")};
+ const cached=prayerFor(state.tripId,today);
+ if(!navigator.onLine){if(cached)paint(cached,true);return}
  try{const pj=await (await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now()/1000)}?latitude=${stop.lat}&longitude=${stop.lng}&method=4`)).json();
-  const p=pj.data&&pj.data.timings;if(!p)return;
-  const c=$("#ptCity");if(c)c.textContent=stop.name;
-  host.innerHTML=["Fajr","Sunrise","Dhuhr","Asr","Maghrib","Isha"].map(k=>`<div class="kv"><span class="k">${k}</span><span class="v">${p[k]}</span></div>`).join("")}catch(e){}}
+  const p=pj.data&&pj.data.timings;if(!p)throw 0;paint(p,false)}
+ catch(e){if(cached)paint(cached,true)}}
 function renderGuide(g){
  // seeded guides carry the original section markup — give it the original section id so CSS/JS hooks work
  return `<div id="${g.key||"custom"}">${g.html}</div>`}

@@ -3,6 +3,7 @@ import {t,tb} from "../i18n.js";
 import {$,esc,fmt,fmtDate,todayISO,openForm,toast} from "../util.js";
 import {Q,dayPlanned,placesOfDay,expHome,dayOrdForDate,EXCATS,CATLBL} from "../calc.js";
 import {sub,subDoc,fs,user,serverTimestamp} from "../db.js";
+import {prayerFor,stopForDay,preparedDaysAgo} from "../offline.js";
 
 export function render(state){
  const tr=state.trip,cur=tr.currency,today=todayISO();
@@ -19,6 +20,8 @@ export function render(state){
  const city=(d.stay||"").replace(/🛏|🏁|HOME —/g,"").trim();
  const jn=state.journal.find(j=>j.dayOrd===d.ord);
  $("#view").innerHTML=`<section style="max-width:760px">
+  ${(()=>{const ago=preparedDaysAgo(state.tripId);
+    return (ago===null||ago>7)?`<div class="warn" style="margin-top:0">📴 <b>${t("notPrepared")}</b> — <a data-nav="settings" style="cursor:pointer;text-decoration:underline">${t("prepareOffline")}</a></div>`:""})()}
   ${mode==="before"?`<div class="note" style="font-size:15px">🗓 <b>${Math.ceil((new Date(tr.start)-new Date(today))/864e5)}</b> ${t("daysToGo")} — ${fmtDate(tr.start)}. ${t("previewDay1")}</div>`:""}
   ${mode==="after"?`<div class="note">🏁 ${t("tripDone")} <a data-nav="journal" style="cursor:pointer;text-decoration:underline">${t("journal")}</a></div>`:""}
   <div class="sec-h">📆 ${t("day")} ${d.ord} · ${esc(d.dow||"")}</div>
@@ -66,13 +69,18 @@ export function render(state){
  weather(state,d);
 }
 async function weather(state,d){
- const el=$("#twx");if(!el||!navigator.onLine)return;
- const stops=state.stops.filter(s=>s.day<=d.ord).sort((a,b)=>b.day-a.day);
- const stop=stops[0]||state.stops[0];if(!stop)return;
+ const el=$("#twx");if(!el)return;
+ const stop=stopForDay(state.stops,d.ord);if(!stop)return;
+ const cached=prayerFor(state.tripId,d.date);
+ const prayPill=p=>p?`<span class="pill">🕌 ${p.Fajr} · ${p.Dhuhr} · ${p.Asr} · ${p.Maghrib} · ${p.Isha}</span>`:"";
+ if(!navigator.onLine){
+  el.innerHTML=`<span class="pill">📍 ${esc(stop.name)}</span>${prayPill(cached)}
+   <span class="pill">${cached?"💾 "+t("prayerCached"):"📴 "+t("offline")}</span>`;return}
  try{
   const w=await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${stop.lat}&longitude=${stop.lng}&current=temperature_2m,apparent_temperature&daily=temperature_2m_max,temperature_2m_min&timezone=auto`)).json();
   let p=null;
   try{const pj=await (await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(Date.now()/1000)}?latitude=${stop.lat}&longitude=${stop.lng}&method=4`)).json();p=pj.data&&pj.data.timings}catch(e){}
   el.innerHTML=`<span class="pill">📍 ${esc(stop.name)}</span>
    ${w.current?`<span class="pill">🌡 <b>${Math.round(w.current.temperature_2m)}°</b> / ${Math.round(w.daily.temperature_2m_max[0])}°-${Math.round(w.daily.temperature_2m_min[0])}°</span>`:""}
-   ${p?`<span class="pill">🕌 ${p.Fajr} · ${p.Dhuhr} · ${p.Asr} · ${p.Maghrib} · ${p.Isha}</span>`:""}`}catch(e){}}
+   ${prayPill(p||cached)}`}catch(e){
+  el.innerHTML=`<span class="pill">📍 ${esc(stop.name)}</span>${prayPill(cached)}`}}

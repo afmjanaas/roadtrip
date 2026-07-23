@@ -3,6 +3,7 @@ import {t,tb,getLang} from "../i18n.js";
 import {$,esc,fmt,fmtDate,todayISO,CCOL,pickImage,toast} from "../util.js";
 import {plannedTotal,spentTotal,preTotal} from "../calc.js";
 import {tripRef,fs} from "../db.js";
+import {prayerFor,stopForDay} from "../offline.js";
 
 export function render(state){
  const tr=state.trip,days=state.days,places=state.places,exps=state.expenses;
@@ -51,13 +52,18 @@ export function render(state){
 
 /* weather + prayer for the current route position */
 async function liveRefresh(state){
- const el=$("#livebar");if(!el||!navigator.onLine)return;
+ const el=$("#livebar");if(!el)return;
  const tr=state.trip,today=todayISO();
  let dn=1;
  if(today>=tr.start&&today<=tr.end)dn=Math.floor((new Date(today)-new Date(tr.start))/864e5)+1;
  else if(today>tr.end)dn=state.days.length;
- const stops=state.stops.filter(s=>s.day<=dn).sort((a,b)=>b.day-a.day);
- const stop=stops[0]||state.stops[0];if(!stop)return;
+ const stop=stopForDay(state.stops,dn);if(!stop)return;
+ const dayIso=(state.days.find(x=>x.ord===dn)||{}).date;
+ const cached=prayerFor(state.tripId,dayIso);
+ const prayPill=p=>p?`<div class="pill">🕌 Fajr ${p.Fajr} · Dhuhr ${p.Dhuhr} · Asr ${p.Asr} · Maghrib ${p.Maghrib} · Isha ${p.Isha}</div>`:"";
+ if(!navigator.onLine){
+  el.innerHTML=`<div class="pill">📍 <b>${esc(stop.name)}</b> · ${t("routePos")}</div>${prayPill(cached)}
+   <div class="pill">${cached?"💾 "+t("prayerCached"):"📴 "+t("offline")}</div>`;return}
  try{
   const w=await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${stop.lat}&longitude=${stop.lng}&current=temperature_2m,apparent_temperature&daily=temperature_2m_max,temperature_2m_min&timezone=auto`)).json();
   let p=null;
@@ -66,5 +72,5 @@ async function liveRefresh(state){
    <div class="pill">📍 <b>${esc(stop.name)}</b> · ${t("routePos")}</div>
    ${w.current?`<div class="pill">🌡 <b>${Math.round(w.current.temperature_2m)}°C</b> (feels ${Math.round(w.current.apparent_temperature)}°)</div>
    <div class="pill">${t("today")}: ${Math.round(w.daily.temperature_2m_max[0])}° / ${Math.round(w.daily.temperature_2m_min[0])}°</div>`:""}
-   ${p?`<div class="pill">🕌 Fajr ${p.Fajr} · Dhuhr ${p.Dhuhr} · Asr ${p.Asr} · Maghrib ${p.Maghrib} · Isha ${p.Isha}</div>`:""}`;
- }catch(e){}}
+   ${prayPill(p||cached)}`;
+ }catch(e){el.innerHTML=`<div class="pill">📍 <b>${esc(stop.name)}</b></div>${prayPill(cached)}`}}

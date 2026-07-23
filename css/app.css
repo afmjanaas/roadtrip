@@ -231,6 +231,21 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
 .mini:hover{border-color:var(--gold)}
 .stbtn{white-space:nowrap}
 
+.sosbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:var(--bad);color:#fff;border-radius:12px;padding:12px 10px;text-decoration:none;box-shadow:var(--shadow)}
+.sosbtn:hover{filter:brightness(1.1)}
+.sosbtn .lbl{font-size:11px;letter-spacing:1px;text-transform:uppercase;opacity:.9;text-align:center}
+.sosbtn .num{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:1px}
+.sosbtn.big{grid-column:1/-1}
+.sosbtn.big .num{font-size:32px}
+.arcard{background:var(--goldL);border:1px solid var(--gold);border-radius:10px;padding:12px 14px;margin-top:10px;
+  font-size:21px;line-height:1.9;direction:rtl;text-align:right;font-family:'Traditional Arabic','Segoe UI',serif}
+.phrase{display:flex;gap:12px;align-items:center;padding:8px 4px;border-bottom:1px dashed var(--line2);flex-wrap:wrap}
+.phrase .en{flex:1;min-width:150px;font-size:13.5px}
+.phrase .ar{min-width:170px;text-align:right;direction:rtl;font-size:20px;line-height:1.6;
+  font-family:'Traditional Arabic','Segoe UI',serif}
+.phrase .ar .tr{font-size:11px;color:var(--ink3);direction:ltr;text-align:right;font-family:var(--sans)}
+
 /* toast */
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.on{opacity:1}
