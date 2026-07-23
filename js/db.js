@@ -70,6 +70,11 @@ export const sub=(tripId,name)=>collection(dbi,"trips",tripId,name);
 export const subDoc=(tripId,name,id)=>doc(dbi,"trips",tripId,name,id);
 export const activityCol=()=>collection(dbi,"activity");
 
+/* raw (UN-logged) helpers — for high-frequency GPS telemetry that must NOT flood the activity log */
+export const rawGet=r=>getDoc(r);
+export const rawSet=(r,d)=>setDoc(r,d);
+export const rawDelete=r=>deleteDoc(r);
+
 export function watch(refOrQuery,cb){return onSnapshot(refOrQuery,cb,e=>console.warn("snapshot error",e))}
 
 export async function batchSet(tripId,name,items){

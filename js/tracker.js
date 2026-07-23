@@ -3,13 +3,13 @@
    localStorage is the source of truth (works fully offline, e.g. the
    Empty Quarter); Firestore is a best-effort mirror so the printout can be
    produced from any device once back online. */
-import {sub,subDoc,fs,serverTimestamp} from "./db.js";
+import {sub,subDoc,fs,rawGet,rawSet,rawDelete,serverTimestamp} from "./db.js";
 
 /* ---- tunables ---- */
 const MIN_M=40;        // don't record a point unless moved >= 40 m
 const MIN_S=20;        // ...or 20 s elapsed
 const MAX_ACC=120;     // ignore fixes worse than 120 m accuracy
-const FLUSH_MS=60000;  // mirror to Firestore every 60 s
+const FLUSH_MS=30000;  // mirror to Firestore every 30 s
 
 /* ---- state ---- */
 let TID=null, watchId=null, wake=null, flushTimer=null, last=null;
@@ -83,7 +83,12 @@ function record(pos){
 async function acquireWake(){
  try{if("wakeLock" in navigator){wake=await navigator.wakeLock.request("screen");
   wake.addEventListener("release",()=>{wake=null})}}catch(e){wake=null}}
-function reWake(){if(isActive()&&!wake&&document.visibilityState==="visible")acquireWake()}
+function reWake(){if(!isActive())return;
+ if(document.visibilityState==="visible"){
+  if(!wake)acquireWake();
+  // dropped a fresh fix each time you return from another app (e.g. Google Maps navigation)
+  if("geolocation" in navigator)navigator.geolocation.getCurrentPosition(
+   p=>record(p),()=>{},{enableHighAccuracy:true,timeout:12000,maximumAge:5000})}}
 
 export async function start(tripId){
  TID=tripId;
@@ -128,7 +133,7 @@ export function editWaypoint(id,patch){
 export function deleteWaypoint(id){
  const w=waypoints().find(x=>x.id===id);
  setWaypoints(waypoints().filter(x=>x.id!==id));emit();
- if(w&&w.synced&&TID)fs.deleteDoc(subDoc(TID,"waypoints",id)).catch(()=>{})}
+ if(w&&w.synced&&TID)rawDelete(subDoc(TID,"waypoints",id)).catch(()=>{})}
 
 /* ---- Firestore mirror ---- */
 let flushing=false;
@@ -138,13 +143,19 @@ export async function flush(){
  try{
   const s=store();
   for(const date of Object.keys(s.dirty||{})){
-   const pts=s.days[date]||[];
-   await fs.setDoc(subDoc(TID,"track",date),{date,points:pts,updated:serverTimestamp()});
+   let pts=s.days[date]||[];
+   // merge with whatever another device already wrote for this day, so nobody's points are lost
+   try{const snap=await rawGet(subDoc(TID,"track",date));
+    const remote=(snap&&snap.exists&&snap.exists())?((snap.data()||{}).points||[]):[];
+    if(remote.length){const seen=new Set(pts.map(p=>p[2]));
+     remote.forEach(p=>{if(!seen.has(p[2]))pts.push(p)});
+     pts.sort((a,b)=>a[2]-b[2]);s.days[date]=pts}}catch(e){}
+   await rawSet(subDoc(TID,"track",date),{date,points:pts,updated:serverTimestamp()});
    delete s.dirty[date]}
   setStore(s);
   const list=waypoints();let changed=false;
   for(const w of list){if(!w.synced){
-   await fs.setDoc(subDoc(TID,"waypoints",w.id),
+   await rawSet(subDoc(TID,"waypoints",w.id),
     {type:w.type,lat:w.lat,lng:w.lng,ts:w.ts,note:w.note,date:w.date,acc:w.acc||null});
    w.synced=true;changed=true}}
   if(changed)setWaypoints(list);

@@ -31,6 +31,10 @@ export function render(state){
     ${WT.map(w=>`<button class="tbtn wpbtn" data-wp="${w.k}" style="border-color:${w.c}">${w.i} ${t("wp_"+w.k)}</button>`).join("")}
    </div>
    <div style="font-size:11px;color:var(--ink3);margin-top:10px">${active?t("keepOpen"):t("startHint")}</div>
+   <details style="margin-top:10px;text-align:left"><summary style="cursor:pointer;font-size:12px;color:var(--ink2)">ℹ️ ${t("howItWorks")}</summary>
+    <div style="font-size:12.5px;color:var(--ink2);line-height:1.65;margin-top:8px">
+     <b>📱 ${t("tipNavTitle")}</b> ${t("tipNav")}<br><br>
+     <b>🔋 ${t("tipHandoffTitle")}</b> ${t("tipHandoff")}</div></details>
   </div>
 
   ${dates.length?`
