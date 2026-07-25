@@ -254,6 +254,29 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
  #view section > *:not(.printjournal){display:none!important}
  .printjournal *{display:revert}}
 
+#share{min-height:100vh;background:var(--paper)}
+.shbar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;gap:10px;
+ padding:10px 16px;background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);font-size:14px}
+.shhero{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#f2ecdc;padding:34px 20px 30px;text-align:center}
+.shhero .kick{letter-spacing:3px;font-size:11px;color:var(--gold);margin-bottom:8px}
+.shhero h1{font-family:var(--serif);font-size:clamp(24px,6vw,40px);color:#fff;line-height:1.1}
+.shhero .shsub{margin-top:8px;color:#cfc8b4;font-size:14px}
+.shbadges{margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.shwrap{max-width:760px;margin:0 auto;padding:18px 14px 60px}
+.shwrap .card{margin-bottom:14px}
+.shstats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:520px){.shstats{grid-template-columns:repeat(2,1fr)}}
+.shmem{border-top:1px dashed var(--line2);padding:12px 0}
+.shmem:first-child{border-top:0}
+.shmem-h{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.shphotos{display:flex;gap:8px;flex-wrap:wrap}
+.shphotos img{height:130px;border-radius:10px;border:1px solid var(--line);object-fit:cover}
+.shday{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:1px dashed var(--line2)}
+.shday:first-child{border-top:0}
+.shday.done{opacity:.65}
+.shdnum{width:26px;height:26px;border-radius:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:none}
+.shfoot{text-align:center;color:var(--ink3);font-size:12px;padding:20px}
+
 /* toast */
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.on{opacity:1}

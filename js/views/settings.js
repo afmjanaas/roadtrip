@@ -1,6 +1,7 @@
 /* ================= SETTINGS ================= */
 import {t,tb,getLang,setLang} from "../i18n.js";
 import {$,esc,toast,pickImage} from "../util.js";
+function shareLink(tr){const b=location.origin+location.pathname;return b+"#/share/"+tr.id}
 import {tripRef,fs,configRef,deleteTripDeep,user,tripsCol,batchSet,serverTimestamp} from "../db.js";
 import {prepareOffline,preparedAt,preparedDaysAgo} from "../offline.js";
 async function writeTrip(d,name){
@@ -45,6 +46,14 @@ export function render(state){
     <div class="kv"><span class="k">${t("theme")}</span><span class="v"><button class="tbtn" id="sDark">◐</button></span></div>
     <div class="kv"><span class="k">Signed in</span><span class="v">${esc(user()?user().email:"")}</span></div></div>
   </div>
+  <div class="card" style="margin-top:16px"><h4>🔗 ${t("familyShare")}</h4>
+   <div class="sec-sub" style="margin-bottom:10px">${t("familyShareSub")}</div>
+   <label class="ck" style="cursor:pointer;border:0;padding:4px 0"><input type="checkbox" id="shareToggle" ${tr.public?"checked":""}> <span class="tx"><b>${t("shareEnable")}</b></span></label>
+   <div id="shareBox" style="display:${tr.public?"block":"none"};margin-top:8px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+     <input class="inp" id="shareUrl" readonly style="flex:1;min-width:220px;font-size:12px" value="${esc(shareLink(tr))}">
+     <button class="tbtn primary" id="shareCopy">📋 ${t("copyLink")}</button></div>
+    <div style="font-size:11px;color:var(--ink3);margin-top:6px">${t("shareNote")}</div></div></div>
   <div class="card" style="margin-top:16px"><h4>📴 ${t("offlineArmour")}</h4>
    <div class="sec-sub" style="margin-bottom:10px">${t("offlineArmourSub")}</div>
    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
@@ -77,6 +86,10 @@ export function render(state){
   fs.updateDoc(configRef(),{allowedEmails:emails}).then(()=>toast("✓")).catch(e=>toast(e.message))};
  $("#sLang").onclick=()=>{setLang(getLang()==="ta"?"en":"ta");location.reload()};
  $("#sDark").onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==="dark"?"light":"dark";localStorage.setItem("ftp_theme",h.dataset.theme)};
+ const shT=$("#shareToggle");if(shT)shT.onchange=e=>{
+   fs.updateDoc(tripRef(tr.id),{public:e.target.checked}).then(()=>{toast("✓");$("#shareBox").style.display=e.target.checked?"block":"none"})};
+ const shC=$("#shareCopy");if(shC)shC.onclick=()=>{const i=$("#shareUrl");i.select();
+   (navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.reject()).then(()=>toast("📋 "+t("copied"))).catch(()=>{try{document.execCommand("copy");toast("📋 "+t("copied"))}catch(e){toast(i.value)}})};
  $("#prepBtn").onclick=async()=>{
   if(!navigator.onLine){toast(t("needOnline"));return}
   const bar=$("#prepBar"),msg=$("#prepMsg"),btn=$("#prepBtn");

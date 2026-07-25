@@ -23,6 +23,7 @@ import * as vSos from "./views/sos.js";
 import * as vBookings from "./views/bookings.js";
 import * as vJourneylog from "./views/journeylog.js";
 import * as TK from "./tracker.js";
+import * as vShare from "./views/share.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
  days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],track:[],waypoints:[],unsubs:[],ready:{}};
@@ -136,7 +137,9 @@ export function render(){
  mod.render(state);
  window.scrollTo(0,0)}
 
-window.addEventListener("hashchange",()=>{const r=route();
+window.addEventListener("hashchange",()=>{
+ const sid=shareId();if(sid){startShare(sid);return}
+ const r=route();
  if(r.page==="home"){if($("#sidebar"))$("#app").innerHTML="";}
  if($("#sidebar")&&r.page!=="home"){render()}else{shellOrHome()}});
 function shellOrHome(){const r=route();
@@ -144,8 +147,21 @@ function shellOrHome(){const r=route();
  else{shell();render()}}
 
 /* ---------- boot ---------- */
+function shareId(){const m=location.hash.match(/^#\/share\/([^/]+)/);return m?m[1]:null}
+let shareSubs=[];
+function startShare(id){
+ shareSubs.forEach(u=>u());shareSubs=[];
+ state.tripId=id;state.ready={};
+ document.documentElement.dataset.theme=localStorage.getItem("ftp_theme")||"light";
+ const paint=debounce(()=>vShare.render(state),80);
+ shareSubs.push(watch(tripRef(id),s=>{state.trip=s.exists()?{id:s.id,...s.data()}:null;state.ready.trip=1;paint()}));
+ [["days","ord"],["places","dayOrd"],["stops","ord"],["journal","dayOrd"],["track","date"],["waypoints","ts"]]
+  .forEach(([n,o])=>shareSubs.push(watch(fs.query(sub(id,n),fs.orderBy(o)),ss=>{state[n]=ss.docs.map(d=>({id:d.id,...d.data()}));paint()})));
+ vShare.render(state);}
+
 async function boot(){
  if(!configured){showSetup();return}
+ const sid=shareId();if(sid){startShare(sid);return}
  onAuth(async u=>{
   state.user=u;
   if(!u){showLogin();return}

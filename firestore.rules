@@ -27,11 +27,15 @@ service cloud.firestore {
       allow read, write: if isOwner();
     }
 
-    // All trip data: family only.
+    // Trip data: family can read+write; ANYONE can read a trip that is marked public
+    // (the family-share "follow our journey" link). Writes always require family.
     match /trips/{tripId} {
-      allow read, write: if isFamily();
+      allow read: if isFamily() || resource.data.public == true;
+      allow write: if isFamily();
       match /{sub}/{docId} {
-        allow read, write: if isFamily();
+        allow read: if isFamily()
+          || get(/databases/$(database)/documents/trips/$(tripId)).data.public == true;
+        allow write: if isFamily();
       }
     }
 
