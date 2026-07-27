@@ -159,7 +159,7 @@ function startShare(id){
  document.documentElement.dataset.theme=localStorage.getItem("ftp_theme")||"light";
  const paint=debounce(()=>vShare.render(state),80);
  shareSubs.push(watch(tripRef(id),s=>{state.trip=s.exists()?{id:s.id,...s.data()}:null;state.ready.trip=1;paint()}));
- [["days","ord"],["places","dayOrd"],["stops","ord"],["journal","dayOrd"],["track","date"],["waypoints","ts"]]
+ [["days","ord"],["places","dayOrd"],["stops","ord"],["journal","dayOrd"],["track","date"],["waypoints","ts"],["guides","ord"],["lists","ord"]]
   .forEach(([n,o])=>shareSubs.push(watch(fs.query(sub(id,n),fs.orderBy(o)),ss=>{state[n]=ss.docs.map(d=>({id:d.id,...d.data()}));paint()})));
  vShare.render(state);}
 
