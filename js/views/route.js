@@ -2,6 +2,7 @@
 import {t,tb} from "../i18n.js";
 import {$,esc,haversine,openForm,toast} from "../util.js";
 import {sub,subDoc,fs,db} from "../db.js";
+import * as MT from "../maptiles.js";
 
 let map=null,layer=null;
 export function render(state){
@@ -20,7 +21,7 @@ export function render(state){
 function buildMap(state){
  const L=window.L;if(!L){$("#lmap").innerHTML="Leaflet failed to load";return}
  map=L.map("lmap");
- L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© OpenStreetMap"}).addTo(map);
+ MT.offlineLayer(L).addTo(map);
  layer=L.layerGroup().addTo(map);
  const stops=[...state.stops].sort((a,b)=>a.ord-b.ord);
  if(stops.length){

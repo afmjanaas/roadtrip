@@ -2,6 +2,7 @@
 import {t,tb} from "../i18n.js";
 import {$,$$,esc,fmtDate,todayISO,toast,openForm} from "../util.js";
 import * as TK from "../tracker.js";
+import * as MT from "../maptiles.js";
 
 const WT=[
  {k:"start",i:"🏳",c:"#0E7A45"},{k:"stay",i:"🛏",c:"#8A1538"},{k:"eat",i:"🍽",c:"#D97B29"},
@@ -92,7 +93,7 @@ function paintStatus(state){
 function buildMap(state){
  const L=window.L;if(!L){$("#jmap").innerHTML="map n/a";return}
  LMAP=L.map("jmap");
- L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(LMAP);
+ MT.offlineLayer(L).addTo(LMAP);
  drawDay(state);
 }
 let dayLayer=null;

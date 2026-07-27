@@ -5,6 +5,7 @@ function shareLink(tr){const b=location.origin+location.pathname;return b+"#/sha
 import {tripRef,fs,configRef,deleteTripDeep,user,tripsCol,batchSet,serverTimestamp} from "../db.js";
 import * as G from "../gemini.js";
 import {prepareOffline,preparedAt,preparedDaysAgo} from "../offline.js";
+import * as MT from "../maptiles.js";
 async function writeTrip(d,name){
  const clean=o=>{const {id,...rest}=o;return rest};
  const ref=await fs.addDoc(tripsCol(),{...d.trip,name,createdAt:serverTimestamp()});
@@ -70,7 +71,16 @@ export function render(state){
     <button class="tbtn primary" id="prepBtn">⬇ ${t("prepareOffline")}</button>
     <span class="pill" id="prepState">${preparedAt(tr.id)?"💾 "+t("lastPrepared")+": "+new Date(preparedAt(tr.id)).toLocaleString():t("neverPrepared")}</span></div>
    <div id="prepBar" class="ckbar" style="display:none"><i></i></div>
-   <div id="prepMsg" style="font-size:12px;color:var(--ink3);margin-top:4px"></div></div>
+   <div id="prepMsg" style="font-size:12px;color:var(--ink3);margin-top:4px"></div>
+   <div style="border-top:1px dashed var(--line2);margin-top:12px;padding-top:12px">
+    <b style="font-size:13.5px">🗺 ${t("offlineMaps")}</b>
+    <div class="sec-sub" style="margin:4px 0 8px">${t("offlineMapsSub")}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+     <button class="tbtn primary" id="mapDl">⬇ ${t("downloadMaps")}</button>
+     <button class="tbtn" id="mapClear">${t("clearMaps")}</button>
+     <span class="pill" id="mapState">…</span></div>
+    <div id="mapBar" class="ckbar" style="display:none"><i></i></div>
+    <div id="mapMsg" style="font-size:12px;color:var(--ink3);margin-top:4px"></div></div></div>
   <div class="card" style="margin-top:16px"><h4>🗃 ${t("dataTools")}</h4>
    <div style="display:flex;gap:10px;flex-wrap:wrap">
     <button class="tbtn" id="expTrip">${t("exportTrip")}</button>
@@ -101,6 +111,21 @@ export function render(state){
    fs.updateDoc(tripRef(tr.id),{public:e.target.checked}).then(()=>{toast("✓");$("#shareBox").style.display=e.target.checked?"block":"none"})};
  const shC=$("#shareCopy");if(shC)shC.onclick=()=>{const i=$("#shareUrl");i.select();
    (navigator.clipboard?navigator.clipboard.writeText(i.value):Promise.reject()).then(()=>toast("📋 "+t("copied"))).catch(()=>{try{document.execCommand("copy");toast("📋 "+t("copied"))}catch(e){toast(i.value)}})};
+ MT.tileCount().then(c=>{const el=$("#mapState");if(el)el.textContent=c?"💾 "+c.toLocaleString()+" "+t("tilesSaved"):t("noMapsYet")});
+ $("#mapDl").onclick=async()=>{
+  if(!navigator.onLine){toast(t("needOnline"));return}
+  const stops=(state.stops||[]).slice().sort((a,b)=>a.ord-b.ord);
+  if(!stops.length){toast("No route stops to cover");return}
+  const est=MT.estimateTiles(stops);
+  if(!confirm(t("mapConfirm").replace("{n}",est.toLocaleString()).replace("{mb}",Math.round(est*15/1024)))) return;
+  const bar=$("#mapBar"),msg=$("#mapMsg"),btn=$("#mapDl");bar.style.display="block";btn.disabled=true;
+  try{const r=await MT.downloadRoute(stops,null,(done,total,failed)=>{
+    bar.querySelector("i").style.width=(done/total*100)+"%";
+    msg.textContent=t("downloadingMaps")+" "+done+"/"+total+(failed?" ("+failed+" ✕)":"")});
+   msg.textContent="✅ "+t("mapsReady");MT.tileCount().then(c=>$("#mapState").textContent="💾 "+c.toLocaleString()+" "+t("tilesSaved"));toast("✓ "+t("mapsReady"));
+  }catch(e){msg.textContent="⚠ "+e.message}
+  btn.disabled=false};
+ $("#mapClear").onclick=async()=>{if(!confirm(t("clearMaps")+"?"))return;await MT.clearTiles();$("#mapState").textContent=t("noMapsYet");toast("✓")};
  $("#prepBtn").onclick=async()=>{
   if(!navigator.onLine){toast(t("needOnline"));return}
   const bar=$("#prepBar"),msg=$("#prepMsg"),btn=$("#prepBtn");

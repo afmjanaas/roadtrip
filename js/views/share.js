@@ -5,6 +5,7 @@
 import {t,tb,getLang,setLang} from "../i18n.js";
 import {$,$$,esc,fmt,fmtDate,todayISO,stars,dots,CCOL} from "../util.js";
 import * as TK from "../tracker.js";
+import * as MT from "../maptiles.js";
 
 const CITYICON={"Abu Dhabi":"🕌","Dubai":"🌆","Muscat":"🕌","Nizwa":"🏰","Bahla":"🏰","Ibri":"🏜","Hofuf (Al Ahsa)":"🏜","Riyadh":"🏙","Buraydah":"🐪","Hail":"🏰","AlUla":"🗿","Madinah":"🕌","Taif":"🌹","Al Baha":"🌲","Abha":"⛰","Rijal Almaa":"🏘","Makkah":"🕋","Al Ain":"🌴"};
 
@@ -141,11 +142,11 @@ async function loadPlacePhotos(){
 function drawMini(tr,lastPt,lastWp){
  const L=window.L,el=$("#shmap");if(!L||!el)return;
  const pos=lastWp?[lastWp.lat,lastWp.lng]:(lastPt?[lastPt[0],lastPt[1]]:null);if(!pos)return;
- const m=L.map("shmap");L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© OpenStreetMap"}).addTo(m);
+ const m=L.map("shmap");MT.offlineLayer(L).addTo(m);
  L.marker(pos,{icon:L.divIcon({className:"",html:'<div style="font-size:26px;text-shadow:0 0 4px #fff">📍</div>',iconAnchor:[13,13]})}).addTo(m);m.setView(pos,9)}
 function drawRoute(state){
  const L=window.L,el=$("#shroute");if(!L||!el)return;
- const m=L.map("shroute");L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© OpenStreetMap"}).addTo(m);
+ const m=L.map("shroute");MT.offlineLayer(L).addTo(m);
  const bounds=[];const stops=(state.stops||[]).slice().sort((a,b)=>a.ord-b.ord);
  if(stops.length)L.polyline(stops.map(s=>[s.lat,s.lng]),{color:state.trip.color||"#8A1538",weight:3,opacity:.5,dashArray:"6 6"}).addTo(m);
  stops.forEach(s=>bounds.push([s.lat,s.lng]));
