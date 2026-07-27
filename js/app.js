@@ -36,7 +36,7 @@ const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog,alerts:vAlerts,assistant:vAssistant};
 const NAVKEY={route:"routeMap",fuel:"fuelLog"};
 const GROUPS=[
- ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["bookings","🧾"],["route","🗺"],["journeylog","🛰"],["book","🖨"]]],
+ ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["bookings","🧾"],["route","🗺"],["journeylog","🛰"],["book","📕"]]],
  ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
  ["gMore",[["assistant","🤖"],["journal","📔"],["checklists","☑"],["guides","📖"],["alerts","🔔"],["sos","🆘"],["settings","⚙"]]]];
 
