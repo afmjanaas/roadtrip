@@ -24,18 +24,20 @@ import * as vBookings from "./views/bookings.js";
 import * as vJourneylog from "./views/journeylog.js";
 import * as TK from "./tracker.js";
 import * as vShare from "./views/share.js";
+import * as vAlerts from "./views/alerts.js";
+import * as notify from "./notify.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
- days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],track:[],waypoints:[],unsubs:[],ready:{}};
+ days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],track:[],waypoints:[],reminders:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays,
- today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog};
+ today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog,alerts:vAlerts};
 const NAVKEY={route:"routeMap",fuel:"fuelLog"};
 const GROUPS=[
  ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["bookings","🧾"],["route","🗺"],["journeylog","🛰"],["book","🖨"]]],
  ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
- ["gMore",[["journal","📔"],["checklists","☑"],["guides","📖"],["sos","🆘"],["settings","⚙"]]]];
+ ["gMore",[["journal","📔"],["checklists","☑"],["guides","📖"],["alerts","🔔"],["sos","🆘"],["settings","⚙"]]]];
 
 document.documentElement.dataset.theme=localStorage.getItem("ftp_theme")||"light";
 document.documentElement.dataset.lang=getLang();
@@ -98,14 +100,14 @@ function updateNet(){const on=navigator.onLine;const d=$("#netdot"),l=$("#netlbl
 /* ---------- trip subscription ---------- */
 function clearTrip(){state.unsubs.forEach(u=>u());state.unsubs=[];
  state.tripId=null;state.trip=null;state.days=[];state.places=[];state.stops=[];
- state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.bookings=[];state.track=[];state.waypoints=[];state.ready={}}
+ state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.bookings=[];state.track=[];state.waypoints=[];state.reminders=[];state.ready={}}
 const rerender=debounce(()=>render(),80);
 function subscribeTrip(id){
  if(state.tripId===id)return;
  clearTrip();state.tripId=id;
  state.unsubs.push(watch(tripRef(id),s=>{state.trip=s.exists()?{id:s.id,...s.data()}:null;state.ready.trip=1;rerender()}));
  TK.resumeIfNeeded(id);
- const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"],["bookings","date"],["track","date"],["waypoints","ts"]];
+ const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"],["bookings","date"],["track","date"],["waypoints","ts"],["reminders","date"]];
  subs.forEach(([name,ord])=>{
   state.unsubs.push(watch(fs.query(sub(id,name),fs.orderBy(ord)),ss=>{
    state[name]=ss.docs.map(d=>({id:d.id,...d.data()}));state.ready[name]=1;rerender()}))});
@@ -133,6 +135,7 @@ export function render(){
  if(state.config&&state.user&&state.config.owner===state.user.email)groups.push(["gAdmin",[["activity","📜"],["vault","🪪"]]]);
  $("#sbLinks").innerHTML=groups.map(([g,items])=>'<div class="sb-h">'+t(g)+'</div>'+items.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span>'+tb(NAVKEY[k]||k)+'</a>').join("")).join("");
  $("#crumb").textContent=state.trip.name+" — "+t(NAVKEY[r.page]||r.page);
+ try{notify.setState(state);if(notify.settings(state.tripId).enabled)notify.rescheduleAll(state)}catch(e){}
  const mod=PAGES[r.page]||vOverview;
  mod.render(state);
  window.scrollTo(0,0)}

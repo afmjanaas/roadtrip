@@ -4,6 +4,7 @@
    Empty Quarter); Firestore is a best-effort mirror so the printout can be
    produced from any device once back online. */
 import {sub,subDoc,fs,rawGet,rawSet,rawDelete,serverTimestamp} from "./db.js";
+import * as notify from "./notify.js";
 
 /* ---- Capacitor (native app) detection — harmless on the web ---- */
 const CAP=(typeof window!=="undefined")&&window.Capacitor;
@@ -87,7 +88,8 @@ function record(lat,lng,acc,tMs){
  last={lat:p[0],lng:p[1],t,acc:p[3]};
  const s=store();const date=localDate(t);
  (s.days[date]=s.days[date]||[]).push(p);
- s.dirty[date]=1;setStore(s);emit()}
+ s.dirty[date]=1;setStore(s);emit();
+ try{notify.onLocation(p[0],p[1])}catch(e){}}
 function recordPos(pos){const c=pos.coords;record(c.latitude,c.longitude,c.accuracy,pos.timestamp)}
 
 async function acquireWake(){
