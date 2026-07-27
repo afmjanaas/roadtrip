@@ -46,6 +46,28 @@ export function pickImage(cb,maxDim=1100,quality=.78){
   rd.readAsDataURL(f)};
  i.click()}
 
+/* ---- audio recording (web + Capacitor WebView) ---- */
+export async function startRecording(){
+ const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+ const pick=["audio/webm","audio/mp4","audio/ogg"].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m));
+ const rec=new MediaRecorder(stream,pick?{mimeType:pick}:undefined);
+ const chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};rec.start();
+ return {stop:()=>new Promise(res=>{rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());
+   const blob=new Blob(chunks,{type:rec.mimeType||"audio/webm"});const fr=new FileReader();
+   fr.onload=()=>res({base64:String(fr.result).split(",")[1],mime:(rec.mimeType||"audio/webm").split(";")[0]});
+   fr.readAsDataURL(blob)};rec.stop()})}}
+export function voiceOverlay(labelStop,labelRec){
+ return new Promise(async(res,rej)=>{let ctl;
+  try{ctl=await startRecording()}catch(e){rej(new Error("Microphone unavailable: "+e.message));return}
+  const ov=document.createElement("div");ov.className="ovl";ov.style.alignItems="center";
+  ov.innerHTML='<div class="modal" style="max-width:340px;text-align:center"><h3 style="color:var(--bad)">● '+(labelRec||"Recording…")+'</h3>'+
+   '<div class="sec-sub">Speak now, then tap Stop.</div><div class="btns" style="justify-content:center">'+
+   '<button class="tbtn" data-a="cancel">Cancel</button><button class="tbtn primary" data-a="stop">'+(labelStop||"⏹ Stop")+'</button></div></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener("click",async e=>{const a=e.target.dataset&&e.target.dataset.a;if(!a)return;
+   if(a==="cancel"){try{await ctl.stop()}catch(_){}ov.remove();rej(new Error("cancelled"))}
+   else{ov.querySelector("h3").textContent="⏳ …";const out=await ctl.stop();ov.remove();res(out)}})})}
+
 /* ---- generic form modal ---- */
 export function openForm(title,fields,vals,onSave,onDelete,delLabel){
  const ov=document.createElement("div");ov.className="ovl";

@@ -3,6 +3,7 @@ import {t,tb,getLang,setLang} from "../i18n.js";
 import {$,esc,toast,pickImage} from "../util.js";
 function shareLink(tr){const b=location.origin+location.pathname;return b+"#/share/"+tr.id}
 import {tripRef,fs,configRef,deleteTripDeep,user,tripsCol,batchSet,serverTimestamp} from "../db.js";
+import * as G from "../gemini.js";
 import {prepareOffline,preparedAt,preparedDaysAgo} from "../offline.js";
 async function writeTrip(d,name){
  const clean=o=>{const {id,...rest}=o;return rest};
@@ -46,6 +47,15 @@ export function render(state){
     <div class="kv"><span class="k">${t("theme")}</span><span class="v"><button class="tbtn" id="sDark">◐</button></span></div>
     <div class="kv"><span class="k">Signed in</span><span class="v">${esc(user()?user().email:"")}</span></div></div>
   </div>
+  <div class="card" style="margin-top:16px"><h4>🤖 ${t("aiSection")}</h4>
+   <div class="sec-sub" style="margin-bottom:8px">${t("aiSectionSub")}</div>
+   <label class="f">${t("apiKey")}<input class="inp" id="gemKey" type="password" placeholder="AIza…" value="${esc(G.getKey())}"></label>
+   <label class="f" style="margin-top:8px">${t("model")}<select class="inp" id="gemModel">
+     ${["gemini-2.0-flash","gemini-2.0-flash-lite","gemini-1.5-flash","gemini-1.5-pro"].map(m=>`<option ${G.getModel()===m?"selected":""}>${m}</option>`).join("")}</select></label>
+   <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+     <button class="tbtn primary" id="gemSave">${t("save")}</button>
+     <a class="tbtn" href="https://aistudio.google.com/apikey" target="_blank" style="text-decoration:none">${t("getKey")} ↗</a></div>
+   <div style="font-size:11px;color:var(--ink3);margin-top:6px">${t("aiKeyNote")}</div></div>
   <div class="card" style="margin-top:16px"><h4>🔗 ${t("familyShare")}</h4>
    <div class="sec-sub" style="margin-bottom:10px">${t("familyShareSub")}</div>
    <label class="ck" style="cursor:pointer;border:0;padding:4px 0"><input type="checkbox" id="shareToggle" ${tr.public?"checked":""}> <span class="tx"><b>${t("shareEnable")}</b></span></label>
@@ -86,6 +96,7 @@ export function render(state){
   fs.updateDoc(configRef(),{allowedEmails:emails}).then(()=>toast("✓")).catch(e=>toast(e.message))};
  $("#sLang").onclick=()=>{setLang(getLang()==="ta"?"en":"ta");location.reload()};
  $("#sDark").onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==="dark"?"light":"dark";localStorage.setItem("ftp_theme",h.dataset.theme)};
+ const gs=$("#gemSave");if(gs)gs.onclick=()=>{G.setKey($("#gemKey").value);G.setModel($("#gemModel").value);toast("✓ "+t("aiSaved"))};
  const shT=$("#shareToggle");if(shT)shT.onchange=e=>{
    fs.updateDoc(tripRef(tr.id),{public:e.target.checked}).then(()=>{toast("✓");$("#shareBox").style.display=e.target.checked?"block":"none"})};
  const shC=$("#shareCopy");if(shC)shC.onclick=()=>{const i=$("#shareUrl");i.select();

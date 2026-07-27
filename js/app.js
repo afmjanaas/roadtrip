@@ -26,18 +26,19 @@ import * as TK from "./tracker.js";
 import * as vShare from "./views/share.js";
 import * as vAlerts from "./views/alerts.js";
 import * as notify from "./notify.js";
+import * as vAssistant from "./views/assistant.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
  days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],track:[],waypoints:[],reminders:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays,
- today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog,alerts:vAlerts};
+ today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog,alerts:vAlerts,assistant:vAssistant};
 const NAVKEY={route:"routeMap",fuel:"fuelLog"};
 const GROUPS=[
  ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["bookings","🧾"],["route","🗺"],["journeylog","🛰"],["book","🖨"]]],
  ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
- ["gMore",[["journal","📔"],["checklists","☑"],["guides","📖"],["alerts","🔔"],["sos","🆘"],["settings","⚙"]]]];
+ ["gMore",[["assistant","🤖"],["journal","📔"],["checklists","☑"],["guides","📖"],["alerts","🔔"],["sos","🆘"],["settings","⚙"]]]];
 
 document.documentElement.dataset.theme=localStorage.getItem("ftp_theme")||"light";
 document.documentElement.dataset.lang=getLang();
