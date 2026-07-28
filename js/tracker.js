@@ -53,6 +53,9 @@ function dm(a,b){const R=6371000,r=x=>x*Math.PI/180;
  const h=Math.sin(dLat/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dLon/2)**2;
  return 2*R*Math.asin(Math.sqrt(h))}
 export function dayDistanceM(points){let d=0;for(let i=1;i<points.length;i++)d+=dm(points[i-1],points[i]);return d}
+export function movingSeconds(points){let s=0;for(let i=1;i<points.length;i++){const dt=points[i][2]-points[i-1][2];
+ if(dt>0&&dt<600&&dm(points[i-1],points[i])>15)s+=dt}return s}
+export function maxAltitude(points){let m=null;points.forEach(p=>{if(p[4]!=null&&(m==null||p[4]>m))m=p[4]});return m}
 export function localDate(tSec){const d=new Date(tSec*1000);
  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 
@@ -78,11 +81,11 @@ export function trackDays(id){const s=load(TK(id||TID||id),{days:{}});return s.d
 export function pointsForDate(id,date){return (load(TK(id),{days:{}}).days||{})[date]||[]}
 
 /* ---- recording ---- */
-function record(lat,lng,acc,tMs){
+function record(lat,lng,acc,tMs,alt){
  if(lat==null||lng==null)return;
  if(acc>MAX_ACC && last)return;
  const t=Math.round((tMs||Date.now())/1000);
- const p=[+(+lat).toFixed(5),+(+lng).toFixed(5),t,Math.round(acc||0)];
+ const p=[+(+lat).toFixed(5),+(+lng).toFixed(5),t,Math.round(acc||0),(alt!=null&&isFinite(alt))?Math.round(alt):null];
  if(last){const gap=t-last.t, moved=dm([last.lat,last.lng],[p[0],p[1]]);
   if(moved<MIN_M && gap<MIN_S)return}
  last={lat:p[0],lng:p[1],t,acc:p[3]};
@@ -90,7 +93,7 @@ function record(lat,lng,acc,tMs){
  (s.days[date]=s.days[date]||[]).push(p);
  s.dirty[date]=1;setStore(s);emit();
  try{notify.onLocation(p[0],p[1])}catch(e){}}
-function recordPos(pos){const c=pos.coords;record(c.latitude,c.longitude,c.accuracy,pos.timestamp)}
+function recordPos(pos){const c=pos.coords;record(c.latitude,c.longitude,c.accuracy,pos.timestamp,c.altitude)}
 
 async function acquireWake(){
  try{if("wakeLock" in navigator){wake=await navigator.wakeLock.request("screen");
@@ -112,7 +115,7 @@ export async function start(tripId){
    backgroundTitle:"Trip tracker",
    requestPermissions:true, stale:false, distanceFilter:MIN_M},
    (loc,err)=>{if(err){console.warn("bg-geo",err);emit();return}
-    if(loc)record(loc.latitude,loc.longitude,loc.accuracy,loc.time)});
+    if(loc)record(loc.latitude,loc.longitude,loc.accuracy,loc.time,loc.altitude)});
   watchId="native";
  }else{
   if(!("geolocation" in navigator))throw new Error("No geolocation on this device");
