@@ -2,6 +2,7 @@
 import {t,tb,getLang} from "../i18n.js";
 import {$,$$,esc,fmt,fmtDate,stars,dots,CCOL,DOWS,openForm,pickImage,toast} from "../util.js";
 import {Q,dayActs,dayPlanned,placesOfDay,spentByDay} from "../calc.js";
+import {PLACE_CATS} from "../categories.js";
 import {sub,subDoc,fs,db} from "../db.js";
 
 const CITYICON={"Abu Dhabi":"🕌","Dubai":"🌆","Hofuf (Al Ahsa)":"🏜","Riyadh":"🏙","Buraydah":"🐪","Hail":"🏰","AlUla":"🗿","Madinah":"🕌","Taif":"🌹","Al Baha":"🌲","Abha":"⛰","Rijal Almaa":"🏘","Makkah":"🕋"};
@@ -32,7 +33,8 @@ const ATTF=st=>[
  {k:"park",l:"🅿 Parking",def:"—"},{k:"pray",l:"🕌 Prayer",def:"—"},
  {k:"kids",l:"🧒 0–5",type:"number",def:3},{k:"ph",l:"📷 0–5",type:"number",def:3},
  {k:"why",l:"Why visit",type:"textarea"},
- {k:"q",l:"Google Maps search",full:1},{k:"wiki",l:"Wikipedia title (auto photo)",full:1}];
+ {k:"q",l:"Google Maps search",full:1},{k:"wiki",l:"Wikipedia title (auto photo)",full:1},
+ {k:"tag",l:"Category (auto if blank)",type:"select",opts:["",...PLACE_CATS.map(c=>c.k)]}];
 
 export function render(state){
  const tr=state.trip,cur=tr.currency,days=state.days,places=state.places;

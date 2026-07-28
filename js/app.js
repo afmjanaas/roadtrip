@@ -27,16 +27,18 @@ import * as vShare from "./views/share.js";
 import * as vAlerts from "./views/alerts.js";
 import * as notify from "./notify.js";
 import * as vAssistant from "./views/assistant.js";
+import * as vPlaces from "./views/places.js";
+import * as vFood from "./views/food.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
  days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],track:[],waypoints:[],reminders:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays,
- today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog,alerts:vAlerts,assistant:vAssistant};
+ today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog,alerts:vAlerts,assistant:vAssistant,places:vPlaces,food:vFood};
 const NAVKEY={route:"routeMap",fuel:"fuelLog"};
 const GROUPS=[
- ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["stays","🏨"],["bookings","🧾"],["route","🗺"],["journeylog","🛰"],["book","📕"]]],
+ ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["places","📌"],["stays","🏨"],["food","🍽"],["bookings","🧾"],["route","🗺"],["journeylog","🛰"],["book","📕"]]],
  ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
  ["gMore",[["assistant","🤖"],["journal","📔"],["checklists","☑"],["guides","📖"],["alerts","🔔"],["sos","🆘"],["settings","⚙"]]]];
 
