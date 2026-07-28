@@ -319,6 +319,24 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
 .meal-h{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:13.5px}
 .meal-empty{font-size:12px;color:var(--ink3);padding:4px 0 0 34px}
 
+.trav-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.trav-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);box-shadow:var(--shadow)}
+.trav-ph{height:150px;position:relative;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--serif);font-size:44px}
+.trav-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.trav-bd{padding:10px 12px}
+.trav-nm{font-weight:700;font-size:15px}
+.trav-meta{font-size:12px;color:var(--ink2);margin-top:2px}
+.trav-notes{font-size:12px;color:var(--ink3);margin-top:6px}
+.trav-stat{font-size:12px;color:var(--ink2);margin-top:8px}
+.trav-ft{display:flex;gap:6px;margin-top:8px}
+.voterow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line2)}
+.votename{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.voteav{width:26px;height:26px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:none}
+.votestars{white-space:nowrap;font-size:20px}
+.vst{cursor:pointer;color:var(--line);padding:0 1px}
+.vst.on{color:var(--gold)}
+.vst.clear{font-size:14px;color:var(--ink3);margin-left:6px}
+
 /* toast */
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.on{opacity:1}

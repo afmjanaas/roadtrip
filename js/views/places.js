@@ -4,6 +4,8 @@ import {$,$$,esc,fmt,fmtDate,stars,dots,openForm,pickImage,toast} from "../util.
 import {Q} from "../calc.js";
 import {PLACE_CATS,effCat,catMeta,autoCat} from "../categories.js";
 import {sub,subDoc,fs} from "../db.js";
+function voteAvg(p){const v=p.votes||{};const a=Object.values(v).filter(x=>x>0);return a.length?a.reduce((s,x)=>s+x,0)/a.length:0}
+function voteCount(p){return Object.values(p.votes||{}).filter(x=>x>0).length}
 
 const CITYICON={"Abu Dhabi":"🕌","Dubai":"🌆","Muscat":"🕌","Nizwa":"🏰","Bahla":"🏰","Ibri":"🏜","Hofuf (Al Ahsa)":"🏜","Riyadh":"🏙","Buraydah":"🐪","Hail":"🏰","AlUla":"🗿","Madinah":"🕌","Taif":"🌹","Al Baha":"🌲","Abha":"⛰","Rijal Almaa":"🏘","Makkah":"🕋","Al Ain":"🌴"};
 let FILTER="all";
@@ -33,6 +35,7 @@ export function render(state){
   let el;
   if(el=e.target.closest("[data-pedit]"))return editPlace(state,el.dataset.pedit);
   if(el=e.target.closest("[data-pphoto]"))return pickImage(u=>fs.updateDoc(subDoc(state.tripId,"places",el.dataset.pphoto),{photo:u}).then(()=>toast("✓")),900,.72);
+  if(el=e.target.closest("[data-pvote]"))return voteModal(state,el.dataset.pvote);
  });
  loadWiki();
 }
@@ -50,6 +53,7 @@ function card(state,p,date){
   <div class="ft">
    <label style="flex:1"><input type="checkbox" data-visit="${p.id}" ${p.visited?"checked":""}> ${t("markVisited")}</label>
    ${p.q?`<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.q)}">🗺</a>`:""}
+   <button class="ebtn" data-pvote="${p.id}" style="display:inline-flex">🗳${voteCount(p)?" "+voteAvg(p).toFixed(1)+"★("+voteCount(p)+")":""}</button>
    <button class="ebtn" data-pedit="${p.id}" style="display:inline-flex">✎</button>
    <button class="ebtn" data-pphoto="${p.id}" style="display:inline-flex">📷</button></div></div>`}
 function editPlace(state,id){
@@ -73,3 +77,23 @@ async function loadWiki(){
  await Promise.all(need.map(async w=>{try{const r=await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(w));
   if(!r.ok){cache[w]=null;return}const j=await r.json();cache[w]=(j.thumbnail&&j.thumbnail.source)?j.thumbnail.source.replace(/\/\d+px-/,"/640px-"):null}catch(e){}}));
  localStorage.setItem("ftp_wimg",JSON.stringify(cache));apply()}
+
+function voteModal(state,pid){
+ const pl=state.places.find(x=>x.id===pid);if(!pl)return;
+ const trav=(state.travellers||[]).slice().sort((a,b)=>(a.created||0)-(b.created||0));
+ if(!trav.length){toast(t("addTravellersFirst"));return}
+ const votes={...(pl.votes||{})};
+ const ov=document.createElement("div");ov.className="ovl";
+ const rows=()=>trav.map(tr=>`<div class="voterow"><span class="votename"><span class="voteav" style="background:${tr.color||'#555'}">${esc((tr.name||'?').slice(0,1))}</span>${esc(tr.name||'')} ${tr.kid?'🧒':''}</span>
+   <span class="votestars" data-tv="${tr.id}">${[1,2,3,4,5].map(n=>`<span class="vst ${((votes[tr.id]||0)>=n)?'on':''}" data-n="${n}">★</span>`).join("")}${votes[tr.id]?`<span class="vst clear" data-n="0">✕</span>`:""}</span></div>`).join("");
+ ov.innerHTML='<div class="modal"><h3>🗳 '+esc(pl.n)+'</h3><div class="sec-sub">'+t("voteHint")+'</div><div id="voteRows">'+rows()+'</div>'+
+  '<div class="btns"><button class="tbtn" data-a="cancel">'+t("cancel")+'</button><button class="tbtn primary" data-a="save">💾 '+t("save")+'</button></div></div>';
+ document.body.appendChild(ov);
+ ov.addEventListener("click",e=>{
+  const st=e.target.closest(".vst");
+  if(st){const tid=st.closest("[data-tv]").dataset.tv;votes[tid]=+st.dataset.n;if(!votes[tid])delete votes[tid];
+   ov.querySelector("#voteRows").innerHTML=rows();return}
+  const a=e.target.dataset&&e.target.dataset.a;
+  if(e.target===ov||a==="cancel"){ov.remove();return}
+  if(a==="save"){fs.updateDoc(subDoc(state.tripId,"places",pid),{votes}).then(()=>{toast("✓");ov.remove();render(state)})}});
+}
