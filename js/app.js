@@ -32,7 +32,7 @@ import * as vFood from "./views/food.js";
 import * as vStats from "./views/stats.js";
 
 export const state={user:null,config:null,tripId:null,trip:null,
- days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],track:[],waypoints:[],reminders:[],unsubs:[],ready:{}};
+ days:[],places:[],stops:[],expenses:[],lists:[],guides:[],journal:[],fuel:[],bookings:[],track:[],waypoints:[],reminders:[],chats:[],unsubs:[],ready:{}};
 
 const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  expenses:vExp,compare:vCmp,checklists:vCk,guides:vGuides,settings:vSet,activity:vAct,stays:vStays,
@@ -104,14 +104,14 @@ function updateNet(){const on=navigator.onLine;const d=$("#netdot"),l=$("#netlbl
 /* ---------- trip subscription ---------- */
 function clearTrip(){state.unsubs.forEach(u=>u());state.unsubs=[];
  state.tripId=null;state.trip=null;state.days=[];state.places=[];state.stops=[];
- state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.bookings=[];state.track=[];state.waypoints=[];state.reminders=[];state.ready={}}
+ state.expenses=[];state.lists=[];state.guides=[];state.journal=[];state.fuel=[];state.bookings=[];state.track=[];state.waypoints=[];state.reminders=[];state.chats=[];state.ready={}}
 const rerender=debounce(()=>render(),80);
 function subscribeTrip(id){
  if(state.tripId===id)return;
  clearTrip();state.tripId=id;
  state.unsubs.push(watch(tripRef(id),s=>{state.trip=s.exists()?{id:s.id,...s.data()}:null;state.ready.trip=1;rerender()}));
  TK.resumeIfNeeded(id);
- const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"],["bookings","date"],["track","date"],["waypoints","ts"],["reminders","date"]];
+ const subs=[["days","ord"],["places","dayOrd"],["stops","ord"],["expenses","date"],["lists","ord"],["guides","ord"],["journal","dayOrd"],["fuel","date"],["bookings","date"],["track","date"],["waypoints","ts"],["reminders","date"],["chats","updated"]];
  subs.forEach(([name,ord])=>{
   state.unsubs.push(watch(fs.query(sub(id,name),fs.orderBy(ord)),ss=>{
    state[name]=ss.docs.map(d=>({id:d.id,...d.data()}));state.ready[name]=1;rerender()}))});

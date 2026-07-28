@@ -88,6 +88,7 @@ export const activityCol=()=>collection(dbi,"activity");
 
 /* raw (UN-logged) helpers — for high-frequency GPS telemetry that must NOT flood the activity log */
 export const rawGet=r=>getDoc(r);
+export const rawAdd=(c,d)=>addDoc(c,d);
 export const rawSet=(r,d)=>setDoc(r,d);
 export const rawDelete=r=>deleteDoc(r);
 

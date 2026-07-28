@@ -28,12 +28,14 @@ export function configured(){return !!getKey()}
 export function keyUrl(){return PROVIDERS[getProvider()].keyUrl}
 
 /* ---- core chat call -> returns text or parsed JSON ---- */
-async function chat(userText,systemText,jsonMode,inlineAudio){
+async function chat(userText,systemText,jsonMode,inlineAudio,history){
  const key=getKey();if(!key)throw new Error("No AI key set (Settings → AI)");
  const prov=getProvider(),cfg=PROVIDERS[prov];
  if(cfg.fmt==="gemini"){
   const parts=[{text:userText}];if(inlineAudio)parts.push({inline_data:{mime_type:inlineAudio.mime,data:inlineAudio.base64}});
-  const body={contents:[{role:"user",parts}]};
+  const contents=(history||[]).map(h=>({role:h.role==="assistant"?"model":"user",parts:[{text:String(h.content||"")}]}));
+  contents.push({role:"user",parts});
+  const body={contents};
   if(systemText)body.systemInstruction={parts:[{text:systemText}]};
   body.generationConfig={temperature:0.6};if(jsonMode)body.generationConfig.responseMimeType="application/json";
   const url="https://generativelanguage.googleapis.com/v1beta/models/"+getModel()+":generateContent?key="+encodeURIComponent(key);
@@ -43,6 +45,7 @@ async function chat(userText,systemText,jsonMode,inlineAudio){
   return jsonMode?safeJSON(txt):txt}
  // OpenAI-compatible (Groq / OpenAI)
  const messages=[];if(systemText)messages.push({role:"system",content:systemText});
+ (history||[]).forEach(h=>messages.push({role:h.role==="assistant"?"assistant":"user",content:String(h.content||"")}));
  messages.push({role:"user",content:userText});
  const body={model:getModel(),messages,temperature:0.6};if(jsonMode)body.response_format={type:"json_object"};
  const r=await fetch(cfg.base+"/chat/completions",{method:"POST",
@@ -79,14 +82,14 @@ export function tripContext(state){
  const tr=state.trip||{};
  const days=(state.days||[]).map(d=>`D${d.ord} ${d.date} ${d.route||""} | stay:${d.hotel||"-"} ${d.hV||0}${d.hCur||""} | km:${d.km||0}`).join("\n");
  return `Trip: ${tr.name} (${tr.start}→${tr.end}), home currency ${tr.currency}, ${(state.days||[]).length} days.\nDays:\n${days}`}
-export async function assistant(userText,state){
+export async function assistant(userText,state,history){
  const sys="You are a trip-planning assistant for a family road-trip app. Either answer, or propose changes as `actions`. "+
   "Return ONLY JSON {reply, actions:[{op,summary,...}]}. Allowed op ONLY: "+
   "addPlace{dayOrd,name,why,city,cur,amount}, editDay{dayOrd,field,value}, setHotel{dayOrd,hotel,cur,amount}, "+
   "addExpense{date,cat,amount,cur,note}, addReminder{title,date,time}, addBooking{title,date,note}. "+
   "cat one of fuel,food,hotel,tickets,parking,shopping,pretrip,other. Dates YYYY-MM-DD. Today "+todayISO()+". "+
   "Never delete. Every action needs a human 'summary'. If unsure, put a question in 'reply' with empty actions.\n\n"+tripContext(state);
- const res=await chat(userText,sys,true);
+ const res=await chat(userText,sys,true,null,history);
  return {reply:res.reply||"",actions:Array.isArray(res.actions)?res.actions:[]}}
 
 /* ---- apply an approved action (logged writes = audit trail) ---- */
