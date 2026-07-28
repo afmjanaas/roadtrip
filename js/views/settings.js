@@ -50,12 +50,14 @@ export function render(state){
   </div>
   <div class="card" style="margin-top:16px"><h4>🤖 ${t("aiSection")}</h4>
    <div class="sec-sub" style="margin-bottom:8px">${t("aiSectionSub")}</div>
-   <label class="f">${t("apiKey")}<input class="inp" id="gemKey" type="password" placeholder="AIza…" value="${esc(G.getKey())}"></label>
+   <label class="f">${t("provider")}<select class="inp" id="aiProv">${Object.entries(G.providers()).map(([k,v])=>`<option value="${k}" ${G.getProvider()===k?"selected":""}>${v.label}</option>`).join("")}</select></label>
+   <label class="f" style="margin-top:8px">${t("apiKey")}<input class="inp" id="gemKey" type="password" placeholder="…" value="${esc(G.getKey())}"></label>
    <label class="f" style="margin-top:8px">${t("model")}<select class="inp" id="gemModel">
-     ${["gemini-2.0-flash","gemini-2.0-flash-lite","gemini-1.5-flash","gemini-1.5-pro"].map(m=>`<option ${G.getModel()===m?"selected":""}>${m}</option>`).join("")}</select></label>
+     ${G.providers()[G.getProvider()].models.map(m=>`<option ${G.getModel()===m?"selected":""}>${m}</option>`).join("")}</select></label>
    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
      <button class="tbtn primary" id="gemSave">${t("save")}</button>
-     <a class="tbtn" href="https://aistudio.google.com/apikey" target="_blank" style="text-decoration:none">${t("getKey")} ↗</a></div>
+     <a class="tbtn" id="getKeyLink" href="${G.keyUrl()}" target="_blank" style="text-decoration:none">${t("getKey")} ↗</a></div>
+   <div style="font-size:11px;color:var(--ink3);margin-top:6px">${t("groqNote")}</div>
    <div style="font-size:11px;color:var(--ink3);margin-top:6px">${t("aiKeyNote")}</div></div>
   <div class="card" style="margin-top:16px"><h4>🔗 ${t("familyShare")}</h4>
    <div class="sec-sub" style="margin-bottom:10px">${t("familyShareSub")}</div>
@@ -106,6 +108,7 @@ export function render(state){
   fs.updateDoc(configRef(),{allowedEmails:emails}).then(()=>toast("✓")).catch(e=>toast(e.message))};
  $("#sLang").onclick=()=>{setLang(getLang()==="ta"?"en":"ta");location.reload()};
  $("#sDark").onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==="dark"?"light":"dark";localStorage.setItem("ftp_theme",h.dataset.theme)};
+ const ap=$("#aiProv");if(ap)ap.onchange=()=>{G.setProvider(ap.value);render(state)};
  const gs=$("#gemSave");if(gs)gs.onclick=()=>{G.setKey($("#gemKey").value);G.setModel($("#gemModel").value);toast("✓ "+t("aiSaved"))};
  const shT=$("#shareToggle");if(shT)shT.onchange=e=>{
    fs.updateDoc(tripRef(tr.id),{public:e.target.checked}).then(()=>{toast("✓");$("#shareBox").style.display=e.target.checked?"block":"none"})};
