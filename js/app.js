@@ -40,9 +40,12 @@ const PAGES={overview:vOverview,itinerary:vItin,route:vRoute,budget:vBudget,
  today:vToday,journal:vJournal,fuel:vFuel,vault:vVault,book:vBook,sos:vSos,bookings:vBookings,journeylog:vJourneylog,alerts:vAlerts,assistant:vAssistant,places:vPlaces,food:vFood,stats:vStats,travellers:vTravellers};
 const NAVKEY={route:"routeMap",fuel:"fuelLog"};
 const GROUPS=[
- ["gTrip",[["overview","⌂"],["today","📆"],["itinerary","📅"],["places","📌"],["stays","🏨"],["food","🍽"],["bookings","🧾"],["route","🗺"],["journeylog","🛰"],["book","📕"]]],
- ["gMoney",[["budget","💰"],["expenses","🧾"],["compare","📊"],["fuel","⛽"]]],
- ["gMore",[["travellers","👨‍👩‍👧"],["assistant","🤖"],["journal","📔"],["stats","📊"],["checklists","☑"],["guides","📖"],["alerts","🔔"],["sos","🆘"],["settings","⚙"]]]];
+ ["gPlan","🧭",[["overview","⌂"],["itinerary","📅"],["places","📌"],["stays","🏨"],["food","🍽"],["route","🗺"],["bookings","🧾"]]],
+ ["gRoad","🚗",[["today","📆"],["journeylog","🛰"],["checklists","☑"],["alerts","🔔"],["sos","🆘"]]],
+ ["gMoney","💰",[["budget","💰"],["expenses","💳"],["compare","⚖"],["fuel","⛽"]]],
+ ["gMemories","📸",[["journal","📔"],["stats","📈"],["book","📕"]]],
+ ["gPeople","👪",[["travellers","👨‍👩‍👧"],["assistant","🤖"],["guides","📖"]]]];
+const navCollapsed=()=>{try{return JSON.parse(localStorage.getItem("ftp_navcol")||"{}")}catch(e){return {}}};
 
 document.documentElement.dataset.theme=localStorage.getItem("ftp_theme")||"light";
 document.documentElement.dataset.lang=getLang();
@@ -95,7 +98,11 @@ function shell(){
  updateNet();window.addEventListener("online",updateNet);window.addEventListener("offline",updateNet);
  $("#recChip").onclick=()=>{location.hash="#/t/"+state.tripId+"/journeylog"};
  TK.onTracker(s=>{const c=$("#recChip");if(c)c.style.display=(s.active&&s.trip===state.tripId)?"inline-block":"none"});
- document.addEventListener("click",e=>{const n=e.target.closest("[data-nav]");if(!n)return;
+ document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-grptoggle]");
+  if(g){const key=g.dataset.grptoggle,col=navCollapsed();col[key]=!col[key];localStorage.setItem("ftp_navcol",JSON.stringify(col));
+   const grp=g.closest(".sb-group");if(grp)grp.classList.toggle("collapsed");return}
+  const n=e.target.closest("[data-nav]");if(!n)return;
   $("#sidebar").classList.remove("open");
   if(n.dataset.nav==="home")location.hash="#/";else location.hash="#/t/"+state.tripId+"/"+n.dataset.nav});
 }
@@ -136,9 +143,16 @@ export function render(){
  // sidebar
  $("#sbTrip").textContent=state.trip.name;
  $("#sbSub").textContent=(state.trip.start||"")+" → "+(state.trip.end||"");
- const groups=[...GROUPS];
- if(state.config&&state.user&&state.config.owner===state.user.email)groups.push(["gAdmin",[["activity","📜"],["vault","🪪"]]]);
- $("#sbLinks").innerHTML=groups.map(([g,items])=>'<div class="sb-h">'+t(g)+'</div>'+items.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span>'+tb(NAVKEY[k]||k)+'</a>').join("")).join("");
+ const admin=[];const owner=state.config&&state.user&&state.config.owner===state.user.email;
+ if(owner)admin.push(["activity","📜"],["vault","🪪"]);
+ admin.push(["settings","⚙"]);
+ const groups=[...GROUPS,["gAdmin","🔒",admin]];
+ const col=navCollapsed();
+ $("#sbLinks").innerHTML=groups.map(([g,gi,items])=>{
+  const isCol=!!col[g]&&!items.some(it=>it[0]===r.page);
+  return '<div class="sb-group'+(isCol?" collapsed":"")+'" data-grp="'+g+'">'+
+   '<div class="sb-h" data-grptoggle="'+g+'"><span class="sb-h-i">'+gi+'</span><span class="sb-h-t">'+t(g)+'</span><span class="sb-h-c">▾</span></div>'+
+   '<div class="sb-items">'+items.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span><span class="sb-a-t">'+tb(NAVKEY[k]||k)+'</span></a>').join("")+'</div></div>'}).join("");
  $("#crumb").textContent=state.trip.name+" — "+t(NAVKEY[r.page]||r.page);
  try{notify.setState(state);if(notify.settings(state.tripId).enabled)notify.rescheduleAll(state)}catch(e){}
  const mod=PAGES[r.page]||vOverview;
