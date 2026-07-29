@@ -352,6 +352,37 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
 .vst.on{color:var(--gold)}
 .vst.clear{font-size:14px;color:var(--ink3);margin-left:6px}
 
+/* dashboard animations */
+@keyframes dfade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes dheroin{from{opacity:0;transform:translateY(10px) scale(.995)}to{opacity:1;transform:none}}
+@keyframes dpop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.dhero-in{animation:dheroin .5s cubic-bezier(.2,.7,.2,1) both}
+.dgrid>.dcard{animation:dfade .5s cubic-bezier(.2,.7,.2,1) both}
+.dgrid>.dcard:nth-child(1){animation-delay:.04s}
+.dgrid>.dcard:nth-child(2){animation-delay:.09s}
+.dgrid>.dcard:nth-child(3){animation-delay:.14s}
+.dgrid>.dcard:nth-child(4){animation-delay:.19s}
+.dgrid>.dcard:nth-child(5){animation-delay:.24s}
+.dgrid>.dcard:nth-child(6){animation-delay:.29s}
+.dgrid>.dcard:nth-child(7){animation-delay:.34s}
+.dgrid>.dcard:nth-child(8){animation-delay:.39s}
+.dgrid>.dcard:nth-child(n+9){animation-delay:.44s}
+.dcard{transition:transform .18s cubic-bezier(.2,.7,.2,1),box-shadow .18s}
+.dcard:hover{transform:translateY(-3px);box-shadow:var(--shadow2)}
+.dcard:active{transform:translateY(-1px) scale(.995)}
+.dhero-bar i{transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.dbar i{transition:width .9s cubic-bezier(.2,.7,.2,1)}
+.dbtn,.dqa-b{transition:transform .12s,filter .12s,background .12s}
+.dbtn:active,.dqa-b:active{transform:scale(.94)}
+.dqa-b:hover{transform:translateY(-2px)}
+#dFab{animation:dpop .4s cubic-bezier(.2,1.4,.4,1) .3s both}
+.dslot.now{animation:dfade .5s .3s both}
+.dwx-now b{transition:color .3s}
+@media(prefers-reduced-motion:reduce){
+ .dhero-in,.dgrid>.dcard,#dFab,.dslot.now{animation:none}
+ .dcard,.dbtn,.dqa-b{transition:none}
+ .dcard:hover{transform:none}
+}
 /* ============ DASHBOARD ============ */
 #dash{padding-bottom:80px}
 .dhero{border-radius:0 0 22px 22px;min-height:210px;color:#fff;display:flex;align-items:flex-end;

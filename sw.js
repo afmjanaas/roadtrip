@@ -1,5 +1,5 @@
 /* Family Trip Planner — offline app shell */
-const CACHE="ftp-v19";
+const CACHE="ftp-v20";
 const SHELL=["./","./index.html","./css/app.css","./manifest.json",
  "./js/app.js","./js/db.js","./js/util.js","./js/i18n.js","./js/calc.js","./js/seed.js","./js/seed-data.js","./js/firebase-config.js",
  "./js/views/trips.js","./js/views/overview.js","./js/views/today.js","./js/views/itinerary.js","./js/views/stays.js",
