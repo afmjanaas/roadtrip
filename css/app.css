@@ -462,8 +462,40 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
 #dFab{transition:transform .15s}
 @media print{#dFab{display:none}}
 
+/* ============ MOBILE: bottom nav + safe areas + touch ============ */
+#btmnav{display:none}
+@media(max-width:960px){
+ #btmnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:55;
+  background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -2px 14px rgba(40,32,10,.10)}
+ #btmnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;
+  color:var(--ink3);font-size:10.5px;padding:6px 2px;cursor:pointer;border-radius:12px;transition:color .15s,background .15s}
+ #btmnav button span{font-size:20px;line-height:1}
+ #btmnav button.on{color:var(--accent)}
+ [data-theme="dark"] #btmnav button.on{color:var(--gold)}
+ #btmnav button.on span{transform:translateY(-1px)}
+ #btmnav button:active{background:var(--line2)}
+ #main{padding-bottom:calc(66px + env(safe-area-inset-bottom))}
+ #topbar{padding-top:calc(10px + env(safe-area-inset-top))}
+ body.notrip #main{padding-bottom:0}
+ section{padding:18px 14px}
+ .dgrid{padding:14px 12px;gap:13px}
+ .tbtn{padding:9px 12px}            /* bigger tap targets */
+ .sb-a{padding:11px 12px}
+ .dqa-b{padding:13px 4px}
+ #toTop{bottom:calc(74px + env(safe-area-inset-bottom))}
+ #dFab{bottom:calc(74px + env(safe-area-inset-bottom))}
+ #recChip,#printBtn,#outBtn .avatar{}          /* topbar stays compact */
+ .crumb{max-width:52vw}
+}
+@media(max-width:560px){
+ .tb-right{gap:6px}
+ #printBtn{display:none}   /* print rarely used from a phone; everything else stays */
+ .dhero h1{font-size:24px}
+ .sec-h{font-size:24px}
+}
 /* toast */
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+#toast{position:fixed;bottom:calc(78px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.on{opacity:1}
 footer{border-top:1px solid var(--line);padding:24px;text-align:center;color:var(--ink3);font-size:12px;margin-top:40px}
 

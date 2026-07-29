@@ -86,6 +86,13 @@ function shell(){
    </div></div>
   <div id="view"></div>
   <footer>🧭 ${t("appName")} — ACT family · Firestore-synced · <span id="ftinfo"></span></footer>
+  <nav id="btmnav">
+   <button data-nav="overview"><span>🏠</span>${t("bnHome")}</button>
+   <button data-nav="today"><span>📆</span>${t("bnToday")}</button>
+   <button data-nav="route"><span>🗺</span>${t("bnMap")}</button>
+   <button data-nav="expenses"><span>💳</span>${t("bnMoney")}</button>
+   <button data-nav="__more"><span>☰</span>${t("bnMore")}</button>
+  </nav>
  </div>`;
  $("#burger").onclick=()=>$("#sidebar").classList.toggle("open");
  $("#editBtn").onclick=()=>{const on=document.body.classList.toggle("editing");$("#editBtn").classList.toggle("on",on)};
@@ -103,6 +110,7 @@ function shell(){
   if(g){const key=g.dataset.grptoggle,col=navCollapsed();col[key]=!col[key];localStorage.setItem("ftp_navcol",JSON.stringify(col));
    const grp=g.closest(".sb-group");if(grp)grp.classList.toggle("collapsed");return}
   const n=e.target.closest("[data-nav]");if(!n)return;
+  if(n.dataset.nav==="__more"){$("#sidebar").classList.toggle("open");return}
   $("#sidebar").classList.remove("open");
   if(n.dataset.nav==="home")location.hash="#/";else location.hash="#/t/"+state.tripId+"/"+n.dataset.nav});
 }
@@ -171,6 +179,7 @@ export function render(){
    '<div class="sb-h" data-grptoggle="'+g+'"><span class="sb-h-i">'+gi+'</span><span class="sb-h-t">'+t(g)+'</span><span class="sb-h-c">▾</span></div>'+
    '<div class="sb-items">'+items.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span><span class="sb-a-t">'+tb(NAVKEY[k]||k)+'</span></a>').join("")+'</div></div>'}).join("");
  $("#crumb").textContent=state.trip.name+" — "+t(NAVKEY[r.page]||r.page);
+ try{$$("#btmnav button").forEach(b=>b.classList.toggle("on",b.dataset.nav===r.page))}catch(e){}
  try{notify.setState(state);if(notify.settings(state.tripId).enabled)notify.rescheduleAll(state)}catch(e){}
  }catch(e){console.error("sidebar",e)}
  const mod=PAGES[r.page]||vOverview;
