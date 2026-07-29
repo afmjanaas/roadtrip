@@ -133,14 +133,31 @@ function route(){
  if(m)return{page:m[2]||"overview",tripId:m[1]};
  return{page:"home"}}
 
+function errCard(where,err,onDash){
+ console.error("[view error]",where,err);
+ return '<section style="max-width:640px"><div class="card" style="border-color:var(--warn);text-align:center;padding:26px">'+
+  '<div style="font-size:34px">😌</div>'+
+  '<h3 style="font-family:var(--serif);margin:8px 0">'+t("errTitle")+'</h3>'+
+  '<div class="sec-sub">'+t("errBody")+'</div>'+
+  '<div style="font-size:11px;color:var(--ink3);margin:8px 0;word-break:break-word">'+esc(String(err&&err.message||err||"")).slice(0,180)+'</div>'+
+  '<div class="btns" style="justify-content:center">'+
+   (onDash?'<button class="tbtn" id="errDash">'+t("goDashboard")+'</button>':'')+
+   '<button class="tbtn primary" id="errReload">'+t("reload")+'</button></div></div></section>'}
+function wireErr(state){
+ const rl=$("#errReload");if(rl)rl.onclick=()=>location.reload();
+ const dh=$("#errDash");if(dh)dh.onclick=()=>{location.hash="#/t/"+(state&&state.tripId||"")+"/overview";location.reload()}}
+function safe(fn,where,into,state,onDash){
+ try{fn()}catch(e){const el=into?$(into):null;if(el)el.innerHTML=errCard(where,e,onDash);wireErr(state)}}
+
 export function render(){
  const r=route();
- if(r.page==="home"){document.body.classList.add("notrip");vTrips.render(state);return}
+ if(r.page==="home"){document.body.classList.add("notrip");safe(()=>vTrips.render(state),"trips","#app",state,false);return}
  document.body.classList.remove("notrip");
  if(!$("#sidebar"))shell();
  if(r.tripId)subscribeTrip(r.tripId);
  if(!state.trip||!state.ready.days){$("#view").innerHTML='<section><div class="sec-sub">⏳ …</div></section>';return}
- // sidebar
+ // sidebar (guarded)
+ try{
  $("#sbTrip").textContent=state.trip.name;
  $("#sbSub").textContent=(state.trip.start||"")+" → "+(state.trip.end||"");
  const admin=[];const owner=state.config&&state.user&&state.config.owner===state.user.email;
@@ -155,9 +172,10 @@ export function render(){
    '<div class="sb-items">'+items.map(([k,i])=>'<a class="sb-a'+(r.page===k?" active":"")+'" data-nav="'+k+'"><span class="ico">'+i+'</span><span class="sb-a-t">'+tb(NAVKEY[k]||k)+'</span></a>').join("")+'</div></div>'}).join("");
  $("#crumb").textContent=state.trip.name+" — "+t(NAVKEY[r.page]||r.page);
  try{notify.setState(state);if(notify.settings(state.tripId).enabled)notify.rescheduleAll(state)}catch(e){}
+ }catch(e){console.error("sidebar",e)}
  const mod=PAGES[r.page]||vOverview;
- mod.render(state);
- window.scrollTo(0,0)}
+ safe(()=>mod.render(state),r.page,"#view",state,r.page!=="overview");
+ try{window.scrollTo(0,0)}catch(e){}}
 
 window.addEventListener("hashchange",()=>{
  const sid=shareId();if(sid){startShare(sid);return}
@@ -175,11 +193,15 @@ function startShare(id){
  shareSubs.forEach(u=>u());shareSubs=[];
  state.tripId=id;state.ready={};
  document.documentElement.dataset.theme=localStorage.getItem("ftp_theme")||"light";
- const paint=debounce(()=>vShare.render(state),80);
+ const paint=debounce(()=>{try{vShare.render(state)}catch(e){console.error("share",e);$("#app").innerHTML='<div class="gate"><div class="card"><h1>😌</h1><div class="sub">'+t("errBody")+'</div></div></div>'}},80);
  shareSubs.push(watch(tripRef(id),s=>{state.trip=s.exists()?{id:s.id,...s.data()}:null;state.ready.trip=1;paint()}));
  [["days","ord"],["places","dayOrd"],["stops","ord"],["journal","dayOrd"],["track","date"],["waypoints","ts"],["guides","ord"],["lists","ord"]]
   .forEach(([n,o])=>shareSubs.push(watch(fs.query(sub(id,n),fs.orderBy(o)),ss=>{state[n]=ss.docs.map(d=>({id:d.id,...d.data()}));paint()})));
- vShare.render(state);}
+ try{vShare.render(state)}catch(e){console.error("share",e)}}
+
+let _errShown=0;
+window.addEventListener("error",e=>{const now=Date.now();if(now-_errShown<8000)return;_errShown=now;try{toast("⚠ "+t("errToast"))}catch(_){}}); 
+window.addEventListener("unhandledrejection",e=>{const now=Date.now();if(now-_errShown<8000)return;_errShown=now;try{toast("⚠ "+t("errToast"))}catch(_){}});
 
 async function boot(){
  if(!configured){showSetup();return}
