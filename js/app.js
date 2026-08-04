@@ -72,6 +72,7 @@ function shell(){
  <nav id="sidebar"><div class="sb-logo"><h1 id="sbTrip"></h1><div class="sub" id="sbSub"></div></div>
   <div class="sb-nav"><a class="sb-a" data-nav="home"><span class="ico">🧳</span>${t("backToTrips")}</a>
   <div class="sb-h">${t("appName")}</div><div id="sbLinks"></div></div></nav>
+ <div id="sbBackdrop"></div>
  <div id="main">
   <div id="topbar"><button id="burger">☰</button><span class="crumb" id="crumb"></span>
    <div class="tb-right">
@@ -94,7 +95,7 @@ function shell(){
    <button data-nav="__more"><span>☰</span>${t("bnMore")}</button>
   </nav>
  </div>`;
- $("#burger").onclick=()=>$("#sidebar").classList.toggle("open");
+ $("#burger").onclick=()=>document.body.classList.toggle("navopen");
  $("#editBtn").onclick=()=>{const on=document.body.classList.toggle("editing");$("#editBtn").classList.toggle("on",on)};
  $("#darkBtn").onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==="dark"?"light":"dark";
   localStorage.setItem("ftp_theme",h.dataset.theme);render()};
@@ -105,13 +106,21 @@ function shell(){
  updateNet();window.addEventListener("online",updateNet);window.addEventListener("offline",updateNet);
  $("#recChip").onclick=()=>{location.hash="#/t/"+state.tripId+"/journeylog"};
  TK.onTracker(s=>{const c=$("#recChip");if(c)c.style.display=(s.active&&s.trip===state.tripId)?"inline-block":"none"});
+ initGlobalClicks();
+}
+let _clicksInit=false;
+function initGlobalClicks(){
+ if(_clicksInit)return;_clicksInit=true;
  document.addEventListener("click",e=>{
+  // tap the dimmed backdrop -> close the drawer
+  if(e.target.id==="sbBackdrop"){document.body.classList.remove("navopen");return}
+  // collapse/expand a sidebar group
   const g=e.target.closest("[data-grptoggle]");
   if(g){const key=g.dataset.grptoggle,col=navCollapsed();col[key]=!col[key];localStorage.setItem("ftp_navcol",JSON.stringify(col));
    const grp=g.closest(".sb-group");if(grp)grp.classList.toggle("collapsed");return}
   const n=e.target.closest("[data-nav]");if(!n)return;
-  if(n.dataset.nav==="__more"){$("#sidebar").classList.toggle("open");return}
-  $("#sidebar").classList.remove("open");
+  if(n.dataset.nav==="__more"){document.body.classList.toggle("navopen");return}
+  document.body.classList.remove("navopen");
   if(n.dataset.nav==="home")location.hash="#/";else location.hash="#/t/"+state.tripId+"/"+n.dataset.nav});
 }
 function updateNet(){const on=navigator.onLine;const d=$("#netdot"),l=$("#netlbl");
