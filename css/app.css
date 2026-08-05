@@ -35,6 +35,7 @@ span.ta{font-family:'Nirmala UI','Noto Sans Tamil','Latha',var(--sans);color:var
 body.notrip #sidebar{display:none}
 body.notrip #main{margin-left:0}
 @media(max-width:960px){#sidebar{transform:translateX(-100%)}body.navopen #sidebar{transform:none;box-shadow:var(--shadow2)}#main{margin-left:0}}
+@media(max-width:960px){#sidebar{padding-bottom:calc(84px + env(safe-area-inset-bottom))}}
 #sbBackdrop{display:none}
 @media(max-width:960px){body.navopen #sbBackdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:49;animation:dfade .2s both}}
 .sb-logo{padding:20px 18px 12px;border-bottom:1px solid rgba(255,255,255,.12)}
@@ -496,6 +497,18 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
  .dhero h1{font-size:24px}
  .sec-h{font-size:24px}
 }
+.jaddrow{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.tbtn.ghost2{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.jentry{border-top:1px solid var(--line2);padding:10px 0}
+.jentry:first-of-type{border-top:0}
+.je-h{display:flex;justify-content:space-between;align-items:center}
+.je-time{font-size:11.5px;color:var(--ink3);letter-spacing:.5px}
+.je-btns{display:flex;gap:5px}
+.je-text{font-size:14px;white-space:pre-wrap;margin:6px 0}
+.je-photos{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.je-ph{position:relative}
+.je-ph img{height:96px;border-radius:10px;border:1px solid var(--line);object-fit:cover}
+.je-ph .mini.danger{position:absolute;top:3px;right:3px;padding:0 6px;background:rgba(0,0,0,.55);color:#fff;border:0}
 /* toast */
 #toast{position:fixed;bottom:calc(78px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.on{opacity:1}

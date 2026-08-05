@@ -19,7 +19,9 @@ export function render(state){
  TK.hydrate(tr.id,state.track,state.waypoints);
  const days=(state.days||[]).slice().sort((a,b)=>a.ord-b.ord);
  const places=state.places||[];
- const journal=(state.journal||[]).slice().sort((a,b)=>(b.dayOrd||0)-(a.dayOrd||0));
+ const journalBy={};(state.journal||[]).forEach(j=>{(journalBy[j.dayOrd]=journalBy[j.dayOrd]||[]).push(j)});
+ Object.values(journalBy).forEach(a=>a.sort((x,y)=>(x.ts||Date.parse(x.date)||0)-(y.ts||Date.parse(y.date)||0)));
+ const journalDays=Object.keys(journalBy).map(Number).sort((a,b)=>b-a);
  const guides=(state.guides||[]).slice().sort((a,b)=>(a.ord||0)-(b.ord||0));
  const lists=state.lists||[];
  const today=todayISO();
@@ -35,7 +37,7 @@ export function render(state){
  const dToday=days.find(d=>d.date===today)||(live?days[dn-1]:null);
  const selPlaces=places.filter(p=>p.on!==false);
  const highlights=selPlaces.filter(p=>(p.s||0)>=5).slice(0,10);
- const photoCount=journal.reduce((s,j)=>s+((j.photos||[]).length),0);
+ const photoCount=(state.journal||[]).reduce((s,j)=>s+((j.photos||[]).length),0);
 
  const placeCard=p=>{const img=p.photo||"";
   return `<div class="shplace">
@@ -78,13 +80,11 @@ export function render(state){
    ${highlights.length?`<div class="card"><h4>⭐ ${t("highlights")}</h4>
      <div class="shgallery">${highlights.map(placeCard).join("")}</div></div>`:""}
 
-   ${journal.length?`<div class="card"><h4>📔 ${t("memories")}</h4>
-     ${journal.map(j=>{const d=days.find(x=>x.ord===j.dayOrd);
-      return `<div class="shmem"><div class="shmem-h">${t("day")} ${j.dayOrd}${d?" · "+fmtDate(d.date):""}</div>
-       ${(j.photos||[]).length?`<div class="shphotos">${j.photos.map(p=>`<img src="${p}" alt="">`).join("")}</div>`:""}
-       ${j.text?`<div style="font-size:14px;white-space:pre-wrap;margin-top:6px">${esc(j.text)}</div>`:""}
-       ${j.best?`<div class="tip" style="margin-top:6px"><b>⭐ ${t("bestMoment")}</b>${esc(j.best)}</div>`:""}
-       ${j.kids?`<div class="tip" style="margin-top:6px"><b>🧒 ${t("kidsVote")}</b>${esc(j.kids)}</div>`:""}</div>`}).join("")}</div>`:""}
+   ${journalDays.length?`<div class="card"><h4>📔 ${t("memories")}</h4>
+     ${journalDays.map(ord=>{const d=days.find(x=>x.ord===ord);const es=journalBy[ord];
+      return `<div class="shmem"><div class="shmem-h">${t("day")} ${ord}${d?" · "+fmtDate(d.date):""}</div>
+       ${es.map(e=>`${(e.photos||[]).length?`<div class="shphotos">${e.photos.map(p=>`<img src="${p}" alt="">`).join("")}</div>`:""}${e.text?`<div style="font-size:14px;white-space:pre-wrap;margin:6px 0">${esc(e.text)}</div>`:""}`).join("")}
+      </div>`}).join("")}</div>`:""}
 
    <div class="card"><h4>🗺 ${t("theRoute")}</h4><div id="shroute" style="height:340px;border-radius:12px;border:1px solid var(--line)"></div></div>
 

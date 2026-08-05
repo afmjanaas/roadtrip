@@ -1,65 +1,75 @@
-/* ================= JOURNAL — daily memories ================= */
-import {t,tb} from "../i18n.js";
-import {$,esc,fmtDate,todayISO,openForm,pickImage,toast,voiceOverlay} from "../util.js";
-import * as G from "../gemini.js";
+/* ================= JOURNAL — multiple timestamped entries per day ================= */
+import {t,tb,getLang} from "../i18n.js";
+import {$,$$,esc,fmtDate,todayISO,openForm,pickImage,toast,voiceOverlay} from "../util.js";
 import {sub,subDoc,fs,user} from "../db.js";
+import * as G from "../gemini.js";
+
+const clock=ts=>{if(!ts)return"";const d=new Date(ts);return d.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})};
+const entryTs=e=>e.ts||Date.parse(e.date+"T12:00:00")||0;
 
 export function render(state){
- const entries=Object.fromEntries(state.journal.map(j=>[j.dayOrd,j]));
+ const byDay={};(state.journal||[]).forEach(e=>{(byDay[e.dayOrd]=byDay[e.dayOrd]||[]).push(e)});
+ Object.values(byDay).forEach(a=>a.sort((x,y)=>entryTs(x)-entryTs(y)));
+ const days=(state.days||[]).slice().sort((a,b)=>a.ord-b.ord);
+ const total=(state.journal||[]).length;
  $("#view").innerHTML=`<section style="max-width:860px">
   <div class="sec-h">📔 ${tb("journal")}</div>
-  <div class="sec-sub">${t("journalSub")}</div><div class="rule"></div>
-  ${state.days.map(d=>{const j=entries[d.ord];
+  <div class="sec-sub">${t("journalSub2")}</div><div class="rule"></div>
+  ${days.map(d=>{const es=byDay[d.ord]||[];
    return `<div class="card" style="margin-bottom:14px">
     <h4>${t("day")} ${d.ord} · ${fmtDate(d.date)} <span style="font-weight:400;color:var(--ink3);font-size:13px">${esc((d.stay||"").replace(/🛏|🏁/g,"").trim())}</span>
-     <button class="tbtn" data-jedit="${d.ord}" style="float:right">${j?"✎":"＋ "+t("writeToday")}</button>${G.configured()?`<button class="tbtn" data-jvoice="${d.ord}" style="float:right;margin-right:6px" title="${esc(t("voiceJournal"))}">🎤</button>`:""}</h4>
-    ${j?`
-     ${(j.photos||[]).length?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">${j.photos.map((p,i)=>`<div style="position:relative"><img src="${p}" style="height:110px;border-radius:10px;border:1px solid var(--line)" alt=""><button class="ebtn danger" data-jpdel="${d.ord}:${i}" style="position:absolute;top:4px;right:4px">✖</button></div>`).join("")}</div>`:""}
-     ${j.text?`<div style="font-size:14px;white-space:pre-wrap;margin:6px 0">${esc(j.text)}</div>`:""}
-     ${j.best?`<div class="tip" style="margin-top:8px"><b>⭐ ${t("bestMoment")}</b>${esc(j.best)}</div>`:""}
-     ${j.kids?`<div class="tip" style="margin-top:8px"><b>🧒 ${t("kidsVote")}</b>${esc(j.kids)}</div>`:""}
-     <div class="eaddrow" style="margin-top:8px"><button class="ebtn" data-jphoto="${d.ord}">📷 ${t("photo").replace("📷 ","")}</button></div>`
-    :`<div class="sec-sub" style="margin:0">${t("noEntryYet")}</div>`}
+     <span class="chip" style="float:right">${es.length} ${t("entries")}</span></h4>
+    <div class="jaddrow">
+     <button class="tbtn" data-jvoice="${d.ord}">🎤 ${t("voiceEntry")}</button>
+     <button class="tbtn ghost2" data-jnote="${d.ord}">✍ ${t("note")}</button>
+     <button class="tbtn ghost2" data-jphoto="${d.ord}">📷 ${t("photo").replace("📷 ","")}</button></div>
+    ${es.length?es.map(e=>entryHtml(e)).join(""):`<div class="sec-sub" style="margin:6px 0 0">${t("noEntryYet")}</div>`}
    </div>`}).join("")}
  </section>`;
- $("#view").onclick=e=>{
-  let el;
-  if(el=e.target.closest("[data-jedit]"))return form(state,+el.dataset.jedit);
-  if(el=e.target.closest("[data-jphoto]"))return addPhoto(state,+el.dataset.jphoto);
-  if(el=e.target.closest("[data-jvoice]"))return voiceEntry(state,+el.dataset.jvoice);
-  if(el=e.target.closest("[data-jpdel]")){const[o,i]=el.dataset.jpdel.split(":");
-   const j=state.journal.find(x=>x.dayOrd===+o);if(!j)return;
-   const photos=(j.photos||[]).filter((_,k)=>k!==+i);
-   fs.updateDoc(subDoc(state.tripId,"journal",j.id),{photos});return}};
+ wire(state);
 }
+function entryHtml(e){
+ const legacy=(e.best?`<div class="tip" style="margin-top:6px"><b>⭐ ${t("bestMoment")}</b>${esc(e.best)}</div>`:"")+
+  (e.kids?`<div class="tip" style="margin-top:6px"><b>🧒 ${t("kidsVote")}</b>${esc(e.kids)}</div>`:"");
+ return `<div class="jentry" data-eid="${e.id}">
+  <div class="je-h"><span class="je-time">🕐 ${clock(entryTs(e))||fmtDate(e.date)}</span>
+   <span class="je-btns"><button class="mini" data-eaddphoto="${e.id}">📷</button><button class="mini" data-eedit="${e.id}">✎</button><button class="mini" data-edel="${e.id}">🗑</button></span></div>
+  ${e.text?`<div class="je-text">${esc(e.text)}</div>`:""}
+  ${(e.photos||[]).length?`<div class="je-photos">${e.photos.map((p,i)=>`<div class="je-ph"><img src="${p}"><button class="mini danger" data-erm="${e.id}:${i}">✖</button></div>`).join("")}</div>`:""}
+  ${legacy}</div>`}
+
+function wire(state){
+ const id=state.tripId;
+ $("#view").onclick=e=>{let el;
+  if(el=e.target.closest("[data-jvoice]"))return voiceEntry(state,+el.dataset.jvoice);
+  if(el=e.target.closest("[data-jnote]"))return noteEntry(state,+el.dataset.jnote);
+  if(el=e.target.closest("[data-jphoto]"))return photoEntry(state,+el.dataset.jphoto);
+  if(el=e.target.closest("[data-eaddphoto]"))return addPhoto(state,el.dataset.eaddphoto);
+  if(el=e.target.closest("[data-eedit]"))return editEntry(state,el.dataset.eedit);
+  if(el=e.target.closest("[data-edel]")){if(confirm(t("deleteEntry")+"?"))fs.deleteDoc(subDoc(id,"journal",el.dataset.edel)).then(()=>toast("✓"));return}
+  if(el=e.target.closest("[data-erm]")){const [eid,i]=el.dataset.erm.split(":");const en=state.journal.find(x=>x.id===eid);
+   if(en){const photos=(en.photos||[]).filter((_,k)=>k!==+i);fs.updateDoc(subDoc(id,"journal",eid),{photos})}return}};
+}
+function newEntry(state,ord,data){
+ const d=(state.days||[]).find(x=>x.ord===ord)||{};
+ return fs.addDoc(sub(state.tripId,"journal"),{dayOrd:ord,date:d.date||todayISO(),ts:Date.now(),
+  by:(user()&&user().displayName)||"",text:"",photos:[],...data})}
 async function voiceEntry(state,ord){
- const d=state.days.find(x=>x.ord===ord);
  try{const {base64,mime}=await voiceOverlay("⏹ "+t("stopTranscribe"),t("recording"));
   toast("⏳ "+t("transcribing"));
-  const out=await G.voiceToJournal(base64,mime,getLangSafe());
-  const j=state.journal.find(x=>x.dayOrd===ord)||{};
-  openForm("🎤 "+t("day")+" "+ord+" — "+fmtDate(d.date),[
-   {k:"text",l:t("journalWhat"),type:"textarea"},{k:"best",l:"⭐ "+t("bestMoment"),full:1},{k:"kids",l:"🧒 "+t("kidsVote"),full:1}],
-   {text:out.text||"",best:out.best||"",kids:out.kids||""},
-   o=>{const data={...o,dayOrd:ord,date:d.date};
-    const p=j.id?fs.updateDoc(subDoc(state.tripId,"journal",j.id),data):fs.addDoc(sub(state.tripId,"journal"),{...data,photos:[]});
-    p.then(()=>toast("✓"))});
- }catch(e){if(e.message!=="cancelled")toast("⚠ "+e.message)}}
-function getLangSafe(){try{return document.documentElement.dataset.lang||"en"}catch(e){return "en"}}
-function form(state,ord){
- const d=state.days.find(x=>x.ord===ord);
- const j=state.journal.find(x=>x.dayOrd===ord)||{};
- openForm("📔 "+t("day")+" "+ord+" — "+fmtDate(d.date),[
-  {k:"text",l:t("journalWhat"),type:"textarea"},
-  {k:"best",l:"⭐ "+t("bestMoment"),full:1},
-  {k:"kids",l:"🧒 "+t("kidsVote"),full:1}],j,
-  out=>{const data={...out,dayOrd:ord,date:d.date,by:(user()&&user().displayName)||""};
-   const p=j.id?fs.updateDoc(subDoc(state.tripId,"journal",j.id),data)
-    :fs.addDoc(sub(state.tripId,"journal"),{...data,photos:[]});
-   p.then(()=>toast("✓"))},
-  j.id?()=>fs.deleteDoc(subDoc(state.tripId,"journal",j.id)):null)}
-function addPhoto(state,ord){
- const j=state.journal.find(x=>x.dayOrd===ord);if(!j)return;
- if((j.photos||[]).length>=3){toast(t("maxPhotos"));return}
- pickImage(u=>fs.updateDoc(subDoc(state.tripId,"journal",j.id),{photos:[...(j.photos||[]),u]})
-  .then(()=>toast("✓")),800,.7)}
+  const out=await G.voiceToJournal(base64,mime,getLang());
+  let text=out.text||"";if(out.best)text+=(text?"\n":"")+"⭐ "+out.best;if(out.kids)text+=(text?"\n":"")+"🧒 "+out.kids;
+  await newEntry(state,ord,{text,kind:"voice"});toast("✓ "+t("entryAdded"));
+ }catch(e){if(e.message==="cancelled")return;
+  // offline / no key / no mic -> let them type instead
+  toast("⚠ "+e.message);openForm("✍ "+t("note"),[{k:"text",l:t("journalWhat"),type:"textarea"}],{},o=>{if(o.text)newEntry(state,ord,{text:o.text}).then(()=>toast("✓"))})}}
+function noteEntry(state,ord){
+ openForm("✍ "+t("note"),[{k:"text",l:t("journalWhat"),type:"textarea"}],{},o=>{if(o.text)newEntry(state,ord,{text:o.text}).then(()=>toast("✓"))})}
+function photoEntry(state,ord){pickImage(u=>newEntry(state,ord,{photos:[u]}).then(()=>toast("✓")),1000,.72)}
+function addPhoto(state,eid){const en=state.journal.find(x=>x.id===eid);if(!en)return;
+ if((en.photos||[]).length>=6){toast(t("maxPhotos"));return}
+ pickImage(u=>fs.updateDoc(subDoc(state.tripId,"journal",eid),{photos:[...(en.photos||[]),u]}).then(()=>toast("✓")),1000,.72)}
+function editEntry(state,eid){const en=state.journal.find(x=>x.id===eid);if(!en)return;
+ openForm("✎ "+t("journal"),[{k:"text",l:t("journalWhat"),type:"textarea"}],en,
+  o=>fs.updateDoc(subDoc(state.tripId,"journal",eid),{text:o.text}).then(()=>toast("✓")),
+  ()=>fs.deleteDoc(subDoc(state.tripId,"journal",eid)).then(()=>toast("✓")))}

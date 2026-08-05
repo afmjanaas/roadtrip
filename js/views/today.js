@@ -18,7 +18,7 @@ export function render(state){
  const spent=todaysExp.reduce((s,e)=>s+expHome(tr,e),0);
  const acts=placesOfDay(state.places,d.ord).filter(p=>p.on);
  const city=(d.stay||"").replace(/🛏|🏁|HOME —/g,"").trim();
- const jn=state.journal.find(j=>j.dayOrd===d.ord);
+ const jes=(state.journal||[]).filter(j=>j.dayOrd===d.ord).sort((a,b)=>(b.ts||0)-(a.ts||0));const jn=jes[0];
  $("#view").innerHTML=`<section style="max-width:760px">
   ${(()=>{const ago=preparedDaysAgo(state.tripId);
     return (ago===null||ago>7)?`<div class="warn" style="margin-top:0">📴 <b>${t("notPrepared")}</b> — <a data-nav="settings" style="cursor:pointer;text-decoration:underline">${t("prepareOffline")}</a></div>`:""})()}
@@ -54,7 +54,7 @@ export function render(state){
     <button class="tbtn primary" id="qAdd" style="height:36px">＋</button></div>
    ${todaysExp.length?`<div style="margin-top:8px">${todaysExp.slice(-3).map(e=>`<div class="kv"><span class="k">${esc(e.note||t(CATLBL[e.cat]||"catOther"))}</span><span class="v money">${fmt(expHome(tr,e),cur)}</span></div>`).join("")}</div>`:""}</div>
   <div class="card"><h4>📔 ${t("journal")}</h4>
-   ${jn?`<div style="font-size:13.5px;white-space:pre-wrap">${esc((jn.text||"").slice(0,200))}${(jn.text||"").length>200?"…":""}</div>`:`<div class="sec-sub">${t("noEntryYet")}</div>`}
+   ${jn?`<div class="sec-sub" style="margin:0 0 4px">${jes.length} ${t("entries")}</div><div style="font-size:13.5px;white-space:pre-wrap">${esc((jn.text||"").slice(0,180))}${(jn.text||"").length>180?"…":""}</div>`:`<div class="sec-sub">${t("noEntryYet")}</div>`}
    <div style="margin-top:8px"><a class="tbtn" data-nav="journal" style="text-decoration:none;cursor:pointer">${t("writeToday")} →</a></div></div>
   <label class="done-ck" style="display:flex;gap:8px;align-items:center;margin:16px 4px;cursor:pointer">
    <input type="checkbox" id="tDone" ${d.done?"checked":""}> <b>${t("markDone")}</b></label>

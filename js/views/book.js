@@ -12,7 +12,8 @@ export function render(state){
  TK.hydrate(tr.id,state.track,state.waypoints);
  const days=(state.days||[]).slice().sort((a,b)=>a.ord-b.ord);
  const places=state.places||[];
- const journal={};(state.journal||[]).forEach(j=>journal[j.dayOrd]=j);
+ const journalBy={};(state.journal||[]).forEach(j=>{(journalBy[j.dayOrd]=journalBy[j.dayOrd]||[]).push(j)});
+ Object.values(journalBy).forEach(a=>a.sort((x,y)=>(x.ts||Date.parse(x.date)||0)-(y.ts||Date.parse(y.date)||0)));
  const tdays=TK.trackDays(tr.id),wps=TK.waypoints(tr.id);
  let actualKm=0;Object.values(tdays).forEach(pts=>actualKm+=TK.dayDistanceM(pts)/1000);
  const plannedKm=days.reduce((s,d)=>s+(d.km||0),0);
@@ -70,17 +71,15 @@ export function render(state){
    </div>
 
    <!-- DAY CHAPTERS -->
-   ${days.map(d=>{const j=journal[d.ord]||{};const dp=placesOfDay?places.filter(p=>p.dayOrd===d.ord):[];
+   ${days.map(d=>{const jes=journalBy[d.ord]||[];const dp=placesOfDay?places.filter(p=>p.dayOrd===d.ord):[];
     const pts=TK.pointsForDate(tr.id,d.date);const dwps=wps.filter(w=>w.date===d.date);
-    const jphotos=(j.photos||[]);
+    const jphotos=[];jes.forEach(e=>(e.photos||[]).forEach(ph=>jphotos.push(ph)));
     return `<div class="mb-chapter">
      <div class="mb-ch-head"><span class="mb-ch-num" style="background:${CCOL[d.cc]||'#8A1538'}">${d.ord}</span>
       <div><div class="mb-ch-t">${esc(d.route||("Day "+d.ord))}</div>
        <div class="mb-ch-d">${fmtDate(d.date)}${d.km?" · "+d.km+" km":""}${d.stay?" · 🛏 "+esc((d.stay||"").replace(/🛏|🏁/g,"").trim()):""}</div></div></div>
      ${(pts.length>1||dwps.length)?svgRoute(pts,dwps,680,240):""}
-     ${j.text?`<p class="mb-journal">${esc(j.text)}</p>`:(d.m||d.a||d.e)?`<p class="mb-plan">${[d.m,d.a,d.e].filter(Boolean).map(esc).join(" ")}</p>`:""}
-     ${j.best?`<div class="mb-quote">“${esc(j.best)}” <span>— ${t("bestMoment")}</span></div>`:""}
-     ${j.kids?`<div class="mb-quote kids">👧 ${esc(j.kids)} <span>— ${t("kidsVote")}</span></div>`:""}
+     ${jes.length?jes.map(e=>e.text?`<p class="mb-journal">${esc(e.text)}</p>`:"").join(""):(d.m||d.a||d.e)?`<p class="mb-plan">${[d.m,d.a,d.e].filter(Boolean).map(esc).join(" ")}</p>`:""}
      ${jphotos.length?`<div class="mb-photos">${jphotos.map(p=>`<img src="${p}">`).join("")}</div>`:""}
      ${dp.length?`<div class="mb-places">${dp.map(placeMini).join("")}</div>`:""}
      ${d.hotel?`<div class="mb-hotel">🏨 ${esc(d.hotel)}</div>`:""}

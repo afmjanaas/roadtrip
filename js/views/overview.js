@@ -174,7 +174,7 @@ function statsCard(state){
  return card("","📈",t("liveStats"),body,"")}
 
 function memoriesCard(state,d){
- const j=(state.journal||[]).slice().sort((a,b)=>(b.dayOrd||0)-(a.dayOrd||0))[0];
+ const j=(state.journal||[]).slice().sort((a,b)=>((b.ts||Date.parse(b.date)||0)-(a.ts||Date.parse(a.date)||0)))[0];
  const photos=[];(state.journal||[]).forEach(x=>(x.photos||[]).forEach(p=>photos.push(p)));
  const body=`${photos.length?`<div class="dmem-ph">${photos.slice(0,4).map(p=>`<img src="${p}">`).join("")}</div>`:""}
    ${j&&j.text?`<div class="dc-sub" style="margin-top:6px">“${esc(j.text.slice(0,120))}${j.text.length>120?"…":""}”</div>`:`<div class="dc-sub">${t("noEntryYet")}</div>`}
