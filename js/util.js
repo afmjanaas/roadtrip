@@ -48,6 +48,21 @@ export function pickImage(cb,maxDim=1100,quality=.78){
 
 /* ---- audio recording (web + Capacitor WebView) ---- */
 export async function startRecording(){
+ // NATIVE (Android app): use the native voice-recorder plugin — the WebView mic is
+ // unreliable on some phones (Samsung "could not start audio source"). The plugin
+ // records via the OS and returns base64 audio we send to the AI to transcribe.
+ const CAP=(typeof window!=="undefined")&&window.Capacitor;
+ const native=!!(CAP&&CAP.isNativePlatform&&CAP.isNativePlatform());
+ const VR=CAP&&((CAP.Plugins&&CAP.Plugins.VoiceRecorder)||(CAP.registerPlugin&&CAP.registerPlugin("VoiceRecorder")));
+ if(native&&VR){
+  try{await VR.requestAudioPermission()}catch(e){}
+  try{await VR.startRecording()}
+  catch(e){throw new Error("Could not start the recorder — check microphone permission in phone Settings. ("+(e&&e.message||e)+")")}
+  return {stop:async()=>{let r;try{r=await VR.stopRecording()}catch(e){throw new Error("Recording failed: "+(e&&e.message||e))}
+    const v=(r&&r.value)||{};if(!v.recordDataBase64)throw new Error("No audio was captured — try again");
+    return {base64:v.recordDataBase64,mime:"audio/mp4"}}};
+ }
+ // WEB fallback: getUserMedia with relaxed constraints + retry
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("This device has no microphone access");
  // Try a few constraint sets + a retry — Android WebViews often throw NotReadableError
  // ("could not start audio source") on the first/strict attempt.
