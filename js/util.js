@@ -48,7 +48,20 @@ export function pickImage(cb,maxDim=1100,quality=.78){
 
 /* ---- audio recording (web + Capacitor WebView) ---- */
 export async function startRecording(){
- const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("This device has no microphone access");
+ // Try a few constraint sets + a retry — Android WebViews often throw NotReadableError
+ // ("could not start audio source") on the first/strict attempt.
+ const tries=[{audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}},{audio:true},{audio:{channelCount:1}}];
+ let stream,lastErr;
+ for(let pass=0;pass<2&&!stream;pass++){
+  for(const c of tries){
+   try{stream=await navigator.mediaDevices.getUserMedia(c);break}
+   catch(e){lastErr=e;await new Promise(r=>setTimeout(r,250))}}
+ }
+ if(!stream){const n=lastErr&&lastErr.name;
+  if(n==="NotReadableError"||n==="AbortError")throw new Error("Mic is busy — close other apps using it (voice recorder, calls, assistant) or restart the phone, then try again");
+  if(n==="NotAllowedError")throw new Error("Microphone permission is off — enable it in phone Settings → Apps → Trip Planner → Permissions → Microphone");
+  throw new Error("Microphone unavailable: "+((lastErr&&lastErr.message)||n||"unknown"));}
  const pick=["audio/webm","audio/mp4","audio/ogg"].find(m=>window.MediaRecorder&&MediaRecorder.isTypeSupported(m));
  const rec=new MediaRecorder(stream,pick?{mimeType:pick}:undefined);
  const chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};rec.start();
