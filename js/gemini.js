@@ -2,7 +2,7 @@
    Providers: Groq (FREE — no billing card), Gemini, OpenAI. Keys are stored
    ONLY on this device. Used for voice→journal and the assistant. */
 import {sub,subDoc,fs,serverTimestamp,tripRef} from "./db.js";
-import {todayISO} from "./util.js";
+import {todayISO,toWav16k} from "./util.js";
 
 const PROVIDERS={
  groq:{label:"Groq (free)",base:"https://api.groq.com/openai/v1",chat:"llama-3.3-70b-versatile",
@@ -74,22 +74,26 @@ async function transcribe(base64,mime){
  const clean=String(mime||"").split(";")[0].trim().toLowerCase();
  const bytes=b64ToBytes(base64);
  if(!bytes.length)throw new Error("Recording was empty — try again");
- // primary mapping, then safe fallbacks; the API decodes by content, not by name
- const attempts=[UPLOAD_AS[clean]||["m4a","audio/mp4"],["mp4","audio/mp4"],["webm","audio/webm"],["mp3","audio/mpeg"]];
- const seen=new Set();let lastMsg="";
- for(const [ext,upMime] of attempts){
-  const k=ext+"|"+upMime;if(seen.has(k))continue;seen.add(k);
+ const attempts=[];
+ // 1) BEST: re-encode to real 16 kHz mono WAV (always accepted, small, Whisper-native)
+ try{const wav=await toWav16k(bytes);if(wav&&wav.length>44)attempts.push([wav,"wav","audio/wav"])}catch(e){}
+ // 2) fallbacks: send the original bytes under accepted names/types
+ const m=UPLOAD_AS[clean]||["m4a","audio/mp4"];
+ attempts.push([bytes,m[0],m[1]],[bytes,"mp4","audio/mp4"],[bytes,"webm","audio/webm"]);
+ let lastMsg="",tried=[];
+ for(const [data,ext,upMime] of attempts){
   const form=new FormData();
-  form.append("file",new Blob([bytes],{type:upMime}),"audio."+ext);
+  form.append("file",new Blob([data],{type:upMime}),"audio."+ext);
   form.append("model",cfg.whisper);
   const r=await fetch(cfg.base+"/audio/transcriptions",{method:"POST",
    headers:{"Authorization":"Bearer "+key},body:form});
   if(r.ok)return (await r.json()).text||"";
-  let m="";try{m=(await r.json()).error?.message||""}catch(e){}
-  lastMsg=cfg.label+" transcribe "+r.status+(m?": "+m:"");
-  if(r.status!==400&&r.status!==415)break;   // only retry on format rejections
+  let msg="";try{msg=(await r.json()).error?.message||""}catch(e){}
+  tried.push(ext+"/"+Math.round(data.length/1024)+"KB");
+  lastMsg=cfg.label+" transcribe "+r.status+(msg?": "+msg:"");
+  if(r.status!==400&&r.status!==415)break;
  }
- throw new Error(lastMsg||"Transcription failed")}
+ throw new Error(lastMsg+" [tried: "+tried.join(", ")+"]")}
 
 /* ---- voice note -> journal entry ---- */
 export async function voiceToJournal(base64,mime,lang){

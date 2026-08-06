@@ -106,6 +106,32 @@ export function voiceOverlay(labelStop,labelRec){
     const rw=ov.querySelector(".recwave");if(rw)rw.style.display="none";
     try{const out=await ctl.stop();ov.remove();res(out)}catch(err){ov.remove();rej(err)}}})})}
 
+/* ---- audio -> 16 kHz mono WAV (so any recorder output is accepted by Whisper APIs) ----
+   Android records raw AAC/ADTS which transcription APIs reject by content type.
+   We decode it in the WebView and re-encode as a real WAV file. */
+export async function toWav16k(bytes){
+ const AC=window.AudioContext||window.webkitAudioContext;
+ const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+ if(!AC||!OAC)throw new Error("no audio decoder");
+ const ctx=new AC();
+ let buf;
+ try{buf=await ctx.decodeAudioData(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength))}
+ finally{try{ctx.close()}catch(e){}}
+ if(!buf||!buf.duration)throw new Error("could not decode audio");
+ const rate=16000,len=Math.max(1,Math.ceil(buf.duration*rate));
+ const off=new OAC(1,len,rate);
+ const src=off.createBufferSource();src.buffer=buf;src.connect(off.destination);src.start();
+ const out=await off.startRendering();
+ const pcm=out.getChannelData(0);
+ const ab=new ArrayBuffer(44+pcm.length*2),dv=new DataView(ab);
+ const ws=(o,str)=>{for(let i=0;i<str.length;i++)dv.setUint8(o+i,str.charCodeAt(i))};
+ ws(0,"RIFF");dv.setUint32(4,36+pcm.length*2,true);ws(8,"WAVE");ws(12,"fmt ");
+ dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);
+ dv.setUint32(24,rate,true);dv.setUint32(28,rate*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);
+ ws(36,"data");dv.setUint32(40,pcm.length*2,true);
+ let o=44;for(let i=0;i<pcm.length;i++,o+=2){let v=Math.max(-1,Math.min(1,pcm[i]));dv.setInt16(o,v<0?v*0x8000:v*0x7FFF,true)}
+ return new Uint8Array(ab)}
+
 /* ---- generic form modal ---- */
 export function openForm(title,fields,vals,onSave,onDelete,delLabel){
  const ov=document.createElement("div");ov.className="ovl";
