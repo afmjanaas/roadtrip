@@ -57,20 +57,39 @@ function safeJSON(t){try{return JSON.parse(t)}catch(e){const m=t.match(/\{[\s\S]
 
 /* ---- audio transcription (Groq/OpenAI Whisper) ---- */
 /* Whisper (Groq/OpenAI) accepts: flac mp3 mp4 mpeg mpga m4a opus wav webm.
-   Android records AAC/ADTS ("audio/aac") which is NOT accepted by name, so we
-   upload it as .m4a (same AAC audio) — the API decodes it fine. */
-const AUDIO_EXT={"audio/aac":"m4a","audio/aacp":"m4a","audio/x-aac":"m4a","audio/mp4":"m4a","audio/m4a":"m4a",
- "audio/x-m4a":"m4a","audio/mpeg":"mp3","audio/mp3":"mp3","audio/wav":"wav","audio/x-wav":"wav",
- "audio/webm":"webm","audio/ogg":"opus","audio/opus":"opus","audio/flac":"flac"};
+   Android records raw AAC/ADTS and reports "audio/aac" — that name AND that
+   content-type are both rejected, so we upload the identical bytes with an
+   accepted filename + content-type (the server sniffs the real format). */
+const UPLOAD_AS={
+ "audio/aac":["m4a","audio/mp4"],"audio/aacp":["m4a","audio/mp4"],"audio/x-aac":["m4a","audio/mp4"],
+ "audio/mp4":["m4a","audio/mp4"],"audio/m4a":["m4a","audio/mp4"],"audio/x-m4a":["m4a","audio/mp4"],
+ "audio/mpeg":["mp3","audio/mpeg"],"audio/mp3":["mp3","audio/mpeg"],
+ "audio/wav":["wav","audio/wav"],"audio/x-wav":["wav","audio/wav"],
+ "audio/webm":["webm","audio/webm"],"audio/ogg":["webm","audio/webm"],
+ "audio/opus":["opus","audio/opus"],"audio/flac":["flac","audio/flac"]};
+function b64ToBytes(b64){const bin=atob(b64);const a=new Uint8Array(bin.length);
+ for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a}
 async function transcribe(base64,mime){
  const cfg=PROVIDERS[getProvider()];const key=getKey();
  const clean=String(mime||"").split(";")[0].trim().toLowerCase();
- const blob=await (await fetch("data:"+(clean||"audio/m4a")+";base64,"+base64)).blob();
- const ext=AUDIO_EXT[clean]||"m4a";
- const form=new FormData();form.append("file",blob,"audio."+ext);form.append("model",cfg.whisper);
- const r=await fetch(cfg.base+"/audio/transcriptions",{method:"POST",headers:{"Authorization":"Bearer "+key},body:form});
- if(!r.ok){let m="";try{m=(await r.json()).error?.message||""}catch(e){}throw new Error(cfg.label+" transcribe "+r.status+(m?": "+m:""))}
- return (await r.json()).text||""}
+ const bytes=b64ToBytes(base64);
+ if(!bytes.length)throw new Error("Recording was empty — try again");
+ // primary mapping, then safe fallbacks; the API decodes by content, not by name
+ const attempts=[UPLOAD_AS[clean]||["m4a","audio/mp4"],["mp4","audio/mp4"],["webm","audio/webm"],["mp3","audio/mpeg"]];
+ const seen=new Set();let lastMsg="";
+ for(const [ext,upMime] of attempts){
+  const k=ext+"|"+upMime;if(seen.has(k))continue;seen.add(k);
+  const form=new FormData();
+  form.append("file",new Blob([bytes],{type:upMime}),"audio."+ext);
+  form.append("model",cfg.whisper);
+  const r=await fetch(cfg.base+"/audio/transcriptions",{method:"POST",
+   headers:{"Authorization":"Bearer "+key},body:form});
+  if(r.ok)return (await r.json()).text||"";
+  let m="";try{m=(await r.json()).error?.message||""}catch(e){}
+  lastMsg=cfg.label+" transcribe "+r.status+(m?": "+m:"");
+  if(r.status!==400&&r.status!==415)break;   // only retry on format rejections
+ }
+ throw new Error(lastMsg||"Transcription failed")}
 
 /* ---- voice note -> journal entry ---- */
 export async function voiceToJournal(base64,mime,lang){
