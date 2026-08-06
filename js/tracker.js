@@ -143,12 +143,14 @@ export function resumeIfNeeded(tripId){
  if(localStorage.getItem(SK(tripId))==="1" && !isActive()){start(tripId).catch(()=>{})}}
 
 /* ---- waypoints ---- */
-export function addWaypoint(type,note){
+export function addWaypoint(type,note,extra){
+ if(extra&&extra.tripId&&!TID)TID=extra.tripId;   // allow pinning even if tracking isn't running
  return new Promise((res,rej)=>{
   const done=(lat,lng,acc)=>{
    const t=Math.round(Date.now()/1000);
    const w={id:"w"+t.toString(36)+Math.random().toString(36).slice(2,5),
-    type,lat:+lat.toFixed(5),lng:+lng.toFixed(5),ts:t,note:note||"",date:localDate(t),acc:acc||null,synced:false};
+    type,lat:+lat.toFixed(5),lng:+lng.toFixed(5),ts:t,note:note||"",date:localDate(t),acc:acc||null,synced:false,
+    ...(extra&&extra.journalId?{journalId:extra.journalId}:{})};
    const list=waypoints();list.push(w);setWaypoints(list);emit();flush();res(w)};
   if(last)return done(last.lat,last.lng,last.acc);
   if(!("geolocation" in navigator))return rej(new Error("No geolocation"));
@@ -158,6 +160,10 @@ export function addWaypoint(type,note){
 export function editWaypoint(id,patch){
  const list=waypoints();const i=list.findIndex(w=>w.id===id);if(i<0)return;
  list[i]={...list[i],...patch,synced:false};setWaypoints(list);flush();emit()}
+export function deleteWaypointByJournal(journalId,tripId){
+ if(tripId&&!TID)TID=tripId;
+ const w=waypoints().find(x=>x.journalId===journalId);
+ if(w)deleteWaypoint(w.id)}
 export function deleteWaypoint(id){
  const w=waypoints().find(x=>x.id===id);
  setWaypoints(waypoints().filter(x=>x.id!==id));emit();
@@ -184,7 +190,7 @@ export async function flush(){
   const list=waypoints();let changed=false;
   for(const w of list){if(!w.synced){
    await rawSet(subDoc(TID,"waypoints",w.id),
-    {type:w.type,lat:w.lat,lng:w.lng,ts:w.ts,note:w.note,date:w.date,acc:w.acc||null});
+    {type:w.type,lat:w.lat,lng:w.lng,ts:w.ts,note:w.note,date:w.date,acc:w.acc||null,journalId:w.journalId||null});
    w.synced=true;changed=true}}
   if(changed)setWaypoints(list);
  }catch(e){/* keep dirty, retry next flush */}

@@ -130,7 +130,7 @@ function paintDay(state){
   </div>
   ${wps.length?wps.map(w=>{const wi=WI[w.type]||WI.sight;
    return `<div class="exrow"><span class="cat" style="background:${wi.c}22">${wi.i}</span>
-    <span class="h"><b>${t("wp_"+w.type)}</b>${w.note?" — "+esc(w.note):""}
+    <span class="h"><b>${t("wp_"+w.type)}</b>${w.journalId?' <span class="jpin">📔 '+t("fromJournal")+'</span>':""}${w.note?" — "+esc(w.note):""}
      <div class="sub2">${clock(w.ts)} · ${w.lat.toFixed(4)}, ${w.lng.toFixed(4)}</div></span>
     <a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${w.lat},${w.lng}">🗺</a>
     <button class="mini" data-wpedit="${w.id}">✎</button></div>`}).join("")

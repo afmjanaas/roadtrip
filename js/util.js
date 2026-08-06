@@ -46,6 +46,42 @@ export function pickImage(cb,maxDim=1100,quality=.78){
   rd.readAsDataURL(f)};
  i.click()}
 
+/* ---- pick MANY images at once (compressed) ---- */
+export function pickImages(cb,maxDim=1100,quality=.78,max=10){
+ const i=document.createElement("input");i.type="file";i.accept="image/*";i.multiple=true;
+ i.onchange=async()=>{
+  const files=[...(i.files||[])].slice(0,max);if(!files.length)return;
+  const out=[];
+  for(const f of files){
+   try{out.push(await compressFile(f,maxDim,quality))}catch(e){}
+  }
+  if(out.length)cb(out)};
+ i.click()}
+export function compressFile(f,maxDim=1100,quality=.78){
+ return new Promise((res,rej)=>{const rd=new FileReader();
+  rd.onerror=()=>rej(new Error("read failed"));
+  rd.onload=()=>{const im=new Image();
+   im.onerror=()=>rej(new Error("decode failed"));
+   im.onload=()=>{let w=im.width,h=im.height;
+    if(Math.max(w,h)>maxDim){const s=maxDim/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}
+    const c=document.createElement("canvas");c.width=w;c.height=h;
+    c.getContext("2d").drawImage(im,0,0,w,h);
+    let q=quality,u=c.toDataURL("image/jpeg",q);
+    while(u.length>700000&&q>0.35){q-=0.1;u=c.toDataURL("image/jpeg",q)}
+    if(u.length>900000){rej(new Error("too large"));return}
+    res(u)};im.src=rd.result};
+  rd.readAsDataURL(f)})}
+
+/* ---- keep the page from jumping to the top when a view re-renders ---- */
+export function keepScroll(fn){
+ const y=window.scrollY||document.documentElement.scrollTop||0;
+ const r=fn&&fn();
+ const restore=()=>{try{window.scrollTo(0,y)}catch(e){}};
+ restore();
+ if(typeof requestAnimationFrame==="function")requestAnimationFrame(restore);
+ setTimeout(restore,60);setTimeout(restore,180);
+ return r}
+
 /* ---- audio recording (web + Capacitor WebView) ---- */
 export async function startRecording(){
  // NATIVE (Android app): use the native voice-recorder plugin — the WebView mic is
