@@ -509,6 +509,18 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
 .je-ph{position:relative}
 .je-ph img{height:96px;border-radius:10px;border:1px solid var(--line);object-fit:cover}
 .je-ph .mini.danger{position:absolute;top:3px;right:3px;padding:0 6px;background:rgba(0,0,0,.55);color:#fff;border:0}
+/* recording indicator */
+@keyframes recpulse2{0%{transform:scale(1);opacity:1}70%{transform:scale(1.9);opacity:0}100%{opacity:0}}
+@keyframes recwave{0%,100%{height:8px}50%{height:26px}}
+.recdot{width:16px;height:16px;border-radius:50%;background:#e5484d;margin:6px auto 0;position:relative}
+.recdot:before{content:"";position:absolute;inset:0;border-radius:50%;background:#e5484d;animation:recpulse2 1.4s infinite}
+.rectime{font-family:var(--serif);font-size:22px;color:var(--ink);letter-spacing:1px;margin:2px 0 6px}
+.recwave{display:flex;align-items:center;justify-content:center;gap:4px;height:30px;margin-bottom:8px}
+.recwave i{width:4px;height:8px;border-radius:99px;background:#e5484d;display:block;animation:recwave 1s infinite}
+.recwave i:nth-child(2){animation-delay:.12s}.recwave i:nth-child(3){animation-delay:.24s}
+.recwave i:nth-child(4){animation-delay:.36s}.recwave i:nth-child(5){animation-delay:.18s}
+.recwave i:nth-child(6){animation-delay:.30s}.recwave i:nth-child(7){animation-delay:.06s}
+@media(prefers-reduced-motion:reduce){.recdot:before,.recwave i{animation:none}}
 /* toast */
 #toast{position:fixed;bottom:calc(78px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.on{opacity:1}

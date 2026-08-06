@@ -56,10 +56,17 @@ async function chat(userText,systemText,jsonMode,inlineAudio,history){
 function safeJSON(t){try{return JSON.parse(t)}catch(e){const m=t.match(/\{[\s\S]*\}/);if(m){try{return JSON.parse(m[0])}catch(e2){}}throw new Error("AI returned unparseable JSON")}}
 
 /* ---- audio transcription (Groq/OpenAI Whisper) ---- */
+/* Whisper (Groq/OpenAI) accepts: flac mp3 mp4 mpeg mpga m4a opus wav webm.
+   Android records AAC/ADTS ("audio/aac") which is NOT accepted by name, so we
+   upload it as .m4a (same AAC audio) — the API decodes it fine. */
+const AUDIO_EXT={"audio/aac":"m4a","audio/aacp":"m4a","audio/x-aac":"m4a","audio/mp4":"m4a","audio/m4a":"m4a",
+ "audio/x-m4a":"m4a","audio/mpeg":"mp3","audio/mp3":"mp3","audio/wav":"wav","audio/x-wav":"wav",
+ "audio/webm":"webm","audio/ogg":"opus","audio/opus":"opus","audio/flac":"flac"};
 async function transcribe(base64,mime){
  const cfg=PROVIDERS[getProvider()];const key=getKey();
- const blob=await (await fetch("data:"+mime+";base64,"+base64)).blob();
- const ext=(mime.split("/")[1]||"webm").split(";")[0];
+ const clean=String(mime||"").split(";")[0].trim().toLowerCase();
+ const blob=await (await fetch("data:"+(clean||"audio/m4a")+";base64,"+base64)).blob();
+ const ext=AUDIO_EXT[clean]||"m4a";
  const form=new FormData();form.append("file",blob,"audio."+ext);form.append("model",cfg.whisper);
  const r=await fetch(cfg.base+"/audio/transcriptions",{method:"POST",headers:{"Authorization":"Bearer "+key},body:form});
  if(!r.ok){let m="";try{m=(await r.json()).error?.message||""}catch(e){}throw new Error(cfg.label+" transcribe "+r.status+(m?": "+m:""))}

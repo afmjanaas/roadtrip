@@ -60,7 +60,7 @@ export async function startRecording(){
   catch(e){throw new Error("Could not start the recorder — check microphone permission in phone Settings. ("+(e&&e.message||e)+")")}
   return {stop:async()=>{let r;try{r=await VR.stopRecording()}catch(e){throw new Error("Recording failed: "+(e&&e.message||e))}
     const v=(r&&r.value)||{};if(!v.recordDataBase64)throw new Error("No audio was captured — try again");
-    return {base64:v.recordDataBase64,mime:"audio/mp4"}}};
+    return {base64:v.recordDataBase64,mime:v.mimeType||"audio/aac"}}};
  }
  // WEB fallback: getUserMedia with relaxed constraints + retry
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("This device has no microphone access");
@@ -88,13 +88,23 @@ export function voiceOverlay(labelStop,labelRec){
  return new Promise(async(res,rej)=>{let ctl;
   try{ctl=await startRecording()}catch(e){rej(new Error("Microphone unavailable: "+e.message));return}
   const ov=document.createElement("div");ov.className="ovl";ov.style.alignItems="center";
-  ov.innerHTML='<div class="modal" style="max-width:340px;text-align:center"><h3 style="color:var(--bad)">● '+(labelRec||"Recording…")+'</h3>'+
+  ov.innerHTML='<div class="modal" style="max-width:340px;text-align:center">'+
+   '<div class="recdot"></div>'+
+   '<h3 style="color:var(--bad);margin-top:6px">'+(labelRec||"Recording…")+'</h3>'+
+   '<div class="rectime" id="recTime">0:00</div>'+
+   '<div class="recwave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
    '<div class="sec-sub">Speak now, then tap Stop.</div><div class="btns" style="justify-content:center">'+
    '<button class="tbtn" data-a="cancel">Cancel</button><button class="tbtn primary" data-a="stop">'+(labelStop||"⏹ Stop")+'</button></div></div>';
   document.body.appendChild(ov);
+  const t0=Date.now();const tEl=ov.querySelector("#recTime");
+  const tick=setInterval(()=>{if(!tEl)return;const s2=Math.floor((Date.now()-t0)/1000);
+   tEl.textContent=Math.floor(s2/60)+":"+String(s2%60).padStart(2,"0")},500);
+  const stopTick=()=>clearInterval(tick);
   ov.addEventListener("click",async e=>{const a=e.target.dataset&&e.target.dataset.a;if(!a)return;
-   if(a==="cancel"){try{await ctl.stop()}catch(_){}ov.remove();rej(new Error("cancelled"))}
-   else{ov.querySelector("h3").textContent="⏳ …";const out=await ctl.stop();ov.remove();res(out)}})})}
+   if(a==="cancel"){stopTick();try{await ctl.stop()}catch(_){}ov.remove();rej(new Error("cancelled"))}
+   else{stopTick();ov.querySelector("h3").textContent="⏳ …";const rd=ov.querySelector(".recdot");if(rd)rd.style.display="none";
+    const rw=ov.querySelector(".recwave");if(rw)rw.style.display="none";
+    try{const out=await ctl.stop();ov.remove();res(out)}catch(err){ov.remove();rej(err)}}})})}
 
 /* ---- generic form modal ---- */
 export function openForm(title,fields,vals,onSave,onDelete,delLabel){
