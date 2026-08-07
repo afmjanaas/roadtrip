@@ -1,6 +1,6 @@
 /* ================= ITINERARY (fully editable) ================= */
 import {t,tb,getLang} from "../i18n.js";
-import {$,$$,esc,fmt,fmtDate,stars,dots,CCOL,DOWS,openForm,pickImage,toast} from "../util.js";
+import {$,$$,esc,fmt,fmtDate,stars,dots,CCOL,DOWS,openForm,pickImage,keepScroll,toast} from "../util.js";
 import {Q,dayActs,dayPlanned,placesOfDay,spentByDay} from "../calc.js";
 import {PLACE_CATS} from "../categories.js";
 import {sub,subDoc,fs,db} from "../db.js";
@@ -51,7 +51,9 @@ export function render(state){
 
 function dayCard(state,d,actual){
  const tr=state.trip,cur=tr.currency;
- const acts=placesOfDay(state.places,d.ord);
+ const all=placesOfDay(state.places,d.ord);
+ const acts=all.filter(p=>!p.visited);
+ const done=all.filter(p=>p.visited);
  const tot=dayPlanned(tr,state.places,d);
  const ta=d.ta||{},lang=getLang();
  const tip=(label,en,taTxt)=>en?`<div class="tip"><b>${label}</b>${esc(en)}${taTxt?'<div class="ta tam">'+esc(taTxt)+"</div>":""}</div>`:"";
@@ -78,8 +80,11 @@ function dayCard(state,d,actual){
      ${d.stay?` <a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("hotels near "+d.stay)}">🗺</a>`:""}
      <button class="ebtn" data-edit="${d.id}">✎</button></div>
    </div>
-   ${acts.length?`<div style="font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);margin-top:14px">${t("attractions")}</div>
-   <div class="atts">${acts.map(p=>attCard(state,p)).join("")}</div>`:""}
+   ${acts.length?`<div style="font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);margin-top:14px">${t("toVisit")} (${acts.length})</div>
+   <div class="atts">${acts.map((p,i)=>attCard(state,p,i,acts.length)).join("")}</div>`:""}
+   ${done.length?`<details class="visited-box" ${localStorage.getItem("ftp_vopen_"+d.ord)==="1"?"open":""} data-vday="${d.ord}">
+     <summary>✅ ${t("visitedPlaces")} (${done.length})</summary>
+     <div class="atts" style="margin-top:8px">${done.map((p,i)=>attCard(state,p,i,done.length,true)).join("")}</div></details>`:""}
    <div class="eaddrow"><button class="ebtn" data-addplace="${d.ord}">${t("addPlace")}</button>
     <button class="ebtn" data-edit="${d.id}">${t("editDay")}</button>
     <button class="ebtn" data-photo="${d.id}">${t("dayPhoto")}</button></div>
@@ -96,7 +101,7 @@ function dayCard(state,d,actual){
 const slot=(st,en,ta)=>en?`<div class="slot"><div class="st">${st}</div><div class="sx">${esc(en)}${ta?'<div class="ta tam">'+esc(ta)+"</div>":""}</div></div>`:"";
 const brow=(l,v,cur)=>`<div class="brow"><span>${l}</span><b>${fmt(v||0,cur)}</b></div>`;
 
-function attCard(state,p){
+function attCard(state,p,idx,total,isDone){
  const cur=state.trip.currency,cost=Q(state.trip,p.cur,p.fam);
  const ta=p.ta||{};
  const img=p.photo||wikiCache[p.wiki]||"";
@@ -108,9 +113,16 @@ function attCard(state,p){
    <div class="why">${esc(p.why||"")}${ta.why?'<div class="ta tam">'+esc(ta.why)+"</div>":""}</div>
    <div class="meta">${p.t?`<span>⏱ ${esc(p.t)}</span>`:""}${p.best?`<span>🌅 ${esc(p.best)}</span>`:""}${p.park?`<span>🅿 ${esc(p.park)}</span>`:""}<span>👧 ${dots(p.kids)}</span><span>📷 ${dots(p.ph)}</span></div>
    ${p.cn?`<div style="font-size:11px;color:var(--ink3)">🎟 ${esc(p.cn)}</div>`:""}</div>
-  <div class="ft"><label><input type="checkbox" data-sel="${p.id}" ${p.on?"checked":""}> ${t("inBudget")}</label>
+  <div class="ft">
+   <button class="mini vbtn ${p.visited?"on":""}" data-vis="${p.id}" title="${t("markVisited")}">${p.visited?"✅":"○"} ${p.visited?t("visited"):t("markVisited")}</button>
    ${p.q?`<a class="gm" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.q)}">🗺</a>`:""}
-   <button class="ebtn" data-editatt="${p.id}">✎</button><button class="ebtn" data-attphoto="${p.id}">📷</button></div></div>`}
+   <span class="ftsp"></span>
+   ${!isDone?`<button class="mini" data-pup="${p.id}" ${idx===0?"disabled":""} title="${t("moveUp")}">↑</button>
+   <button class="mini" data-pdn="${p.id}" ${idx===total-1?"disabled":""} title="${t("moveDown")}">↓</button>`:""}
+   <button class="mini" data-pmove="${p.id}" title="${t("moveToDay")}">↔</button>
+   <button class="ebtn" data-editatt="${p.id}">✎</button><button class="ebtn" data-attphoto="${p.id}">📷</button>
+  </div>
+  <div class="ft" style="border-top:0;padding-top:0"><label style="font-size:11.5px"><input type="checkbox" data-sel="${p.id}" ${p.on?"checked":""}> ${t("inBudget")}</label></div></div>`}
 
 /* ---------- events ---------- */
 function wire(state){
@@ -124,6 +136,13 @@ function wire(state){
   if(el=q("[data-addplace]")){e.stopPropagation();addPlace(state,+el.dataset.addplace);return}
   if(el=q("[data-editatt]")){e.stopPropagation();editPlace(state,el.dataset.editatt);return}
   if(el=q("[data-attphoto]")){e.stopPropagation();pickImage(u=>fs.updateDoc(subDoc(id,"places",el.dataset.attphoto),{photo:u}).then(()=>toast("✓")),900,.72);return}
+  if(el=q("[data-vis]")){e.stopPropagation();const pl=state.places.find(x=>x.id===el.dataset.vis);if(!pl)return;
+   keepScroll(()=>fs.updateDoc(subDoc(id,"places",pl.id),{visited:!pl.visited}).then(()=>toast(!pl.visited?"✅ "+t("visited"):"↩")));return}
+  if(el=q("[data-pup]")){e.stopPropagation();movePlace(state,el.dataset.pup,-1);return}
+  if(el=q("[data-pdn]")){e.stopPropagation();movePlace(state,el.dataset.pdn,1);return}
+  if(el=q("[data-pmove]")){e.stopPropagation();moveToDay(state,el.dataset.pmove);return}
+  if(el=q(".visited-box > summary")){const box=el.closest(".visited-box");
+   setTimeout(()=>localStorage.setItem("ftp_vopen_"+box.dataset.vday,box.open?"1":"0"),0);return}
   if(e.target.id==="addDayBtn"){addDay(state);return}
   if(el=q("[data-toggle]")){el.parentElement.classList.toggle("open")}};
  $("#view").onchange=e=>{
@@ -179,3 +198,32 @@ async function loadWikiImages(state){
  $$("#view img[data-wiki]").forEach(img=>{const u=wikiCache[img.dataset.wiki];
   if(u&&!img.src){img.src=u;img.style.display="block";
    const f=img.parentElement.querySelector(".fall");if(f)f.style.display="none"}})}
+
+/* ---- ordering & moving places ---- */
+function ordered(state,ord){return placesOfDay(state.places,ord).filter(p=>!p.visited)}
+async function normalize(state,ord){          // give every place in a day a clean 0..n ord
+ const list=ordered(state,ord);const b=fs.writeBatch(db());let n=0;
+ list.forEach((p,i)=>{if(p.ord!==i){b.update(subDoc(state.tripId,"places",p.id),{ord:i});n++}});
+ if(n)await b.commit();
+ return list}
+async function movePlace(state,pid,dir){
+ const pl=state.places.find(x=>x.id===pid);if(!pl)return;
+ const list=await normalize(state,pl.dayOrd);
+ const i=list.findIndex(x=>x.id===pid),j=i+dir;
+ if(i<0||j<0||j>=list.length)return;
+ const other=list[j];
+ const b=fs.writeBatch(db());
+ b.update(subDoc(state.tripId,"places",pl.id),{ord:j});
+ b.update(subDoc(state.tripId,"places",other.id),{ord:i});
+ keepScroll(()=>{});await b.commit();toast("✓")}
+function moveToDay(state,pid){
+ const pl=state.places.find(x=>x.id===pid);if(!pl)return;
+ const days=(state.days||[]).slice().sort((a,b)=>a.ord-b.ord);
+ const opts=days.map(d=>d.ord+" — "+fmtDate(d.date)+" "+((d.stay||d.route||"").replace(/🛏|🏁/g,"").trim().slice(0,26)));
+ openForm(t("moveToDay")+" — "+pl.n,[{k:"day",l:t("day"),type:"select",opts}],
+  {day:opts.find(o=>o.startsWith(pl.dayOrd+" — "))||opts[0]},
+  async out=>{const newOrd=parseInt(String(out.day).split(" — ")[0]);
+   if(!newOrd||newOrd===pl.dayOrd)return;
+   const dest=placesOfDay(state.places,newOrd).filter(x=>!x.visited);
+   await fs.updateDoc(subDoc(state.tripId,"places",pl.id),{dayOrd:newOrd,ord:dest.length});
+   toast("✓ "+t("movedToDay")+" "+newOrd)})}

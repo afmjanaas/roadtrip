@@ -6,7 +6,10 @@ export const CATLBL={fuel:"catFuel",food:"catFood",hotel:"catHotel",tickets:"cat
 
 export const Q=(trip,cur,v)=>(v||0)*((trip.fx&&trip.fx[cur])!=null?trip.fx[cur]:1);
 
-export function placesOfDay(places,ord){return places.filter(p=>p.dayOrd===ord)}
+export function placesOfDay(places,ord){
+ return places.filter(p=>p.dayOrd===ord)
+  .sort((a,b)=>{const ao=(a.ord==null?9999:a.ord),bo=(b.ord==null?9999:b.ord);
+   if(ao!==bo)return ao-bo;return String(a.n||"").localeCompare(String(b.n||""))})}
 export function dayActs(trip,places,ord){return placesOfDay(places,ord).filter(p=>p.on).reduce((s,p)=>s+Q(trip,p.cur,p.fam),0)}
 export function dayPlanned(trip,places,d){
  return Q(trip,d.hCur||trip.currency,d.hV)+(d.fuelQ||0)+(d.foodQ||0)+(d.parkQ||0)+(d.miscQ||0)+dayActs(trip,places,d.ord)}

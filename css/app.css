@@ -535,6 +535,16 @@ label.f{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:upperc
 .jday-b{display:none;padding:0 14px 14px}
 .jday.open .jday-b{display:block}
 .jpin{font-size:10.5px;background:var(--goldL);color:var(--gold);border-radius:99px;padding:1px 7px;margin-left:4px;white-space:nowrap}
+.ftsp{flex:1}
+.vbtn{white-space:nowrap}
+.vbtn.on{background:color-mix(in srgb,var(--ok) 18%,var(--card));border-color:var(--ok);color:var(--ok)}
+.att .ft .mini[disabled]{opacity:.35;cursor:default}
+.visited-box{margin-top:14px;border-top:1px dashed var(--line2);padding-top:10px}
+.visited-box>summary{cursor:pointer;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);list-style:none}
+.visited-box>summary::-webkit-details-marker{display:none}
+.visited-box>summary:hover{color:var(--ink)}
+.visited-box .att{opacity:.72}
+.visited-box .att .ph{filter:grayscale(.35)}
 /* toast */
 #toast{position:fixed;bottom:calc(78px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 20px;border-radius:999px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
 #toast.on{opacity:1}
